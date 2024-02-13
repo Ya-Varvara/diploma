@@ -1,8 +1,8 @@
-version: '3'
+version: '3.9'
 
 services:
   db:
-    image: postgres:15
+    image: postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -10,8 +10,8 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
-    # volumes:
-    #   - postgres_data:/var/lib/postgresql/data/
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
   web:
     build:
       context: .
