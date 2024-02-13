@@ -18,10 +18,13 @@ CREATE TABLE tasks (
 
 CREATE TABLE users (
     "id" serial NOT NULL,
-	"login" text NOT NULL,
-	"password" text NOT NULL,
+	"username" text NOT NULL,
+	"hashed_password" text NOT NULL,
     "email" text NOT NULL,
-	"metadata" jsonb NOT NULL,
+	-- "meta" jsonb NOT NULL,
+	"is_active" bool NOT NULL default true,
+	"is_superuser" bool NOT NULL default false,
+	"is_verified" bool NOT NULL default false,
 	
 	PRIMARY KEY ("id")
 );
