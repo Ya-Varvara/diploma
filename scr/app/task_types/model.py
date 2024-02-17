@@ -8,8 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 Base: DeclarativeMeta = declarative_base()
 
 if TYPE_CHECKING:
-    class Task(Base):
-        pass
+    from scr.app.tasks.model import Task
 
 
 class TaskType(Base):
@@ -20,15 +19,4 @@ class TaskType(Base):
     data_types: Mapped[List[str]] = mapped_column(ARRAY(String))
     answer_type: Mapped[List[str]] = mapped_column(ARRAY(String))
 
-    tasks: Mapped[List[Task]] = relationship(back_populates="type")
-
-
-class Task(Base):
-    __tablename__ = "tasks"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, nullable=False)
-    name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
-    type: Mapped[TaskType] = relationship(back_populates="id")
-    data: Mapped[Dict[str, Any]] = mapped_column(JSONB)
-
-
+    tasks: Mapped[list[Task]] = relationship(back_populates="type")

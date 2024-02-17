@@ -6,7 +6,7 @@ from scr.app.auth.manager import get_user_manager
 from scr.app.auth.auth import auth_backend
 from scr.app.auth.models import User
 
-from scr.app.tasks.router import router
+from scr.app.task_types.router import router
 
 from fastapi_users import FastAPIUsers
 
