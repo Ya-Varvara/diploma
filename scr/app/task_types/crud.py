@@ -8,7 +8,7 @@ Delete
 from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
-from scr.app.task_types.model import TaskType
+from scr.app.core.models import TaskType
 
 from scr.app.task_types.schemas import TaskTypeCreate, TaskTypeUpdate, TaskTypeUpdatePartial
 
@@ -20,8 +20,8 @@ async def get_task_types(session: AsyncSession) -> list[TaskType]:
     return list(task_types)
 
 
-async def get_task_type(session: AsyncSession, product_id: int) -> TaskType | None:
-    return await session.get(TaskType, product_id)
+async def get_task_type(session: AsyncSession, task_type_id: int) -> TaskType | None:
+    return await session.get(TaskType, task_type_id)
 
 
 async def create_task_type(session: AsyncSession, task_type_in: TaskTypeCreate) -> TaskType:

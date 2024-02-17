@@ -1,22 +1,22 @@
 from typing import List, Any, Dict, TYPE_CHECKING
 
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import Column, Integer, Text, String, Boolean, MetaData, ARRAY
+from sqlalchemy import Column, Integer, Text, String, Boolean, MetaData, ARRAY, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-Base: DeclarativeMeta = declarative_base()
+from .base import Base
 
 if TYPE_CHECKING:
-    from scr.app.tasks.model import Task
+    from .task_type import TaskType
 
 
-class TaskType(Base):
-    __tablename__ = "task_types"
+class Task(Base):
+    __tablename__ = "tasks"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
-    data_types: Mapped[List[str]] = mapped_column(ARRAY(String))
-    answer_type: Mapped[List[str]] = mapped_column(ARRAY(String))
+    type: Mapped[int] = mapped_column(ForeignKey("task_types.id"))
+    data: Mapped[Dict[str, Any]] = mapped_column(JSONB)
 
-    tasks: Mapped[list[Task]] = relationship(back_populates="type")
+    type_name: Mapped["TaskType"] = relationship(back_populates="tasks")

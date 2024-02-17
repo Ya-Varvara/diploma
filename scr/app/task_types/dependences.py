@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from scr.app.database import get_async_session
 
-from scr.app.task_types.model import TaskType
+from scr.app.core.models import TaskType
 
 import scr.app.task_types.crud as crud
 

@@ -1,11 +1,28 @@
-from typing import Optional, List
+from typing import Optional, List, Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
-class TastTypeCreate(BaseModel):
-    """Base TastType model."""
+
+class TaskBase(BaseModel):
+    """
+    Модель Задание
+    """
+    name: str
+    type: int
+    data: dict[str, Any]
+
+class TaskCreate(TaskBase):
+    pass
+
+class TaskUpdate(TaskCreate):
+    pass
+
+class TaskUpdatePartial(TaskCreate):
+    name: Optional[str] = None
+    type: Optional[int] = None
+    data: Optional[dict[str, Any]] = None
+
+class Task(TaskBase):
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
-    name: str
-    data_types: List[str]
-    answer_type: List[str]
