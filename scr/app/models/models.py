@@ -8,8 +8,6 @@ from fastapi_users.db import SQLAlchemyBaseUserTable
 
 Base: DeclarativeMeta = declarative_base()
 
-metadata = MetaData()
-
 
 class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = "users"
