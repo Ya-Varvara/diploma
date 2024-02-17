@@ -1,7 +1,5 @@
-from typing import Optional
-
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
-from sqlalchemy import Column, Integer, Text, String, Boolean, JSON, MetaData
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
 from fastapi_users.db import SQLAlchemyBaseUserTable
