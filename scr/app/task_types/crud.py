@@ -6,6 +6,7 @@ Delete
 """
 
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from scr.app.core.models import TaskType
@@ -25,7 +26,26 @@ async def get_task_types(session: AsyncSession) -> list[TaskType]:
 
 
 async def get_task_type(session: AsyncSession, task_type_id: int) -> TaskType | None:
-    return await session.get(TaskType, task_type_id)
+    stmt = (
+        select(TaskType)
+        .options(joinedload(TaskType.tasks))
+        .where(TaskType.id == task_type_id)
+    )
+    task_type: TaskType | None = await session.scalar(stmt)
+    return task_type
+
+
+async def get_task_type_by_name(
+    session: AsyncSession, task_type_name: str
+) -> TaskType | None:
+    stmt = (
+        select(TaskType)
+        .options(joinedload(TaskType.tasks))
+        .where(TaskType.name == task_type_name)
+    )
+    # result: Result = await session.execute(stmt)
+    task_type: TaskType | None = await session.scalar(stmt)
+    return task_type
 
 
 async def create_task_type(

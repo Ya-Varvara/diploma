@@ -25,6 +25,15 @@ async def get_task(session: AsyncSession, task_id: int) -> Task | None:
     return await session.get(Task, task_id)
 
 
+async def get_task_by_name(session: AsyncSession, task_name: str) -> Task | None:
+    stmt = (
+        select(Task).where(Task.name == task_name).options(joinedload(Task.type_name))
+    )
+    result: Result = await session.execute(stmt)
+    task: Task = result.one_or_none()
+    return task
+
+
 async def create_task(session: AsyncSession, task_in: TaskCreate) -> Task:
     task = Task(**task_in.model_dump())
     session.add(task)
