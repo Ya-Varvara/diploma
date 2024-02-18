@@ -10,10 +10,7 @@ from scr.app.tests.dependences import test_by_id
 
 import scr.app.tests.crud as crud
 
-router = APIRouter(
-    prefix="/test",
-    tags=["Test"]
-)
+router = APIRouter(prefix="/test", tags=["Test"])
 
 
 @router.get("/", response_model=list[Test])
@@ -44,11 +41,7 @@ async def update_test(
     test: Test = Depends(test_by_id),
     session: AsyncSession = Depends(get_async_session),
 ):
-    return await crud.update_test(
-        session=session,
-        test=test,
-        test_update=test_update
-    )
+    return await crud.update_test(session=session, test=test, test_update=test_update)
 
 
 @router.patch("/{test_id}/")

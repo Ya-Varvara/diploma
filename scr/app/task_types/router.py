@@ -5,15 +5,17 @@ from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from scr.app.database import get_async_session
-from scr.app.task_types.schemas import TaskTypeCreate, TaskTypeUpdate, TaskTypeUpdatePartial, TaskType
+from scr.app.task_types.schemas import (
+    TaskTypeCreate,
+    TaskTypeUpdate,
+    TaskTypeUpdatePartial,
+    TaskType,
+)
 from scr.app.task_types.dependences import task_type_by_id
 
 import scr.app.task_types.crud as crud
 
-router = APIRouter(
-    prefix="/task_type",
-    tags=["Task type"]
-)
+router = APIRouter(prefix="/task_type", tags=["Task type"])
 
 
 @router.get("/", response_model=list[TaskType])
@@ -45,9 +47,7 @@ async def update_task_type(
     session: AsyncSession = Depends(get_async_session),
 ):
     return await crud.update_task_type(
-        session=session,
-        task_type=task_type,
-        task_type_update=task_type_update
+        session=session, task_type=task_type, task_type_update=task_type_update
     )
 
 

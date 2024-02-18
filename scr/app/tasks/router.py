@@ -10,10 +10,7 @@ from scr.app.tasks.dependences import task_by_id
 
 import scr.app.tasks.crud as crud
 
-router = APIRouter(
-    prefix="/task",
-    tags=["Task"]
-)
+router = APIRouter(prefix="/task", tags=["Task"])
 
 
 @router.get("/", response_model=list[Task])
@@ -44,11 +41,7 @@ async def update_task(
     task: Task = Depends(task_by_id),
     session: AsyncSession = Depends(get_async_session),
 ):
-    return await crud.update_task(
-        session=session,
-        task=task,
-        task_update=task_update
-    )
+    return await crud.update_task(session=session, task=task, task_update=task_update)
 
 
 @router.patch("/{task_id}/")

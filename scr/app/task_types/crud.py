@@ -10,7 +10,11 @@ from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from scr.app.core.models import TaskType
 
-from scr.app.task_types.schemas import TaskTypeCreate, TaskTypeUpdate, TaskTypeUpdatePartial
+from scr.app.task_types.schemas import (
+    TaskTypeCreate,
+    TaskTypeUpdate,
+    TaskTypeUpdatePartial,
+)
 
 
 async def get_task_types(session: AsyncSession) -> list[TaskType]:
@@ -24,7 +28,9 @@ async def get_task_type(session: AsyncSession, task_type_id: int) -> TaskType | 
     return await session.get(TaskType, task_type_id)
 
 
-async def create_task_type(session: AsyncSession, task_type_in: TaskTypeCreate) -> TaskType:
+async def create_task_type(
+    session: AsyncSession, task_type_in: TaskTypeCreate
+) -> TaskType:
     task_type = TaskType(**task_type_in.model_dump())
     session.add(task_type)
     await session.commit()

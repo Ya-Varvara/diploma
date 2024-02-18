@@ -1,10 +1,4 @@
-__all__ = (
-    "Base",
-    "Task",
-    "TaskType",
-    "Test",
-    "User"
-)
+__all__ = ("Base", "Task", "TaskType", "Test", "User")
 
 from .base import Base
 from .task import Task

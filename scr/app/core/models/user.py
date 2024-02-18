@@ -11,6 +11,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .test import Test
 
+
 class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = "users"
 
