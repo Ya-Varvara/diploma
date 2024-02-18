@@ -19,6 +19,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .test import Test
     from .task import Task
+    from .test_task_result import TestTaskResult
 
 
 class TestTask(Base):
@@ -31,3 +32,4 @@ class TestTask(Base):
 
     test: Mapped["Test"] = relationship(back_populates="test_variants")
     task: Mapped["Task"] = relationship(back_populates="task_variants")
+    result: Mapped["TestTaskResult"] = relationship(back_populates="test")

@@ -9,11 +9,11 @@ CREATE TABLE task_types (
 CREATE TABLE tasks (
     "id" serial NOT NULL,
 	"name" text NOT NULL,
-	"type" int NOT NULL,
+	"type_id" int NOT NULL,
     "data" jsonb NOT NULL,
 	
 	PRIMARY KEY ("id"),
-	FOREIGN KEY ("type") REFERENCES task_types ("id")
+	FOREIGN KEY ("type_id") REFERENCES task_types ("id")
 );
 
 CREATE TABLE users (
@@ -52,7 +52,7 @@ CREATE TABLE test_task (
 	FOREIGN KEY ("task_id") REFERENCES tasks ("id")
 );
 
-CREATE TABLE task_result (
+CREATE TABLE test_task_result (
     "id" serial NOT NULL,
 	"test_task_id" int NOT NULL,
 	"answer" jsonb NOT NULL,

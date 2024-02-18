@@ -9,7 +9,7 @@ class TaskBase(BaseModel):
     """
 
     name: str
-    type: int
+    type_id: int
     data: dict[str, Any]
 
 
