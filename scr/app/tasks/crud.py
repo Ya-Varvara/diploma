@@ -15,11 +15,9 @@ from scr.app.tasks.schemas import TaskCreate, TaskUpdate, TaskUpdatePartial
 
 
 async def get_tasks(session: AsyncSession) -> list[Task]:
-    stmt = select(Task).order_by(Task.id)
+    stmt = select(Task).options(joinedload(Task.type_name)).order_by(Task.id)
     result: Result = await session.execute(stmt)
     tasks = result.scalars().all()
-    for task in tasks:
-        print(task)
     return list(tasks)
 
 
