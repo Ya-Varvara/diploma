@@ -1,16 +1,41 @@
 from typing import List
+from json import loads
+from datetime import datetime, time
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from scr.app.database import get_async_session
-from scr.app.tests.schemas import TestCreate, TestUpdate, TestUpdatePartial, Test
+from scr.app.tests.schemas import (
+    TestCreate,
+    TestUpdate,
+    TestUpdatePartial,
+    Test,
+    TestOut,
+    DescriptionBase,
+)
 from scr.app.tests.dependences import test_by_id
 
 import scr.app.tests.crud as crud
 
 router = APIRouter(prefix="/test", tags=["Test"])
+
+
+def create_test_model(test) -> Test:
+    return Test(
+        id=test.id,
+        name=test.name,
+        user_id=test.user_id,
+        link=test.link,
+        description=DescriptionBase(
+            students_number=test.description["students_number"],
+            description=test.description["description"],
+            tasks=test.description["tasks"],
+            deadline=datetime.fromisoformat(test.description["deadline"]),
+            time=time.fromisoformat(test.description["time"]),
+        ),
+    )
 
 
 @router.get("/", response_model=list[Test])

@@ -1,6 +1,19 @@
 from typing import Optional, List, Any
+from datetime import datetime, time
 
 from pydantic import BaseModel, ConfigDict
+
+
+class DescriptionBase(BaseModel):
+    """
+    Описание теста
+    """
+
+    students_number: int = 1
+    description: str = ""
+    tasks: dict[str, int]  # tasks = {"task_type_name": count}
+    deadline: datetime
+    time: time
 
 
 class TestBase(BaseModel):
@@ -10,7 +23,7 @@ class TestBase(BaseModel):
 
     name: str
     user_id: int
-    description: dict[str, Any]
+    description: DescriptionBase
     link: str
 
 
@@ -25,7 +38,7 @@ class TestUpdate(TestCreate):
 class TestUpdatePartial(TestCreate):
     name: Optional[str] = None
     user_id: Optional[int] = None
-    description: Optional[dict[str, Any]] = None
+    description: Optional[DescriptionBase] = None
     link: Optional[str] = None
 
 
@@ -33,3 +46,10 @@ class Test(TestBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
+
+class TestOut(TestBase):
+    name: str
+    user_id: int
+    description: dict
+    link: str

@@ -26,7 +26,15 @@ async def get_test(session: AsyncSession, test_id: int) -> Test | None:
 
 
 async def create_test(session: AsyncSession, test_in: TestCreate) -> Test:
-    test = Test(**test_in.model_dump())
+    dict_test_in = test_in.model_dump(exclude={"description"})
+    print(dict_test_in)
+    dict_test_in["description"] = test_in.description.model_dump()
+    dict_test_in["description"]["time"] = str(test_in.description.time)
+    dict_test_in["description"]["deadline"] = str(test_in.description.deadline)
+    print(dict_test_in)
+
+    test = Test(**dict_test_in)
+
     session.add(test)
     await session.commit()
     return test
