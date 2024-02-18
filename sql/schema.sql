@@ -31,8 +31,8 @@ CREATE TABLE users (
 
 CREATE TABLE tests (
     "id" serial NOT NULL,
-	"user_id" int NOT NULL,
 	"name" text NOT NULL,
+	"user_id" int NOT NULL,
     "description" jsonb NOT NULL,
 	"link" text NOT NULL,
 	

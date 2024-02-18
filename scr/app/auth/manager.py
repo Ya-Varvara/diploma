@@ -4,7 +4,7 @@ from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin
 
 from scr.app.auth.db_handlers import get_user_db
-from scr.app.auth.models import User
+from scr.app.core.models import User
 
 
 SECRET = "SECRET"

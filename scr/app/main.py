@@ -4,10 +4,11 @@ from fastapi import FastAPI, Depends
 from scr.app.auth.schemas import UserRead, UserCreate, UserUpdate
 from scr.app.auth.manager import get_user_manager
 from scr.app.auth.auth import auth_backend
-from scr.app.auth.models import User
+from scr.app.core.models import User
 
 from scr.app.task_types.router import router as task_type_router
 from scr.app.tasks.router import router as task_router 
+from scr.app.tests.router import router as test_router
 
 from fastapi_users import FastAPIUsers
 
@@ -33,6 +34,7 @@ app.include_router(
 
 app.include_router(task_router)
 app.include_router(task_type_router)
+app.include_router(test_router)
 
 current_user = fastapi_users.current_user()
 
