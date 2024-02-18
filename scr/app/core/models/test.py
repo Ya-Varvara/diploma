@@ -18,6 +18,7 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .user import User
+    from .test_task import TestTask
 
 
 class Test(Base):
@@ -29,3 +30,4 @@ class Test(Base):
     link: Mapped[str] = mapped_column(String(64))
 
     user: Mapped["User"] = relationship(back_populates="tests")
+    test_variants: Mapped[list["TestTask"]] = relationship(back_populates="test")

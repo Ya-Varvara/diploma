@@ -18,6 +18,7 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .task_type import TaskType
+    from .test_task import TestTask
 
 
 class Task(Base):
@@ -29,3 +30,4 @@ class Task(Base):
     data: Mapped[Dict[str, Any]] = mapped_column(JSONB)
 
     type_name: Mapped["TaskType"] = relationship(back_populates="tasks")
+    task_variants: Mapped[list["TestTask"]] = relationship(back_populates="task")
