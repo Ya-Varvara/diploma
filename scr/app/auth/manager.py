@@ -3,8 +3,8 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin
 
-from scr.app.models.models import User
-from scr.app.auth.database import get_user_db
+from scr.app.auth.db_handlers import get_user_db
+from scr.app.core.models import User
 
 
 SECRET = "SECRET"

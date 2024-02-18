@@ -1,9 +1,16 @@
 from fastapi import FastAPI, Depends
-from scr.app.models.models import User
+
 
 from scr.app.auth.schemas import UserRead, UserCreate, UserUpdate
 from scr.app.auth.manager import get_user_manager
 from scr.app.auth.auth import auth_backend
+from scr.app.core.models import User
+
+from scr.app.task_types.router import router as task_type_router
+from scr.app.tasks.router import router as task_router
+from scr.app.tests.router import router as test_router
+from scr.app.test_tasks.router import router as test_task_router
+from scr.app.test_task_results.router import router as test_task_result_router
 
 from fastapi_users import FastAPIUsers
 
@@ -17,8 +24,8 @@ fastapi_users = FastAPIUsers[User, int](
 
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
-    tags=["auth"],
+    prefix="/auth",
+    tags=["Auth"],
 )
 
 app.include_router(
@@ -27,7 +34,14 @@ app.include_router(
     tags=["Auth"],
 )
 
+app.include_router(task_router)
+app.include_router(task_type_router)
+app.include_router(test_router)
+app.include_router(test_task_router)
+app.include_router(test_task_result_router)
+
 current_user = fastapi_users.current_user()
+
 
 @app.get("/protected-route")
 def protected_route(user: User = Depends(current_user)):
@@ -37,6 +51,7 @@ def protected_route(user: User = Depends(current_user)):
 @app.get("/ping")
 def pong():
     return {"ping": "pong!!!!"}
+
 
 @app.get("/wow")
 def wow_func():
