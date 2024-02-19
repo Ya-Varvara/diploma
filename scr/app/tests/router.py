@@ -64,6 +64,7 @@ async def get_tests(session: AsyncSession = Depends(get_async_session)):
 async def create_test(
     test_in: TestCreate,
     session: AsyncSession = Depends(get_async_session),
+    # user_id: User = Depends(current_user),
 ):
     test = await crud.create_test(session=session, test_in=test_in)
 
