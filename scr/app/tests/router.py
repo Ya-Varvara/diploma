@@ -19,7 +19,7 @@ from scr.app.tests.schemas import (
 from scr.app.tests.dependences import test_by_id
 
 from scr.app.task_types.crud import get_task_type_by_name, get_task_type
-from scr.app.core.models import TaskType, Task
+from scr.app.core.models import TaskType, Task, User
 
 from scr.app.tasks.crud import get_task_by_name, create_task
 from scr.app.tasks.schemas import TaskCreate
@@ -28,7 +28,7 @@ from scr.app.test_tasks.crud import create_test_task
 from scr.app.test_tasks.schemas import TestTaskCreate
 
 import scr.app.tests.crud as crud
-
+from scr.app.auth.router import get_current_user
 
 from scr.app.core.graph_generation.graph_gen import generate_graph
 
@@ -64,7 +64,7 @@ async def get_tests(session: AsyncSession = Depends(get_async_session)):
 async def create_test(
     test_in: TestCreate,
     session: AsyncSession = Depends(get_async_session),
-    # user_id: User = Depends(current_user),
+    user_id: User = Depends(get_current_user),
 ):
     test = await crud.create_test(session=session, test_in=test_in)
 
