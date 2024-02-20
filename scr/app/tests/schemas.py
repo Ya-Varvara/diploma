@@ -22,9 +22,7 @@ class TestBase(BaseModel):
     """
 
     name: str
-    user_id: int
     description: DescriptionBase
-    link: str
 
 
 class TestCreate(TestBase):
@@ -46,6 +44,8 @@ class Test(TestBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    user_id: int
+    link: str
 
 
 class TestOut(TestBase):
