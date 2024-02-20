@@ -41,6 +41,7 @@ def make_new_test_data(test_in: TestCreate, **options) -> dict[str, Any]:
 
     return test_data
 
+
 async def create_test(session: AsyncSession, test_in: dict[str, Any]) -> Test:
     test = Test(**test_in)
     session.add(test)

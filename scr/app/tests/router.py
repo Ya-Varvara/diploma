@@ -68,7 +68,10 @@ async def create_test(
 ):
     print("USER!!!", user)
     options = {"user_id": user.id}
-    test = await crud.create_test(session=session, test_in=crud.make_new_test_data(test_in=test_in, options=options))
+    test = await crud.create_test(
+        session=session,
+        test_in=crud.make_new_test_data(test_in=test_in, options=options),
+    )
 
     raw_task_types = test_in.description.tasks
     task_types_list = {}
