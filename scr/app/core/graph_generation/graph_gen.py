@@ -4,12 +4,23 @@ from .graph_draw import draw_graph
 from collections import deque
 
 
-def make_data_from_graph(graph: tuple) -> dict:
-    return {"data": "some_graph", "result": "wow"}
+def make_graph_data(graph: tuple) -> dict:
+    net, nodes, cutA, cutB, cut, r_cut, max_flow = graph
+    return {
+        "students_data": {"graph_net": net},
+        "teachers_data": {
+            "nodes_number": nodes,
+            "cut_A": cutA,
+            "cut_B": cutB,
+            "cut": cut,
+            "reverse_cut": r_cut,
+            "max_flow": max_flow,
+        },
+    }
 
 
 def generate_graph(
-    nodes: int, min_weight=10, max_weight=70, info=False, draw=False
+    nodes: int = 13, min_weight=10, max_weight=70, info=False, draw=False
 ) -> tuple:
     """
     Функция генерации сети с одним источником и одним стоком. При этом при решении данного графа можно построить хотя бы один увеличивающий маршрут
@@ -67,9 +78,9 @@ def generate_graph(
             f"Максимальный заданный поток = {ff_max_flow}\n"
         )
     if max_flow == ff_max_flow and cutA == ff_cutA and cutB == ff_cutB:
-        return True, net, nodes, cutA, cutB, cut, r_cut, max_flow
+        return make_graph_data((net, nodes, cutA, cutB, cut, r_cut, max_flow))
     else:
-        return False, 0
+        return None
 
 
 def generate_graph_base(n: int) -> dict:

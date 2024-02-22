@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

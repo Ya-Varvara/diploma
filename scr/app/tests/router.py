@@ -7,7 +7,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+
 from scr.app.database import get_async_session
+from scr.app.core.models import TaskType, Task, User, Test as TestModel, TestTask
+
+from scr.app.core.graph_generation.graph_gen import generate_graph
+
+
+import scr.app.tests.crud as crud
 from scr.app.tests.schemas import (
     TestCreate,
     TestUpdate,
@@ -15,22 +22,20 @@ from scr.app.tests.schemas import (
     Test,
     TestOut,
     DescriptionBase,
+    TestVariant,
 )
-from scr.app.tests.dependences import test_by_id
+from scr.app.tests.dependences import test_by_id, test_by_link
 
 from scr.app.task_types.crud import get_task_type_by_name, get_task_type
-from scr.app.core.models import TaskType, Task, User
 
-from scr.app.tasks.crud import get_task_by_name, create_task
-from scr.app.tasks.schemas import TaskCreate
+from scr.app.tasks.crud import get_task_by_name, create_task, get_task
+from scr.app.tasks.schemas import TaskCreate, TaskBase
 
-from scr.app.test_tasks.crud import create_test_task
-from scr.app.test_tasks.schemas import TestTaskCreate
+from scr.app.test_tasks.crud import create_test_task, update_test_task
+from scr.app.test_tasks.schemas import TestTaskCreate, TestTaskUpdatePartial
 
-import scr.app.tests.crud as crud
 from scr.app.auth.router import get_current_user
 
-from scr.app.core.graph_generation.graph_gen import generate_graph
 
 router = APIRouter(prefix="/test", tags=["Test"])
 
@@ -66,7 +71,6 @@ async def create_test(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(get_current_user()),
 ):
-    print("USER!!!", user)
     options = {"user_id": user.id}
     test = await crud.create_test(
         session=session,
@@ -80,18 +84,14 @@ async def create_test(
             session=session, task_type_name=key
         )
         if task_type is None:
-            print(f"Task type {key} not found!")
             continue
-        print("TASK TYPE", task_type.name, task_type.id)
         task_types_list[task_type.id] = value
-    print(f"Get Task types: {task_types_list}")
 
     for var in range(test_in.description.students_number):
         for task_type_id, num in task_types_list.items():
             task_type: TaskType = await get_task_type(
                 session=session, task_type_id=task_type_id
             )
-            print(f"TEST TASK {task_type.name} {num=}")
             task_ids = []
             for _ in range(num):
                 task: Task
@@ -109,14 +109,12 @@ async def create_test(
                         i = randint(0, len(task_type.tasks) - 1)
                     task_ids.append(i)
                     task = task_type.tasks[i]
-                print(f"AFTER TASK CREATION {task}")
                 test_task = await create_test_task(
                     session=session,
                     test_task_in=TestTaskCreate(
                         variant=var + 1, test_id=test.id, task_id=task.id
                     ),
                 )
-                print(f"Create Test Task: {test_task}")
     return test
 
 
@@ -154,3 +152,53 @@ async def delete_test(
     session: AsyncSession = Depends(get_async_session),
 ) -> None:
     await crud.delete_test(session=session, test=test)
+
+
+@router.get(
+    "/variant/{test_link}", status_code=status.HTTP_200_OK, response_model=TestVariant
+)
+async def get_variant(
+    session: AsyncSession = Depends(get_async_session),
+    test: TestModel = Depends(test_by_link),
+) -> TestVariant:
+    variant: int = None
+    test_tasks: List[TestTask] = []
+    tasks: List[Task] = []
+
+    for test_task in test.test_variants:
+        if test_task.is_given:
+            continue
+        if variant is None:
+            variant = test_task.variant
+        if test_task.variant == variant:
+            test_tasks.append(test_task)
+            await update_test_task(
+                session=session,
+                test_task=test_task,
+                test_task_update=TestTaskUpdatePartial(is_given=True),
+                partial=True,
+            )
+            task: Task = await get_task(session=session, task_id=test_task.task_id)
+            print(type(task))
+            tasks.append(task)
+
+    if not test_tasks:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="All variants are given",
+        )
+
+    if not tasks:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="There are no tasks in test",
+        )
+
+    test_variant = TestVariant(name=test.name, description=test.description, tasks=[])
+    for t in tasks:
+        print(type(t))
+        students_data = t.data.get("students_data", {})
+        test_variant.tasks.append(
+            TaskBase(name=t.name, type_id=t.type_id, data=students_data)
+        )
+    return test_variant

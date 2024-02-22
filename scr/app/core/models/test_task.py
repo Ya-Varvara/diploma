@@ -1,17 +1,8 @@
-from typing import List, Any, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy import (
-    Column,
-    Integer,
-    Text,
-    String,
-    Boolean,
-    MetaData,
-    ARRAY,
     ForeignKey,
 )
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
