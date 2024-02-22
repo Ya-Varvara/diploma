@@ -18,5 +18,6 @@ class TestTaskResult(Base):
     test_task_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
     answer: Mapped[Dict[str, Any]] = mapped_column(JSONB)
     data: Mapped[bytes] = mapped_column(BYTEA, nullable=True)
+    student_info: Mapped[Dict[str, Any]] = mapped_column(JSONB)
 
     test: Mapped["TestTask"] = relationship(back_populates="result")

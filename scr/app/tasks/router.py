@@ -5,8 +5,13 @@ from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from scr.app.database import get_async_session
+
+from scr.app.auth.router import get_current_user
+
 from scr.app.tasks.schemas import TaskCreate, TaskUpdate, TaskUpdatePartial, Task
 from scr.app.tasks.dependences import task_by_id
+
+from scr.app.core.models import User
 
 import scr.app.tasks.crud as crud
 
@@ -14,7 +19,7 @@ router = APIRouter(prefix="/task", tags=["Task"])
 
 
 @router.get("/", response_model=list[Task])
-async def get_tasks(session: AsyncSession = Depends(get_async_session)):
+async def get_tasks(session: AsyncSession = Depends(get_async_session), user: User = Depends(get_current_user()),):
     return await crud.get_tasks(session=session)
 
 

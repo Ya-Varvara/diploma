@@ -7,6 +7,7 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .task import Task
+    from .user import User
 
 
 class TaskType(Base):
@@ -16,5 +17,7 @@ class TaskType(Base):
     name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     data_types: Mapped[List[str]] = mapped_column(ARRAY(String))
     answer_type: Mapped[List[str]] = mapped_column(ARRAY(String))
+    user_id: Mapped[int]
 
     tasks: Mapped[list["Task"]] = relationship(back_populates="type_name")
+    user: Mapped["User"] = relationship(back_populates="task_types")

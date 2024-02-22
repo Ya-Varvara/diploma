@@ -9,6 +9,8 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .test import Test
+    from .task_type import TaskType
+    from .task import Task
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
@@ -23,3 +25,5 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     tests: Mapped[list["Test"]] = relationship(back_populates="user")
+    task_types: Mapped[list["TaskType"]] = relationship(back_populates="user")
+    tasks: Mapped[list["Task"]] = relationship(back_populates="user")
