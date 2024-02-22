@@ -23,11 +23,11 @@ async def get_test_tasks(session: AsyncSession = Depends(get_async_session)):
     return await crud.get_test_tasks(session=session)
 
 
-@router.post(
-    "/",
-    response_model=TestTask,
-    status_code=status.HTTP_201_CREATED,
-)
+# @router.post(
+#     "/",
+#     response_model=TestTask,
+#     status_code=status.HTTP_201_CREATED,
+# )
 async def create_test_task(
     test_task_in: TestTaskCreate,
     session: AsyncSession = Depends(get_async_session),
@@ -35,12 +35,12 @@ async def create_test_task(
     return await crud.create_test_task(session=session, test_task_in=test_task_in)
 
 
-@router.get("/{test_task_id}/", response_model=TestTask)
+# @router.get("/{test_task_id}/", response_model=TestTask)
 async def get_test_task(test_task: TestTask = Depends(test_task_by_id)):
     return test_task
 
 
-@router.put("/{test_task_id}/")
+# @router.put("/{test_task_id}/")
 async def update_test_task(
     test_task_update: TestTaskUpdate,
     test_task: TestTask = Depends(test_task_by_id),
@@ -51,7 +51,7 @@ async def update_test_task(
     )
 
 
-@router.patch("/{test_task_id}/")
+# @router.patch("/{test_task_id}/")
 async def update_test_task_partial(
     test_task_update: TestTaskUpdatePartial,
     test_task: TestTask = Depends(test_task_by_id),
@@ -65,7 +65,7 @@ async def update_test_task_partial(
     )
 
 
-@router.delete("/{test_task_id}/", status_code=status.HTTP_204_NO_CONTENT)
+# @router.delete("/{test_task_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_test_task(
     test_task: TestTask = Depends(test_task_by_id),
     session: AsyncSession = Depends(get_async_session),

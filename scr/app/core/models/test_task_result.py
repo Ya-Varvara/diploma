@@ -1,14 +1,6 @@
-from typing import List, Any, Dict, TYPE_CHECKING
+from typing import Any, Dict, TYPE_CHECKING
 
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy import (
-    Column,
-    Integer,
-    Text,
-    String,
-    Boolean,
-    MetaData,
-    ARRAY,
     ForeignKey,
 )
 from sqlalchemy.dialects.postgresql import JSONB, BYTEA
@@ -26,5 +18,6 @@ class TestTaskResult(Base):
     test_task_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
     answer: Mapped[Dict[str, Any]] = mapped_column(JSONB)
     data: Mapped[bytes] = mapped_column(BYTEA, nullable=True)
+    student_info: Mapped[Dict[str, Any]] = mapped_column(JSONB)
 
     test: Mapped["TestTask"] = relationship(back_populates="result")

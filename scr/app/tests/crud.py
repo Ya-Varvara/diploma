@@ -5,6 +5,10 @@ Update
 Delete
 """
 
+from typing import Any
+
+from uuid import uuid4
+
 from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.orm import joinedload
@@ -14,27 +18,42 @@ from scr.app.core.models import Test
 from scr.app.tests.schemas import TestCreate, TestUpdate, TestUpdatePartial
 
 
-async def get_tests(session: AsyncSession) -> list[Test]:
+async def get_tests(session: AsyncSession, **options) -> list[Test]:
     stmt = select(Test).options(joinedload(Test.user)).order_by(Test.id)
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(Test.user_id == user_id)
     result: Result = await session.execute(stmt)
     tests = result.scalars().all()
     return list(tests)
 
 
-async def get_test(session: AsyncSession, test_id: int) -> Test | None:
-    return await session.get(Test, test_id)
+async def get_test(session: AsyncSession, test_id: int, user_id: int) -> Test | None:
+    stmt = (
+        select(Test)
+        .options(joinedload(Test.user))
+        .where(Test.id == test_id, Test.user_id == user_id)
+    )
+    print(stmt)
+    result: Result = await session.execute(stmt)
+    test = result.scalar()
+    return test
 
 
-async def create_test(session: AsyncSession, test_in: TestCreate) -> Test:
-    dict_test_in = test_in.model_dump(exclude={"description"})
-    print(dict_test_in)
-    dict_test_in["description"] = test_in.description.model_dump()
-    dict_test_in["description"]["time"] = str(test_in.description.time)
-    dict_test_in["description"]["deadline"] = str(test_in.description.deadline)
-    print(dict_test_in)
+def make_new_test_data(test_in: TestCreate, **options) -> dict[str, Any]:
+    test_data = test_in.model_dump(exclude={"description"})
 
-    test = Test(**dict_test_in)
+    test_data["description"] = test_in.description.model_dump()
+    test_data["description"]["time"] = str(test_in.description.time)
+    test_data["description"]["deadline"] = str(test_in.description.deadline)
 
+    test_data["user_id"] = options.get("user_id", 1)
+    test_data["link"] = str(uuid4())
+
+    return test_data
+
+
+async def create_test(session: AsyncSession, test_in: dict[str, Any]) -> Test:
+    test = Test(**test_in)
     session.add(test)
     await session.commit()
     return test

@@ -1,14 +1,7 @@
-from typing import List, Any, Dict, TYPE_CHECKING
+from typing import Any, Dict, TYPE_CHECKING
 
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy import (
-    Column,
-    Integer,
-    Text,
     String,
-    Boolean,
-    MetaData,
-    ARRAY,
     ForeignKey,
 )
 from sqlalchemy.dialects.postgresql import JSONB
@@ -19,6 +12,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .task_type import TaskType
     from .test_task import TestTask
+    from .user import User
 
 
 class Task(Base):
@@ -28,6 +22,8 @@ class Task(Base):
     name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     type_id: Mapped[int] = mapped_column(ForeignKey("task_types.id"))
     data: Mapped[Dict[str, Any]] = mapped_column(JSONB)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
     type_name: Mapped["TaskType"] = relationship(back_populates="tasks")
     task_variants: Mapped[list["TestTask"]] = relationship(back_populates="task")
+    user: Mapped["User"] = relationship(back_populates="tasks")

@@ -1,7 +1,10 @@
-from typing import Optional, List, Any
+from typing import TYPE_CHECKING, Optional, List, Any
 from datetime import datetime, time
 
 from pydantic import BaseModel, ConfigDict
+
+# if TYPE_CHECKING:
+from scr.app.tasks.schemas import TaskBase
 
 
 class DescriptionBase(BaseModel):
@@ -22,9 +25,7 @@ class TestBase(BaseModel):
     """
 
     name: str
-    user_id: int
     description: DescriptionBase
-    link: str
 
 
 class TestCreate(TestBase):
@@ -46,6 +47,8 @@ class Test(TestBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    user_id: int
+    link: str
 
 
 class TestOut(TestBase):
@@ -53,3 +56,10 @@ class TestOut(TestBase):
     user_id: int
     description: dict
     link: str
+
+
+class TestVariant(BaseModel):
+    name: str
+    variant_number: int
+    description: str
+    tasks: list[TaskBase]
