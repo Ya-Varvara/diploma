@@ -18,15 +18,25 @@ from scr.app.core.models import Test
 from scr.app.tests.schemas import TestCreate, TestUpdate, TestUpdatePartial
 
 
-async def get_tests(session: AsyncSession) -> list[Test]:
+async def get_tests(session: AsyncSession, **options) -> list[Test]:
     stmt = select(Test).options(joinedload(Test.user)).order_by(Test.id)
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(Test.user_id == user_id)
     result: Result = await session.execute(stmt)
     tests = result.scalars().all()
     return list(tests)
 
 
-async def get_test(session: AsyncSession, test_id: int) -> Test | None:
-    return await session.get(Test, test_id)
+async def get_test(session: AsyncSession, test_id: int, user_id: int) -> Test | None:
+    stmt = (
+        select(Test)
+        .options(joinedload(Test.user))
+        .where(Test.id == test_id, Test.user_id == user_id)
+    )
+    print(stmt)
+    result: Result = await session.execute(stmt)
+    test = result.scalar()
+    return test
 
 
 def make_new_test_data(test_in: TestCreate, **options) -> dict[str, Any]:

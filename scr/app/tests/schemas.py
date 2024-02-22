@@ -58,5 +58,8 @@ class TestOut(TestBase):
     link: str
 
 
-class TestVariant(TestBase):
+class TestVariant(BaseModel):
+    name: str
+    variant_number: int
+    description: str
     tasks: list[TaskBase]

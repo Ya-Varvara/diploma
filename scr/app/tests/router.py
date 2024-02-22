@@ -57,8 +57,12 @@ def create_test_model(test) -> Test:
 
 
 @router.get("/", response_model=list[Test])
-async def get_tests(session: AsyncSession = Depends(get_async_session)):
-    return await crud.get_tests(session=session)
+async def get_tests(
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(get_current_user()),
+):
+    options = {"user_id": user.id}
+    return await crud.get_tests(session, options)
 
 
 @router.post(
@@ -118,21 +122,34 @@ async def create_test(
     return test
 
 
-@router.get("/{test_id}/", response_model=Test)
-async def get_test(test: Test = Depends(test_by_id)):
+@router.get(
+    "/{test_id}/",
+    response_model=Test,
+)
+async def get_test(
+    test_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(get_current_user()),
+):
+    test = await crud.get_test(session=session, test_id=test_id, user_id=user.id)
+    if test is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
+        )
     return test
 
 
-@router.put("/{test_id}/")
+# @router.put("/{test_id}/")
 async def update_test(
     test_update: TestUpdate,
     test: Test = Depends(test_by_id),
     session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(get_current_user()),
 ):
     return await crud.update_test(session=session, test=test, test_update=test_update)
 
 
-@router.patch("/{test_id}/")
+# @router.patch("/{test_id}/")
 async def update_test_partial(
     test_update: TestUpdatePartial,
     test: Test = Depends(test_by_id),
@@ -148,9 +165,15 @@ async def update_test_partial(
 
 @router.delete("/{test_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_test(
-    test: Test = Depends(test_by_id),
+    test_id: int,
     session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(get_current_user()),
 ) -> None:
+    test = await crud.get_test(session=session, test_id=test_id, user_id=user.id)
+    if test is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
+        )
     await crud.delete_test(session=session, test=test)
 
 
@@ -194,7 +217,12 @@ async def get_variant(
             detail="There are no tasks in test",
         )
 
-    test_variant = TestVariant(name=test.name, description=test.description, tasks=[])
+    test_variant = TestVariant(
+        name=test.name,
+        variant_number=variant,
+        description=test.description["description"],
+        tasks=[],
+    )
     for t in tasks:
         print(type(t))
         students_data = t.data.get("students_data", {})
