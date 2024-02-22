@@ -14,28 +14,38 @@ from scr.app.core.models import Task
 from scr.app.tasks.schemas import TaskCreate, TaskUpdate, TaskUpdatePartial
 
 
-async def get_tasks(session: AsyncSession) -> list[Task]:
+async def get_tasks(session: AsyncSession, **options) -> list[Task]:
     stmt = select(Task).options(joinedload(Task.type_name)).order_by(Task.id)
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(Task.user_id == user_id)
     result: Result = await session.execute(stmt)
     tasks = result.scalars().all()
     return list(tasks)
 
 
-async def get_task(session: AsyncSession, task_id: int) -> Task | None:
+async def get_task(session: AsyncSession, task_id: int, **options) -> Task | None:
+    stmt = select(Task).options(joinedload(Task.type_name)).where(Task.id == task_id)
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(Task.user_id == user_id)
     return await session.get(Task, task_id)
 
 
-async def get_task_by_name(session: AsyncSession, task_name: str) -> Task | None:
+async def get_task_by_name(
+    session: AsyncSession, task_name: str, **options
+) -> Task | None:
     stmt = (
         select(Task).where(Task.name == task_name).options(joinedload(Task.type_name))
     )
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(Task.user_id == user_id)
     result: Result = await session.execute(stmt)
     task: Task = result.one_or_none()
     return task
 
 
-async def create_task(session: AsyncSession, task_in: TaskCreate) -> Task:
+async def create_task(session: AsyncSession, task_in: TaskCreate, user_id: int) -> Task:
     task = Task(**task_in.model_dump())
+    task.user_id = user_id
     session.add(task)
     await session.commit()
     # await session.refresh(product)

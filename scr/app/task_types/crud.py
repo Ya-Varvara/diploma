@@ -18,40 +18,48 @@ from scr.app.task_types.schemas import (
 )
 
 
-async def get_task_types(session: AsyncSession) -> list[TaskType]:
+async def get_task_types(session: AsyncSession, **options) -> list[TaskType]:
     stmt = select(TaskType).order_by(TaskType.id)
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(TaskType.user_id == user_id)
     result: Result = await session.execute(stmt)
     task_types = result.scalars().all()
     return list(task_types)
 
 
-async def get_task_type(session: AsyncSession, task_type_id: int) -> TaskType | None:
+async def get_task_type(
+    session: AsyncSession, task_type_id: int, **options
+) -> TaskType | None:
     stmt = (
         select(TaskType)
         .options(joinedload(TaskType.tasks))
         .where(TaskType.id == task_type_id)
     )
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(TaskType.user_id == user_id)
     task_type: TaskType | None = await session.scalar(stmt)
     return task_type
 
 
 async def get_task_type_by_name(
-    session: AsyncSession, task_type_name: str
+    session: AsyncSession, task_type_name: str, **options
 ) -> TaskType | None:
     stmt = (
         select(TaskType)
         .options(joinedload(TaskType.tasks))
         .where(TaskType.name == task_type_name)
     )
-    # result: Result = await session.execute(stmt)
+    if user_id := options.get("user_id", ""):
+        stmt = stmt.where(TaskType.user_id == user_id)
     task_type: TaskType | None = await session.scalar(stmt)
     return task_type
 
 
 async def create_task_type(
-    session: AsyncSession, task_type_in: TaskTypeCreate
+    session: AsyncSession, task_type_in: TaskTypeCreate, user_id: int
 ) -> TaskType:
     task_type = TaskType(**task_type_in.model_dump())
+    task_type.user_id = user_id
     session.add(task_type)
     await session.commit()
     # await session.refresh(product)

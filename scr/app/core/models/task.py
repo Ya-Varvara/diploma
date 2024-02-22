@@ -22,6 +22,7 @@ class Task(Base):
     name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     type_id: Mapped[int] = mapped_column(ForeignKey("task_types.id"))
     data: Mapped[Dict[str, Any]] = mapped_column(JSONB)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
     type_name: Mapped["TaskType"] = relationship(back_populates="tasks")
     task_variants: Mapped[list["TestTask"]] = relationship(back_populates="task")

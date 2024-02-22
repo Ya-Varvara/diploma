@@ -31,3 +31,4 @@ class Task(TaskBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    user_id: int

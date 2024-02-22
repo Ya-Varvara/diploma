@@ -62,7 +62,7 @@ async def get_tests(
     user: User = Depends(get_current_user()),
 ):
     options = {"user_id": user.id}
-    return await crud.get_tests(session, options)
+    return await crud.get_tests(session=session, options=options)
 
 
 @router.post(
@@ -104,8 +104,11 @@ async def create_test(
                     task = await create_task(
                         session=session,
                         task_in=TaskCreate(
-                            name="some_name", type_id=task_type.id, data=data
+                            name="some_name",
+                            type_id=task_type.id,
+                            data=data,
                         ),
+                        user_id=user.id,
                     )
                 else:
                     i = randint(0, len(task_type.tasks) - 1)

@@ -31,12 +31,4 @@ class TaskType(TaskTypeBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-
-
-class TaskCreate(BaseModel):
-    """Base TastType model."""
-
-    id: int
-    name: str
-    type: int
-    data: dict[str, Any]
+    user_id: int
