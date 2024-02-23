@@ -10,7 +10,7 @@ from api.scr.app.test_task_results.router import router as test_task_result_rout
 
 
 origins = [
-    "http://localhost:5173",  # Разрешить источник, где запущен ваш frontend
+    "http://localhost:3000",  # Разрешить источник, где запущен ваш frontend
     "http://localhost:8000",  # Опционально, если вы также делаете запросы на сам backend
 ]
 
