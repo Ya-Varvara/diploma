@@ -1,11 +1,12 @@
 # Устанавливаем официальный образ Node.js в качестве базового
-FROM node:16-alpine
+FROM node:alpine
 
 # Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
 # Копируем файлы package.json и package-lock.json
 COPY package*.json ./
+COPY vite.config.js ./
 
 # Устанавливаем зависимости
 RUN npm install
@@ -14,10 +15,10 @@ RUN npm install
 COPY . .
 
 # Строим приложение для продакшена
-RUN npm run build
+# RUN npm run build
 
 # Запускаем сервер разработки
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 
-# Открываем порт 3000
+# Открываем порт 5173
 EXPOSE 3000

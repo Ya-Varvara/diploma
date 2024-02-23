@@ -1,4 +1,4 @@
-version: '3.10'
+version: '3.12'
 
 services:
   db:
@@ -27,7 +27,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - 3000:3000
+      - 3000:3000 # Маппинг порта из контейнера на хост
     volumes:
       - ./frontend:/app
-    command: sh -c "npm install && npm start"
+    # command: sh -c "npm install && npm start"
