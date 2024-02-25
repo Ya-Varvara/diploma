@@ -10,7 +10,7 @@ import MainUnauthorizedPage from "../Components/MainUnauthorizedPage";
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
   const [siderState, setSiderState] = useState(true);
-  console.log(siderState);
+  console.log(isAuthenticated);
 
   function SiderStateChanged() {
     console.log("clicked");
@@ -23,7 +23,7 @@ export default function HomePage() {
       <Layout>
         {isAuthenticated ? <AppSider siderState={siderState} /> : <></>}
         <AppContent>
-        {isAuthenticated ? <></> : <MainUnauthorizedPage />}
+          {isAuthenticated ? <><p>Домашняя страница!</p></> : <MainUnauthorizedPage />}
         </AppContent>
       </Layout>
     </Layout>

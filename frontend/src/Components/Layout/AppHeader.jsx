@@ -1,6 +1,7 @@
 import { Layout, Button } from "antd";
 import { useAuth } from "../../AuthContext";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom"; // Для навигации
 
 const headerStyle = {
   width: "100%",
@@ -15,6 +16,11 @@ const headerStyle = {
 
 export default function AppHeader({ onClick }) {
   const { isAuthenticated, login, logout } = useAuth();
+  const navigate = useNavigate();
+
+  function loginClick() {
+    navigate("/login")
+  }
 
   return (
     <Layout.Header style={headerStyle}>
@@ -25,7 +31,7 @@ export default function AppHeader({ onClick }) {
           </Button>
         </>
       ) : (
-        <Button onClick={login} style={{ float: "right" }}>
+        <Button onClick={loginClick} style={{ float: "right" }}>
           Войти
         </Button>
       )}

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"; // Для навигации
-import { Button, Flex, Form } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 
 export default function MainUnauthorizedPage() {
   const navigate = useNavigate();
@@ -19,12 +19,41 @@ export default function MainUnauthorizedPage() {
   }
 
   return (
-    <Flex vertical gap="large" style={{ maxWidth: "600px" }}>
+    <Flex vertical gap="large" style={{ maxWidth: "700px" }}>
       <Flex gap="small">
-        {/* <Form>
-          <Form.Item name="uuid"></Form.Item>
-        </Form> */}
-        <Button onClick={validateIdentifier}>Перейти</Button>
+        <Form onFinish={onFinish} layout="inline">
+          <Form.Item
+            name="uuid"
+            rules={[
+              { required: true, message: "Please input your uuid" },
+              () => ({
+                validator(rule, value, callback) {
+                  if (!value.trim()) {
+                    return Promise.resolve();
+                  }
+                //   if (value.length !== 36) {
+                //     return Promise.reject("Enter a valid uuid!");
+                //   }
+                  if (!/^[a-zA-Z0-9-]+$/.test(value)) {
+                    return Promise.reject("Enter a valid uuid!");
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input
+              count={{
+                show: true,
+                max: 36,
+              }}
+              style={{minWidth: "500px"}}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button htmlType="submit">Перейти</Button>
+          </Form.Item>
+        </Form>
       </Flex>
       <Button type="link" onClick={clickRegisterButton}>
         Регистрация

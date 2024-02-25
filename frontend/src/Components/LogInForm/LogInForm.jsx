@@ -2,13 +2,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; // Для навигации
 import { LockOutlined, MailOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex } from "antd";
+import { useAuth } from "../../AuthContext";
 import "./LogInForm.css";
 
 export default function LogInForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   function onFinish(values) {
     console.log("Received values of form: ", values);
+    login();
     navigate("/");
   }
 
