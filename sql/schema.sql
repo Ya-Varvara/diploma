@@ -11,23 +11,33 @@ CREATE TABLE users (
 	PRIMARY KEY ("id")
 );
 
-INSERT INTO public.users(
-	id, username, hashed_password, email, is_active, is_superuser, is_verified)
+INSERT INTO public.users (id, username, hashed_password, email, is_active, is_superuser, is_verified)
 	VALUES (1, 'admin', '$2b$12$3GGWjvTNrOCD6chPEDWSfeL14IzFXW2K449LzMIz6hx.o/etQj/mm', 'admin@gmail.com', true, false, false);
+
+CREATE TABLE base_task_types (
+    "id" serial NOT NULL,
+	"name" text NOT NULL,
+	"settings" json NOT NULL,
+
+	PRIMARY KEY ("id")
+);
+
+INSERT INTO public.base_task_types (name, settings)
+	VALUES ('граф', '{"nodes_number": "int", "min_weight": "int", "max_weight": "int"}');
 
 CREATE TABLE task_types (
     "id" serial NOT NULL,
 	"name" text NOT NULL,
-    "condition_form_type" text NOT NULL unique,
-    "answer_form_type" text NOT NULL unique,
-	"user_id" int NOT NULL,
+ 	"user_id" int NOT NULL,
+	"base_task_type" int,
 	"settings" json,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL,
 	"deleted" bool NOT NULL,
 
 	PRIMARY KEY ("id"),
-	FOREIGN KEY ("user_id") REFERENCES users ("id")
+	FOREIGN KEY ("user_id") REFERENCES users ("id"),
+	FOREIGN KEY ("base_task_type") REFERENCES base_task_types ("id")
 );
 
 CREATE TABLE forms (
@@ -49,20 +59,20 @@ INSERT INTO public.forms (name, short_name, condition_form, answer_form)
 	('загрузка файлов', 'upload', false, true);
 
 CREATE TABLE task_types_condition_forms (
-    "task_type_form_id" text NOT NULL,
+    "task_type_condition_form_id" int NOT NULL,
 	"form_id" int NOT NULL,
 
-	PRIMARY KEY ("task_type_form_id", "form_id"),
-	FOREIGN KEY ("task_type_form_id") REFERENCES task_types ("condition_form_type"),
+	PRIMARY KEY ("task_type_condition_form_id", "form_id"),
+	FOREIGN KEY ("task_type_condition_form_id") REFERENCES task_types ("id"),
 	FOREIGN KEY ("form_id") REFERENCES forms ("id")
 );
 
 CREATE TABLE task_types_answer_forms (
-    "task_type_form_id" text NOT NULL,
+    "task_type_answer_form_id" int NOT NULL,
 	"form_id" int NOT NULL,
 
-	PRIMARY KEY ("task_type_form_id", "form_id"),
-	FOREIGN KEY ("task_type_form_id") REFERENCES task_types ("answer_form_type"),
+	PRIMARY KEY ("task_type_answer_form_id", "form_id"),
+	FOREIGN KEY ("task_type_answer_form_id") REFERENCES task_types ("id"),
 	FOREIGN KEY ("form_id") REFERENCES forms ("id")
 );
 
