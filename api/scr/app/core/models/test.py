@@ -43,4 +43,4 @@ class Test(Base):
 
     user: Mapped["User"] = relationship(back_populates="tests")
     test_variants: Mapped[list["TestTask"]] = relationship(back_populates="test")
-    task_types: Mapped[List["TestTaskType"]] = relationship(back_populates="tests")
+    task_types: Mapped[List["TestTaskType"]] = relationship(back_populates="test")

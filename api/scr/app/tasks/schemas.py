@@ -1,34 +1,68 @@
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Dict
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
+
+from api.scr.app.task_types.schemas import TaskTypeForTask
 
 
 class TaskBase(BaseModel):
     """
-    Модель Задание
+    Базовая модель задание теста
+
+    На основе этой модели делаются модели для получения и изменения задания
     """
 
     name: str
     type_id: int
-    data: dict[str, Any]
+    description_data: Optional[dict[str, Any]]
+    condition_data: Dict[str, Any]
+
+
+class TaskForStudent(TaskBase):
+    """
+    Модель для отправки задания на фронтенд
+    """
+
+    type: TaskTypeForTask
 
 
 class TaskCreate(TaskBase):
-    pass
+    """
+    Модель для создания задания. Задание создается на сервере или в будущей экспортируется из файла, поэтому эта модель не отправляется на фронтенд.
+    """
+
+    answer_data: Dict[str, Any]
 
 
 class TaskUpdate(TaskCreate):
-    pass
+    """
+    Модель для изменения задания
+    """
+
+    answer_data: Optional[Dict[str, Any]]
 
 
-class TaskUpdatePartial(TaskCreate):
-    name: Optional[str] = None
-    type: Optional[int] = None
-    data: Optional[dict[str, Any]] = None
+class TaskUpdatePartial(TaskBase):
+    """
+    Модель для частичного изменения задания
+    """
+
+    name: Optional[str]
+    type_id: Optional[int]
+    description_data: Optional[dict[str, Any]]
+    condition_data: Optional[Dict[str, Any]]
+    answer_data: Optional[Dict[str, Any]]
 
 
-class Task(TaskBase):
+class Task(TaskCreate):
+    """
+    Полная модель задания
+    """
+
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    user_id: int
+    created_at: datetime
+    updated_at: datetime
+    deleted: bool

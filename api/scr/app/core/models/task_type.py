@@ -5,7 +5,6 @@ from sqlalchemy import String, ARRAY, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
 
-
 from .base import Base
 
 if TYPE_CHECKING:
@@ -36,8 +35,8 @@ class TaskType(Base):
     tests: Mapped[List["TestTaskType"]] = relationship(back_populates="task_type")
 
     condition_forms: Mapped[List["Form"]] = relationship(
-        secondary="task_types_condition_forms", back_populates="task_type"
+        secondary="task_types_condition_forms", back_populates="condition_task_type_ids"
     )
     answer_forms: Mapped[List["Form"]] = relationship(
-        secondary="task_types_answer_forms", back_populates="task_type"
+        secondary="task_types_answer_forms", back_populates="answer_task_type_ids"
     )

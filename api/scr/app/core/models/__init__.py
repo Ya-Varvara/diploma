@@ -1,6 +1,5 @@
 __all__ = (
     "BaseTaskType",
-    "Base",
     "Task",
     "TaskType",
     "Test",
@@ -9,11 +8,13 @@ __all__ = (
     "User",
     "Form",
     "TestTaskType",
+    "TaskTypesAnswerForm",
+    "TaskTypesConditionForm",
 )
 
 from .base_task_type import BaseTaskType
 from .base import Base
-from .form import Form
+from .form import Form, TaskTypesAnswerForm, TaskTypesConditionForm
 from .task import Task
 from .task_type import TaskType
 from .test import Test, TestTaskType

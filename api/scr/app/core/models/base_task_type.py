@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, List, Any
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSON
 
 
 from .base import Base
@@ -14,8 +14,7 @@ if TYPE_CHECKING:
 class BaseTaskType(Base):
     __tablename__ = "base_task_types"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
-    settings: Mapped[Dict[str, str]] = mapped_column(JSONB, nullable=True)
+    settings: Mapped[Dict[str, Any]] = mapped_column(JSON, nullable=True)
 
-    task_types: Mapped[list["TaskType"]] = relationship(back_populates="base_type")
+    task_types: Mapped[List["TaskType"]] = relationship(back_populates="base_type")
