@@ -31,12 +31,12 @@ class TaskType(Base):
 
     tasks: Mapped[list["Task"]] = relationship(back_populates="type_name")
     user: Mapped["User"] = relationship(back_populates="task_types")
-    base_type: Mapped["BaseTaskType"] = relationship(back_populates="task_types")
+    base_type: Mapped["BaseTaskType"] = relationship(back_populates="task_types", lazy="selectin")
     tests: Mapped[List["TestTaskType"]] = relationship(back_populates="task_type")
 
     condition_forms: Mapped[List["Form"]] = relationship(
-        secondary="task_types_condition_forms", back_populates="condition_task_type_ids"
+        secondary="task_types_condition_forms", back_populates="condition_task_type_ids", lazy="selectin"
     )
     answer_forms: Mapped[List["Form"]] = relationship(
-        secondary="task_types_answer_forms", back_populates="answer_task_type_ids"
+        secondary="task_types_answer_forms", back_populates="answer_task_type_ids", lazy="selectin"
     )

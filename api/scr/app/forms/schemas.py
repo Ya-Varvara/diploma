@@ -10,6 +10,8 @@ class Form(BaseModel):
     Вызывается с интерфейса, когда пользователь выбирает тип задания при создании тестирования
     """
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
     short_name: str

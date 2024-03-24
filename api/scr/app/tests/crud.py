@@ -33,7 +33,7 @@ async def get_test(session: AsyncSession, test_id: int, user_id: int) -> Test | 
         .options(joinedload(Test.user))
         .where(Test.id == test_id, Test.user_id == user_id)
     )
-    print(stmt)
+    # print(stmt)
     result: Result = await session.execute(stmt)
     test = result.scalar()
     return test

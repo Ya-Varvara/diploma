@@ -21,16 +21,21 @@ router = APIRouter(prefix="/task_type", tags=["Task type"])
 def make_full_task_type(task_types: List[dbm.TaskType]) -> List[sch.FullTaskType]:
     result = []
     for tt in task_types:
+        # print(tt)
+        # print(tt.__dict__)
         newtt = sch.FullTaskType(
             id=tt.id,
             name=tt.name,
             created_at=tt.created_at,
             updated_at=tt.updated_at,
-            answer_forms=tt.answer_forms,
-            condition_forms=tt.condition_forms,
+            answer_forms=[formsch.Form.from_orm(af) for af in tt.answer_forms],
+            condition_forms=[formsch.Form.from_orm(cf) for cf in tt.condition_forms],
             settings=tt.settings,
             base_task_type=tt.base_task_type,
+            user_id=tt.user_id,
+            deleted=tt.deleted,
         )
+        # print(newtt.__dict__)
         result.append(newtt)
     return result
 
@@ -54,7 +59,7 @@ async def get_all_base_task_types(
 
 @router.post(
     "/",
-    response_model=sch.TaskType,
+    response_model=sch.FullTaskType,
     status_code=status.HTTP_201_CREATED,
 )
 async def create_task_type(
@@ -62,19 +67,20 @@ async def create_task_type(
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ):
-    return await crud.create_task_type(
+    tt = await crud.create_task_type(
         session=session, task_type_in=task_type_in, user_id=user.id
     )
+    return make_full_task_type([tt])[0]
 
 
-@router.get("/{task_type_id}/", response_model=sch.TaskType)
+@router.get("/{task_type_id}/", response_model=sch.FullTaskType)
 async def get_task_type_by_id(
     task_type_id: int,
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ):
     options = {"user_id": user.id}
-    task_type = await crud.get_task_type(
+    task_type = await crud.get_task_type_by_id(
         session=session, task_type_id=task_type_id, options=options
     )
     if task_type is None:
@@ -82,10 +88,10 @@ async def get_task_type_by_id(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Task Type not found",
         )
-    return task_type
+    return make_full_task_type([task_type])[0]
 
 
-@router.put("/{task_type_id}/")
+# @router.put("/{task_type_id}/")
 async def update_task_type(
     task_type_update: sch.TaskTypeUpdate,
     task_type: sch.TaskType = Depends(task_type_by_id),
@@ -102,7 +108,7 @@ async def update_task_type(
     )
 
 
-@router.patch("/{task_type_id}/")
+# @router.patch("/{task_type_id}/")
 async def update_task_type_partial(
     task_type_update: sch.TaskTypeUpdatePartial,
     task_type: sch.TaskType = Depends(task_type_by_id),

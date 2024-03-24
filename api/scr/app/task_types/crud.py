@@ -37,13 +37,14 @@ async def get_all_task_types(session: AsyncSession, **options) -> List[dbm.TaskT
             joinedload(dbm.TaskType.condition_forms),
             joinedload(dbm.TaskType.answer_forms),
             joinedload(dbm.TaskType.base_type),
-        )
+        ).where(dbm.TaskType.deleted == False)
         .order_by(dbm.TaskType.id)
     )
     if user_id := options.get("user_id", ""):
         stmt = stmt.where(dbm.TaskType.user_id == user_id)
     result: Result = await session.execute(stmt)
-    task_types = result.scalars().all()
+    task_types = result.scalars().unique().all()
+    # print("IN CRUD", task_types)
     return list(task_types)
 
 
@@ -52,8 +53,10 @@ async def get_task_type_by_id(
 ) -> dbm.TaskType | None:
     stmt = (
         select(dbm.TaskType)
-        .options(joinedload(dbm.TaskType.tasks))
-        .where(dbm.TaskType.id == task_type_id)
+        .options(joinedload(dbm.TaskType.tasks), joinedload(dbm.TaskType.condition_forms),
+            joinedload(dbm.TaskType.answer_forms),
+            joinedload(dbm.TaskType.base_type),)
+        .where(dbm.TaskType.id == task_type_id).where(dbm.TaskType.deleted == False)
     )
 
     if user_id := options.get("user_id", ""):
@@ -68,8 +71,10 @@ async def get_task_type_by_name(
 ) -> dbm.TaskType | None:
     stmt = (
         select(dbm.TaskType)
-        .options(joinedload(dbm.TaskType.tasks))
-        .where(dbm.TaskType.name == task_type_name)
+        .options(joinedload(dbm.TaskType.tasks), joinedload(dbm.TaskType.condition_forms),
+            joinedload(dbm.TaskType.answer_forms),
+            joinedload(dbm.TaskType.base_type),)
+        .where(dbm.TaskType.name == task_type_name).where(dbm.TaskType.deleted == False)
     )
 
     if user_id := options.get("user_id", ""):
@@ -87,6 +92,7 @@ async def make_new_task_type(tt: TaskTypeCreate, user_id: int) -> dbm.TaskType:
     task_type.created_at = datetime.now()
     task_type.updated_at = datetime.now()
     task_type.deleted = False
+    return task_type
 
 
 async def create_task_type(
@@ -94,12 +100,15 @@ async def create_task_type(
 ) -> dbm.TaskType:
     task_type = await make_new_task_type(task_type_in, user_id)
     session.add(task_type)
-    await session.commit()
+    await session.flush()
+    # print("TASK TYPE ID", task_type.id)
 
     await fcrud.create_answer_forms(session, task_type_in.answer_forms, task_type.id)
     await fcrud.create_condition_forms(
         session, task_type_in.condition_forms, task_type.id
     )
+    # print("LAST", task_type)
+    await session.refresh(task_type)
     return task_type
 
 
