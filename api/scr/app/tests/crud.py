@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 
 from uuid import uuid4
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.engine import Result
 from sqlalchemy.orm import joinedload, contains_eager
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -90,6 +90,15 @@ async def get_test_by_id(
     test: dbm.Test | None = await session.scalar(stmt)
     return test
 
+async def make_test_given(session: AsyncSession, test_id: int, variant: int) -> None:
+    stmt = (
+        update(dbm.TestTask).where(dbm.TestTask.test_id == test_id).where(dbm.TestTask.variant == variant).values(is_given=True)
+    )
+    print(stmt)
+    await session.execute(stmt)
+    await session.commit()
+    return
+    
 
 async def get_test_by_link_and_variant(
     session: AsyncSession, link: str, variant: int
@@ -126,6 +135,7 @@ async def get_test_by_link_and_variant(
         variant_number=variant,
         tasks=tasks,
     )
+    await make_test_given(session, test.id, variant)
     return result
 
 
@@ -264,7 +274,7 @@ async def create_test(
     return test
 
 
-async def get_free_variant_number(session: AsyncSession, link: str) -> int:
+async def get_free_variant_number(session: AsyncSession, link: str) -> int | None:
     stmt = (
         select(dbm.TestTask.variant)
         .join(dbm.Test, dbm.Test.id == dbm.TestTask.test_id)
@@ -279,7 +289,10 @@ async def get_free_variant_number(session: AsyncSession, link: str) -> int:
     result: Result = await session.execute(stmt)
     variants = list(result.scalars().unique().all())
 
-    return choice(variants)
+    if variants:
+        return choice(variants)
+
+    return None
 
 
 # async def update_test(

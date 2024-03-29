@@ -172,10 +172,10 @@ async def get_variant(link: str, session: AsyncSession = Depends(get_async_sessi
     # test = await crud.get_test_by_link(session=session, link="test")
     variant = await crud.get_free_variant_number(session=session, link=link)
 
-    # if test is None:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
-    #     )
+    if variant is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
+        )
 
     return await crud.get_test_by_link_and_variant(
         session=session, link=link, variant=variant
