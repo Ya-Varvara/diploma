@@ -27,7 +27,7 @@ app.add_middleware(
 app.include_router(auth_router)
 # app.include_router(task_router)
 app.include_router(task_type_router)
-# app.include_router(test_router)
+app.include_router(test_router)
 # app.include_router(test_task_router)
 # app.include_router(test_task_result_router)
 

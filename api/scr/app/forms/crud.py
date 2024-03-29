@@ -25,7 +25,9 @@ async def create_condition_forms(
 ) -> None:
     for form_id in forms_ids:
         session.add(
-            dbm.TaskTypesConditionForm(task_type_condition_form_id=task_type_id, form_id=form_id)
+            dbm.TaskTypesConditionForm(
+                task_type_condition_form_id=task_type_id, form_id=form_id
+            )
         )
     await session.commit()
 
@@ -34,7 +36,11 @@ async def create_answer_forms(
     session: AsyncSession, forms_ids: List[int], task_type_id: int
 ) -> None:
     for form_id in forms_ids:
-        session.add(dbm.TaskTypesAnswerForm(task_type_answer_form_id=task_type_id, form_id=form_id))
+        session.add(
+            dbm.TaskTypesAnswerForm(
+                task_type_answer_form_id=task_type_id, form_id=form_id
+            )
+        )
     await session.commit()
 
 

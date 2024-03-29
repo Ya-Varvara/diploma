@@ -14,7 +14,9 @@ async def task_type_by_id(
     task_type_id: Annotated[int, Path],
     session: AsyncSession = Depends(get_async_session),
 ) -> TaskType:
-    task_type = await crud.get_task_type_by_id(session=session, task_type_id=task_type_id)
+    task_type = await crud.get_task_type_by_id(
+        session=session, task_type_id=task_type_id
+    )
     if task_type is not None:
         return task_type
 

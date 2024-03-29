@@ -5,6 +5,8 @@ from pydantic import BaseModel, ConfigDict
 
 from api.scr.app.tasks.schemas import TaskForStudent
 
+from api.scr.app.task_types.schemas import FullTaskType
+
 
 class TestBase(BaseModel):
     """
@@ -27,6 +29,15 @@ class TaskTypesForTestCreation(BaseModel):
     number: int
 
 
+class TaskTypesForFullTest(BaseModel):
+    """
+    Модель для описания типов заданий в интерфейсе. Нужно указать ID типа и количество заданий.
+    """
+
+    type: FullTaskType
+    number: int
+
+
 class TestCreate(TestBase):
     """
     Модель для создания теста. Используется для создания нового тестирования пользователем в интерфейсе.
@@ -40,7 +51,6 @@ class TestUpdate(TestCreate):
 
 
 class TestUpdatePartial(TestCreate):
-    name: Optional[str]
     name: Optional[str]
     start_datetime: Optional[datetime]
     end_datetime: Optional[datetime]
@@ -58,6 +68,10 @@ class Test(TestBase):
     created_at: datetime
     updated_at: datetime
     deleted: bool
+
+
+class FullTest(Test):
+    task_types: List[TaskTypesForFullTest]
 
 
 class TestVariant(BaseModel):

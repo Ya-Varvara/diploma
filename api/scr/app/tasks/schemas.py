@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from api.scr.app.task_types.schemas import TaskTypeForTask
+from api.scr.app.task_types.schemas import FullTaskType
 
 
 class TaskBase(BaseModel):
@@ -15,7 +15,7 @@ class TaskBase(BaseModel):
 
     name: str
     type_id: int
-    description_data: Optional[dict[str, Any]]
+    description_data: Optional[str]
     condition_data: Dict[str, Any]
 
 
@@ -24,7 +24,7 @@ class TaskForStudent(TaskBase):
     Модель для отправки задания на фронтенд
     """
 
-    type: TaskTypeForTask
+    type: FullTaskType
 
 
 class TaskCreate(TaskBase):
@@ -50,7 +50,7 @@ class TaskUpdatePartial(TaskBase):
 
     name: Optional[str]
     type_id: Optional[int]
-    description_data: Optional[dict[str, Any]]
+    description_data: Optional[str]
     condition_data: Optional[Dict[str, Any]]
     answer_data: Optional[Dict[str, Any]]
 

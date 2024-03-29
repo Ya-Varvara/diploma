@@ -12,7 +12,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.scr.app.core.models import TestTaskResult
 
 
-
 # async def get_test_task_results(session: AsyncSession) -> list[TestTaskResult]:
 #     stmt = select(TestTaskResult).order_by(TestTaskResult.id)
 #     result: Result = await session.execute(stmt)

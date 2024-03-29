@@ -16,7 +16,9 @@ class TaskTypesConditionForm(Base):
     task_type_condition_form_id: Mapped[int] = mapped_column(
         ForeignKey("task_types.id"), primary_key=True, nullable=False
     )
-    form_id: Mapped[int] = mapped_column(ForeignKey("forms.id"), primary_key=True, nullable=False)
+    form_id: Mapped[int] = mapped_column(
+        ForeignKey("forms.id"), primary_key=True, nullable=False
+    )
 
 
 class TaskTypesAnswerForm(Base):
@@ -25,7 +27,9 @@ class TaskTypesAnswerForm(Base):
     task_type_answer_form_id: Mapped[int] = mapped_column(
         ForeignKey("task_types.id"), primary_key=True, nullable=False
     )
-    form_id: Mapped[int] = mapped_column(ForeignKey("forms.id"), primary_key=True, nullable=False)
+    form_id: Mapped[int] = mapped_column(
+        ForeignKey("forms.id"), primary_key=True, nullable=False
+    )
 
 
 class Form(Base):

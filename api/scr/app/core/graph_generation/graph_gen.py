@@ -4,11 +4,12 @@ from .graph_draw import draw_graph
 from collections import deque
 
 
-def make_graph_data(graph: tuple) -> dict:
+async def make_graph_data(graph: tuple) -> dict:
     net, nodes, cutA, cutB, cut, r_cut, max_flow = graph
     return {
-        "students_data": {"graph_net": net},
-        "teachers_data": {
+        "description_data": "Найдите максимальный поток и минимальный разрез с помощью алгоритма Форда Фалкерсона",
+        "condition_data": {"graph_net": net},
+        "answer_data": {
             "nodes_number": nodes,
             "cut_A": cutA,
             "cut_B": cutB,
@@ -19,9 +20,9 @@ def make_graph_data(graph: tuple) -> dict:
     }
 
 
-def generate_graph(
-    nodes: int = 13, min_weight=10, max_weight=70, info=False, draw=False
-) -> tuple:
+async def generate_graph(**settings) -> tuple:
+    #     nodes: int = 13, min_weight=10, max_weight=70, info=False, draw=False
+    # ) -> tuple:
     """
     Функция генерации сети с одним источником и одним стоком. При этом при решении данного графа можно построить хотя бы один увеличивающий маршрут
 
@@ -30,33 +31,38 @@ def generate_graph(
     :param max_weight: Максимальный вес ребра
     :return: Возвращает 1, если граф сгенерирован успешно
     """
+    nodes = settings.get("nodes", 13)
+    min_weight = settings.get("min_weight", 10)
+    max_weight = settings.get("max_weight", 70)
+    info = settings.get("info", False)
+    draw = settings.get("draw", False)
     # Высчитываем средний вес и 10% от диапазона для задания максимального потока
     k = (max_weight - min_weight) // 10
     avg = (max_weight - min_weight) // 2
 
     # Генерируем базу
-    base = generate_graph_base(nodes)
+    base = await generate_graph_base(nodes)
     if info:
         print(f"=========== Сгенерированная база графа ===========\n{base}\n")
 
     # Генерируем сильно связный граф
-    make_strongly_connected(base)
+    await make_strongly_connected(base)
     if info:
         print(f"=========== Сильно связный граф ===========\n{base}\n")
 
     # Задаем разрез и определяем подмножества вершин и обратные ребра разреза
-    cutA, cutB, cut, r_cut = make_cut(base)
+    cutA, cutB, cut, r_cut = await make_cut(base)
 
     if info:
         print(f"=========== Сильно связный граф с изменениями ===========\n{base}\n")
 
     # Задаем максимальный поток на графе
-    net, max_flow = make_flow(base, r_cut, avg, avg + 4 * k)
+    net, max_flow = await make_flow(base, r_cut, avg, avg + 4 * k)
     if info:
         print(f"=========== Сильно связный граф с потоком ===========\n{net}\n")
 
     # Определяем пропускные способности
-    make_throughput(net, cut, min_weight, max_weight)
+    await make_throughput(net, cut, min_weight, max_weight)
     if info:
         print(
             f"=========== Сильно связный граф с пропускными способностями ===========\n{net}\n"
@@ -78,12 +84,12 @@ def generate_graph(
             f"Максимальный заданный поток = {ff_max_flow}\n"
         )
     if max_flow == ff_max_flow and cutA == ff_cutA and cutB == ff_cutB:
-        return make_graph_data((net, nodes, cutA, cutB, cut, r_cut, max_flow))
+        return await make_graph_data((net, nodes, cutA, cutB, cut, r_cut, max_flow))
     else:
         return None
 
 
-def generate_graph_base(n: int) -> dict:
+async def generate_graph_base(n: int) -> dict:
     """Генерирует слабо связную базу графа
 
     :param n: количество вершин
@@ -113,13 +119,13 @@ def generate_graph_base(n: int) -> dict:
                 first += 1
                 last += 1
                 window.append(last)
-        if is_weakly_connected(graph):
+        if await is_weakly_connected(graph):
             break
         graph = {i: [] for i in range(n)}
     return graph
 
 
-def is_weakly_connected(graph: dict) -> bool:
+async def is_weakly_connected(graph: dict) -> bool:
     """Проверка на связность графа
 
     :param graph: граф в виде словаря
@@ -142,7 +148,7 @@ def is_weakly_connected(graph: dict) -> bool:
     return True if len(done) == len(graph) else False
 
 
-def is_strongly_connected(graph: dict) -> tuple:
+async def is_strongly_connected(graph: dict) -> tuple:
     """
     Функция проверяет граф на сильную связность. Если граф не является сильно связным, то функция возвращает список
     вершин, которые являются сильно связными
@@ -164,7 +170,7 @@ def is_strongly_connected(graph: dict) -> tuple:
     return False, done
 
 
-def make_strongly_connected(graph: dict) -> None:
+async def make_strongly_connected(graph: dict) -> None:
     """На выходе получаем сильно связный граф
 
     :param graph: Граф слабой связности
@@ -278,7 +284,7 @@ def make_strongly_connected(graph: dict) -> None:
                 if not k:
                     break
             break
-    flag, good_nodes = is_strongly_connected(graph)
+    flag, good_nodes = await is_strongly_connected(graph)
     while not flag:
         # print("Is not strongly connected after first round")
         bad_nodes = set(graph.keys()) - good_nodes
@@ -298,7 +304,7 @@ def make_strongly_connected(graph: dict) -> None:
                 ):
                     update_edges(i, x)
                     break
-        flag, good_nodes = is_strongly_connected(graph)
+        flag, good_nodes = await is_strongly_connected(graph)
     edges_in, edges_out = count_edges()
     # must_edges = check_ways(graph, diff)
     for node in graph:
@@ -312,11 +318,11 @@ def make_strongly_connected(graph: dict) -> None:
                 k = node_list.pop(0)
             graph[node].remove(k)
             # print(f"Edge ({node}, {k}) was removed")
-    check_ways(graph, diff)
+    await check_ways(graph, diff)
     return
 
 
-def check_ways(graph: dict, diff: int) -> None:
+async def check_ways(graph: dict, diff: int) -> None:
     """
     Функция проверяет, что из каждой вершины выходит хотя бы 1 ребро, ведущее дальше, а не возвращающееся уже к пройденным вершинам
 
@@ -371,7 +377,7 @@ def check_ways(graph: dict, diff: int) -> None:
     return
 
 
-def check_graph_flow(graph) -> bool:
+async def check_graph_flow(graph) -> bool:
     """
     Функция проверяет каждую вершину графа на баланс потока
 
@@ -395,7 +401,7 @@ def check_graph_flow(graph) -> bool:
     return True
 
 
-def make_flow(base: dict, reversed_cut: list, min_flow=20, max_flow=40) -> tuple:
+async def make_flow(base: dict, reversed_cut: list, min_flow=20, max_flow=40) -> tuple:
     """Расставляет поток в графе
 
     :param max_flow: Верхняя граница максимального потока
@@ -471,7 +477,7 @@ def make_flow(base: dict, reversed_cut: list, min_flow=20, max_flow=40) -> tuple
     return graph, flow
 
 
-def make_cut(graph: dict) -> tuple:
+async def make_cut(graph: dict) -> tuple:
     """Делает разрез в графе
 
     :param graph: граф
@@ -525,11 +531,11 @@ def make_cut(graph: dict) -> tuple:
                 r_cutbest.append((node, x))
                 # print("Add extra reverse edge")
                 break
-    check_reversed_cut(graph, sorted(Abest), sorted(Bbest), r_cutbest)
+    await check_reversed_cut(graph, sorted(Abest), sorted(Bbest), r_cutbest)
     return sorted(Abest), sorted(Bbest), cutbest, r_cutbest
 
 
-def check_reversed_cut(graph: dict, A: list, B: list, r_cut: list) -> None:
+async def check_reversed_cut(graph: dict, A: list, B: list, r_cut: list) -> None:
     """
     Функция проверяет, чтобы из каждой вершины, из которой идет обратное ребро, шло не только обратное ребро.
     Иначе добавляет ребро
@@ -550,7 +556,9 @@ def check_reversed_cut(graph: dict, A: list, B: list, r_cut: list) -> None:
     return
 
 
-def make_throughput(graph: dict, cut_edges: list, min_weight=1, max_weight=60) -> None:
+async def make_throughput(
+    graph: dict, cut_edges: list, min_weight=1, max_weight=60
+) -> None:
     """Функция расставляет пропускные способности ребер
 
     :param graph: граф
@@ -574,7 +582,7 @@ def make_throughput(graph: dict, cut_edges: list, min_weight=1, max_weight=60) -
 
 
 # ======================================= НЕ ИСПОЛЬЗУЕТСЯ ====================================================
-def make_cut_2(graph: dict) -> tuple:
+async def make_cut_2(graph: dict) -> tuple:
     """Делает разрез в графе
 
     :param graph: граф
@@ -666,7 +674,7 @@ def make_cut_2(graph: dict) -> tuple:
     return sorted(list(cutA)), sorted(list(cutB)), cut, reverse_cut
 
 
-def generate_graph_with_p(n: int, p: float) -> dict:
+async def generate_graph_with_p(n: int, p: float) -> dict:
     """Генерирует рандомный орграф в виде словаря с некоторой вероятностью p
 
     :param n: количество вершин
@@ -681,7 +689,8 @@ def generate_graph_with_p(n: int, p: float) -> dict:
             for j in range(i + 1, n):
                 if round(random(), 3) <= p:
                     graph[i].append(j)
-        if is_weakly_connected(graph):
+        flag = await is_weakly_connected(graph)
+        if flag:
             break
         else:
             graph = {i: [] for i in range(n)}

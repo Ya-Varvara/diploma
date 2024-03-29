@@ -37,7 +37,8 @@ async def get_all_task_types(session: AsyncSession, **options) -> List[dbm.TaskT
             joinedload(dbm.TaskType.condition_forms),
             joinedload(dbm.TaskType.answer_forms),
             joinedload(dbm.TaskType.base_type),
-        ).where(dbm.TaskType.deleted == False)
+        )
+        .where(dbm.TaskType.deleted == False)
         .order_by(dbm.TaskType.id)
     )
     if user_id := options.get("user_id", ""):
@@ -53,10 +54,14 @@ async def get_task_type_by_id(
 ) -> dbm.TaskType | None:
     stmt = (
         select(dbm.TaskType)
-        .options(joinedload(dbm.TaskType.tasks), joinedload(dbm.TaskType.condition_forms),
+        .options(
+            joinedload(dbm.TaskType.tasks),
+            joinedload(dbm.TaskType.condition_forms),
             joinedload(dbm.TaskType.answer_forms),
-            joinedload(dbm.TaskType.base_type),)
-        .where(dbm.TaskType.id == task_type_id).where(dbm.TaskType.deleted == False)
+            joinedload(dbm.TaskType.base_type),
+        )
+        .where(dbm.TaskType.id == task_type_id)
+        .where(dbm.TaskType.deleted == False)
     )
 
     if user_id := options.get("user_id", ""):
@@ -71,10 +76,14 @@ async def get_task_type_by_name(
 ) -> dbm.TaskType | None:
     stmt = (
         select(dbm.TaskType)
-        .options(joinedload(dbm.TaskType.tasks), joinedload(dbm.TaskType.condition_forms),
+        .options(
+            joinedload(dbm.TaskType.tasks),
+            joinedload(dbm.TaskType.condition_forms),
             joinedload(dbm.TaskType.answer_forms),
-            joinedload(dbm.TaskType.base_type),)
-        .where(dbm.TaskType.name == task_type_name).where(dbm.TaskType.deleted == False)
+            joinedload(dbm.TaskType.base_type),
+        )
+        .where(dbm.TaskType.name == task_type_name)
+        .where(dbm.TaskType.deleted == False)
     )
 
     if user_id := options.get("user_id", ""):

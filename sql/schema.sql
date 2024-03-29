@@ -112,11 +112,12 @@ CREATE TABLE tests (
 );
 
 CREATE TABLE test_task_types (
+	"id" serial NOT NULL,
 	"test_id" int NOT NULL,
 	"task_type_id" int NOT NULL,
     "number" int NOT NULL,
 	
-	PRIMARY KEY ("test_id", "task_type_id"),
+	PRIMARY KEY ("id"),
 	FOREIGN KEY ("test_id") REFERENCES tests ("id"),
 	FOREIGN KEY ("task_type_id") REFERENCES task_types ("id")
 );
