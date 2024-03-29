@@ -9,10 +9,37 @@ export default function LogInForm() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  // function onFinish(values) {
+  //   console.log("Received values of form: ", values);
+  //   login();
+  //   navigate("/");
+  // }
+
   function onFinish(values) {
     console.log("Received values of form: ", values);
-    login();
-    navigate("/");
+    let formData = new FormData();
+    formData.append("username", values.email);
+    formData.append("password", values.password);
+  
+    // Используем fetch для отправки запроса на сервер
+    fetch('http://localhost:8000/auth/login', {
+      method: 'POST', // Метод запроса
+      credentials: 'include', // Указываем, что мы хотим использовать cookies
+      body: formData,
+    })
+    .then(response => {
+      if (response.status === 204) {
+        console.log("Login successful");
+        login(); // Предположим, что это функция для установки состояния аутентификации
+        navigate("/"); // Переход на главную страницу или другую страницу после успешного входа
+      } else if (!response.ok) {
+        throw new Error('Login failed with status: ' + response.status);
+      }
+    })
+    .catch(error => {
+      console.error(error.message);
+      // Здесь можно обработать ошибку, например, показать пользователю сообщение
+    });
   }
 
   function onFinishFailed(errorInfo) {

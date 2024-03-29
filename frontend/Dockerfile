@@ -6,10 +6,9 @@ WORKDIR /app
 
 # Копируем файлы package.json
 COPY package.json ./
-
 # Устанавливаем зависимости
 RUN npm install
-
+RUN npm install js-cookie
 # Копируем исходный код фронтенда в контейнер
 COPY . .
 

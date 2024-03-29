@@ -22,11 +22,31 @@ export default function AppHeader({ onClick }) {
     navigate("/login")
   }
 
+  function logoutClick() {
+    // Отправляем запрос на сервер для выхода из системы
+    fetch('http://localhost:8000/auth/logout', {
+      method: 'POST', // или 'GET', в зависимости от того, как ожидает ваш сервер
+      credentials: 'include', // если используются cookies
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("Вы успешно вышли из системы");
+        logout(); // очистка данных аутентификации на клиенте
+        navigate("/"); // перенаправление на страницу входа
+      } else {
+        throw new Error('Проблема при выходе из системы');
+      }
+    })
+    .catch(error => {
+      console.error(error.message);
+    });
+  }
+
   return (
     <Layout.Header style={headerStyle}>
       {isAuthenticated ? (
         <>
-          <Button onClick={logout} style={{ float: "right" }}>
+          <Button onClick={logoutClick} style={{ float: "right" }}>
             Выйти
           </Button>
         </>
