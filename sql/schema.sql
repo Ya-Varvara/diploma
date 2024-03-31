@@ -56,7 +56,8 @@ INSERT INTO public.forms (name, short_name, condition_form, answer_form)
 	('ввод', 'input', false, true),
 	('выбор одного варианта', 'radio', false, true),
 	('выбор нескольких вариантов варианта', 'checkbox', false, true),
-	('загрузка файлов', 'upload', false, true);
+	('загрузка файлов', 'upload', false, true),
+	('текст', 'text', true, false);
 
 CREATE TABLE task_types_condition_forms (
     "task_type_condition_form_id" int NOT NULL,

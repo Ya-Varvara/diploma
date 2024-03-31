@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Для навигации
 import { LockOutlined, MailOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Flex } from "antd";
+import { Button, Checkbox, Form, Input, Flex, message } from "antd";
 import { useAuth } from "../../AuthContext";
 import "./LogInForm.css";
 
@@ -32,6 +32,9 @@ export default function LogInForm() {
         console.log("Login successful");
         login(); // Предположим, что это функция для установки состояния аутентификации
         navigate("/"); // Переход на главную страницу или другую страницу после успешного входа
+      } else if (response.status === 400) {
+        // Выводим сообщение об ошибке с помощью компонента message
+        message.error("Почта или пароль неверные.");
       } else if (!response.ok) {
         throw new Error('Login failed with status: ' + response.status);
       }

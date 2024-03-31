@@ -6,6 +6,8 @@ import AppSider from "../Components/Layout/AppSider";
 import AppContent from "../Components/Layout/AppContent";
 import { useAuth } from "../AuthContext";
 import MainUnauthorizedPage from "../Components/MainUnauthorizedPage";
+import CreateTaskTypeForm from "../Components/Forms/CreateTaskTypeForm";
+import CreateTestForm from "../Components/Forms/CreateTestForm";
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -23,7 +25,13 @@ export default function HomePage() {
       <Layout>
         {isAuthenticated ? <AppSider siderState={siderState} /> : <></>}
         <AppContent>
-          {isAuthenticated ? <><p>Домашняя страница!</p></> : <MainUnauthorizedPage />}
+          {isAuthenticated ? (
+            <>
+              <CreateTaskTypeForm />
+            </>
+          ) : (
+            <MainUnauthorizedPage />
+          )}
         </AppContent>
       </Layout>
     </Layout>
