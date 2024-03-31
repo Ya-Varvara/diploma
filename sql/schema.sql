@@ -11,8 +11,8 @@ CREATE TABLE users (
 	PRIMARY KEY ("id")
 );
 
-INSERT INTO public.users (id, username, hashed_password, email, is_active, is_superuser, is_verified)
-	VALUES (1, 'admin', '$2b$12$3GGWjvTNrOCD6chPEDWSfeL14IzFXW2K449LzMIz6hx.o/etQj/mm', 'admin@gmail.com', true, false, false);
+INSERT INTO public.users (username, hashed_password, email, is_active, is_superuser, is_verified)
+	VALUES ('admin', '$2b$12$3GGWjvTNrOCD6chPEDWSfeL14IzFXW2K449LzMIz6hx.o/etQj/mm', 'admin@gmail.com', true, false, false);
 
 CREATE TABLE base_task_types (
     "id" serial NOT NULL,
