@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import {
   Form,
   Input,
@@ -10,25 +10,27 @@ import {
   message,
   Card,
   Space,
+  Drawer,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons"; // Если вы используете иконку загрузки
-import "./CreateTaskTypeForm.css";
 import GraphMatrix from "./GraphMatrix";
 import data from "./data.json";
 
 const { Option } = Select;
 
-export default function CreateTaskTypeForm() {
+export default function CreateTaskTypeForm({ open, onClose }) {
   const [form] = Form.useForm();
+
   const [baseTypes, setBaseTypes] = useState([]);
   const [forms, setForms] = useState([]);
+
   const [selectedBaseType, setSelectedBaseType] = useState();
   const [selectedConditionForm, setSelectedConditionForm] = useState([]);
   const [selectedAnswerForm, setSelectedAnswerForm] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:8000/task_type/base_types/", {
-      credentials: "include", // Для отправки и приёма куки
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -36,11 +38,11 @@ export default function CreateTaskTypeForm() {
         console.log(data);
       })
       .catch((error) => {
-        message.error("Ошибка при загрузке базовых типов заданий");
+        message.error("Ошибка при загрузке базовых типов заданий: ", error);
       });
 
     fetch("http://localhost:8000/forms/", {
-      credentials: "include", // Для отправки и приёма куки
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => {
@@ -48,34 +50,32 @@ export default function CreateTaskTypeForm() {
         console.log(data);
       })
       .catch((error) => {
-        message.error("Ошибка при загрузке форм интерфейсов");
+        message.error("Ошибка при загрузке форм интерфейсов: ", error);
       });
   }, []);
+
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-    // Здесь можно добавить логику отправки данных формы на сервер
+    console.log("Received values of create task type form: ", values);
     const requestBody = {
       name: values.name,
-      condition_forms: values.condition_forms_ids, // Если формы не выбраны, используем массив с 0
-      answer_forms: values.answer_forms_ids, // Аналогично для форм ответа
+      condition_forms: values.condition_forms_ids,
+      answer_forms: values.answer_forms_ids,
     };
-
-    // Добавление базового типа и настроек, если базовый тип выбран
     if (values.base_task_type_id) {
       const settings = {};
       Object.keys(values.settings).forEach((key) => {
-        settings[key] = values.settings[key];
+        settings[key] = parseInt(values.settings[key]);
       });
       requestBody.settings = settings;
       requestBody.base_task_type = values.base_task_type_id;
     }
 
     fetch("http://localhost:8000/task_type/", {
-      method: "POST", // Метод запроса
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include", // Указываем, что мы хотим использовать cookies
+      credentials: "include",
       body: JSON.stringify(requestBody),
     })
       .then((response) => {
@@ -89,37 +89,34 @@ export default function CreateTaskTypeForm() {
       })
       .catch((error) => {
         console.error(error.message);
-        // Здесь можно обработать ошибку, например, показать пользователю сообщение
       });
+    setSelectedBaseType([]);
+    setSelectedAnswerForm([]);
+    setSelectedConditionForm([]);
+    form.resetFields();
+    onClose();
   };
 
-  // Обработчик изменения выбранного базового типа
+  // Функция для обработки изменения выбранного базового типа
   const onBaseTypeChange = (value) => {
     setSelectedBaseType(baseTypes.find((type) => type.id === value));
   };
 
+  // Функция для обработки изменения выбранных форм
   const onConditionFormChange = (values) => {
-    // Преобразование каждого ID из values в соответствующий объект формы
     const selectedForms = values.map((value) =>
       forms.find((form) => form.id === value)
     );
-
-    // Установка массива выбранных форм в состояние
     setSelectedConditionForm(selectedForms);
-
-    // Для проверки, можно вывести в консоль выбранные формы
-    console.log("Selected Condition Forms: ", selectedForms);
+    // console.log("Selected Condition Forms: ", selectedForms);
   };
 
   const onAnswerFormChange = (values) => {
-    // Преобразование каждого ID из values в соответствующий объект формы
     const selectedForms = values.map((value) =>
       forms.find((form) => form.id === value)
     );
-    // Установка массива выбранных форм в состояние
     setSelectedAnswerForm(selectedForms);
-    // Для проверки, можно вывести в консоль выбранные формы
-    console.log("Selected Answer Forms: ", selectedForms);
+    // console.log("Selected Answer Forms: ", selectedForms);
   };
 
   // Функция для генерации дополнительных полей ввода
@@ -183,7 +180,28 @@ export default function CreateTaskTypeForm() {
     : null;
 
   return (
-    <div>
+    <Drawer
+      title="Создать тип задания"
+      width={900}
+      open={open}
+      onClose={onClose}
+      styles={{
+        body: {
+          paddingBottom: 80,
+        },
+      }}
+      extra={
+        <Space>
+          <Button
+            htmlType="submit"
+            onClick={() => form.submit()}
+            type="primary"
+          >
+            Создать
+          </Button>
+        </Space>
+      }
+    >
       <Form
         form={form}
         name="create_task_type"
@@ -230,7 +248,6 @@ export default function CreateTaskTypeForm() {
                 {form.name}
               </Option>
             ))}
-            {/* {conditionForms} */}
           </Select>
         </Form.Item>
 
@@ -250,16 +267,10 @@ export default function CreateTaskTypeForm() {
                 {form.name}
               </Option>
             ))}
-            {/* {answerForms} */}
           </Select>
         </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Создать тип задания
-          </Button>
-        </Form.Item>
       </Form>
+
       <Space direction="vertical" size="middle" style={{ display: "flex" }}>
         <Card title="Форма интерфейса представления задания" size="small">
           <p style={{ fontWeight: "bold" }}>Задание</p>
@@ -279,6 +290,6 @@ export default function CreateTaskTypeForm() {
           </div>
         </Card>
       </Space>
-    </div>
+    </Drawer>
   );
 }
