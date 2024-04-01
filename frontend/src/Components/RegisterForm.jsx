@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Для навигации
 import { Button, Form, Input, Flex } from "antd";
+import { useAuth } from "../AuthContext";
 // import "./RegisterForm.css";
 
 const formItemLayout = {
@@ -36,12 +37,44 @@ const tailFormItemLayout = {
 
 export default function RegisterForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [form] = Form.useForm();
 
   function onFinish(values) {
     console.log("Received values of form: ", values);
-    navigate("/login");
+
+    const requestBody = {
+      email: values.email,
+      password: values.password,
+      username: values.username, // Используем значение nickname как username
+      is_active: true,
+      is_superuser: false,
+      is_verified: false,
+      id: 1000
+    };
+
+    fetch('http://localhost:8000/auth/register', {
+      method: 'POST', // Метод запроса
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', // Указываем, что мы хотим использовать cookies
+      body: JSON.stringify(requestBody),
+    })
+    .then(response => {
+      if (response.status === 201) {
+        console.log("Login successful");
+        // login(); // Предположим, что это функция для установки состояния аутентификации
+        navigate("/login"); // Переход на главную страницу или другую страницу после успешного входа
+      } else if (!response.ok) {
+        throw new Error('Login failed with status: ' + response.status);
+      }
+    })
+    .catch(error => {
+      console.error(error.message);
+      // Здесь можно обработать ошибку, например, показать пользователю сообщение
+    });
   }
 
   return (
@@ -113,13 +146,13 @@ export default function RegisterForm() {
       </Form.Item>
 
       <Form.Item
-        name="nickname"
-        label="Nickname"
+        name="username"
+        label="Username"
         tooltip="What do you want others to call you?"
         rules={[
           {
             required: true,
-            message: "Please input your nickname!",
+            message: "Please input your username!",
             whitespace: true,
           },
         ]}

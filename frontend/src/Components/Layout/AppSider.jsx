@@ -1,4 +1,6 @@
+import React from "react";
 import { Layout } from "antd";
+import { useAuth } from "../../AuthContext";
 
 const siderStyle = {
   textAlign: "center",
@@ -8,7 +10,7 @@ const siderStyle = {
 };
 
 export default function AppSider({siderState}) {
-  // console.log(siderState)
+  const { isAuthenticated } = useAuth();
   return (
     <Layout.Sider width="25%" style={siderStyle} trigger={null} collapsible collapsed={siderState}>
       Sider

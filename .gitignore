@@ -202,3 +202,4 @@ yarn-error.log*
 /.changelog
 .npm/
 dist
+frontend/package-lock.json

@@ -3,33 +3,47 @@ from datetime import datetime, time
 
 from pydantic import BaseModel, ConfigDict
 
-# if TYPE_CHECKING:
-from api.scr.app.tasks.schemas import TaskBase
+from api.scr.app.tasks.schemas import TaskForStudent
 
-
-class DescriptionBase(BaseModel):
-    """
-    Описание теста
-    """
-
-    students_number: int = 1
-    description: str = ""
-    tasks: dict[str, int]  # tasks = {"task_type_name": count}
-    deadline: datetime
-    time: time
+from api.scr.app.task_types.schemas import FullTaskType
 
 
 class TestBase(BaseModel):
     """
-    Модель Тест
+    Базовая модель теста
     """
 
     name: str
-    description: DescriptionBase
+    start_datetime: datetime
+    end_datetime: datetime
+    test_time: time
+    variants_number: int
+
+
+class TaskTypesForTestCreation(BaseModel):
+    """
+    Модель для описания типов заданий в интерфейсе. Нужно указать ID типа и количество заданий.
+    """
+
+    type_id: int
+    number: int
+
+
+class TaskTypesForFullTest(BaseModel):
+    """
+    Модель для описания типов заданий в интерфейсе. Нужно указать ID типа и количество заданий.
+    """
+
+    type: FullTaskType
+    number: int
 
 
 class TestCreate(TestBase):
-    pass
+    """
+    Модель для создания теста. Используется для создания нового тестирования пользователем в интерфейсе.
+    """
+
+    task_types: List[TaskTypesForTestCreation]
 
 
 class TestUpdate(TestCreate):
@@ -37,10 +51,12 @@ class TestUpdate(TestCreate):
 
 
 class TestUpdatePartial(TestCreate):
-    name: Optional[str] = None
-    user_id: Optional[int] = None
-    description: Optional[DescriptionBase] = None
-    link: Optional[str] = None
+    name: Optional[str]
+    start_datetime: Optional[datetime]
+    end_datetime: Optional[datetime]
+    test_time: Optional[time]
+    variants_number: Optional[int]
+    task_types: Optional[List[TaskTypesForTestCreation]]
 
 
 class Test(TestBase):
@@ -49,17 +65,23 @@ class Test(TestBase):
     id: int
     user_id: int
     link: str
+    created_at: datetime
+    updated_at: datetime
+    deleted: bool
 
 
-class TestOut(TestBase):
-    name: str
-    user_id: int
-    description: dict
-    link: str
+class FullTest(Test):
+    task_types: List[TaskTypesForFullTest]
 
 
 class TestVariant(BaseModel):
+    """
+    Модель для отображения варианта теста в интерфейсе для студентов.
+    """
+
     name: str
+    start_datetime: datetime
+    end_datetime: datetime
+    test_time: time
     variant_number: int
-    description: str
-    tasks: list[TaskBase]
+    tasks: List[TaskForStudent]

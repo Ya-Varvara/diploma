@@ -1,20 +1,27 @@
-import React, { createContext, useContext, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './Pages/HomePage';
-import { AuthProvider } from './AuthContext';
-import LogInPage from './Pages/LogInPage';
-import RegisterPage from './Pages/RegisterPage';
+import React, { createContext, useContext, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./Pages/HomePage";
+import { AuthProvider } from "./AuthContext";
+import LogInPage from "./Pages/LogInPage";
+import RegisterPage from "./Pages/RegisterPage";
+import OneTestPage from "./Pages/OneTestPage";
+import AllTestsPage from "./Pages/AllTestsPage";
+import AnswerPage from "./Pages/AnswerPage";
 
 export default function App() {
   return (
     <AuthProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LogInPage />}></Route>
-        <Route path='/register' element={<RegisterPage />}></Route>
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LogInPage />}></Route>
+          <Route path="/register" element={<RegisterPage />}></Route>
+
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/home/tests" element={<AllTestsPage />} />
+          <Route path="/home/tests/:id" element={<OneTestPage />} />
+          <Route path="/home/tests/:id/:answer_id" element={<AnswerPage />} />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 }

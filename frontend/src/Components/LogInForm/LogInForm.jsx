@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Для навигации
 import { LockOutlined, MailOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Flex } from "antd";
+import { Button, Checkbox, Form, Input, Flex, message } from "antd";
 import { useAuth } from "../../AuthContext";
 import "./LogInForm.css";
 
@@ -11,8 +11,32 @@ export default function LogInForm() {
 
   function onFinish(values) {
     console.log("Received values of form: ", values);
-    login();
-    navigate("/");
+    let formData = new FormData();
+    formData.append("username", values.email);
+    formData.append("password", values.password);
+
+    // Используем fetch для отправки запроса на сервер
+    fetch("http://localhost:8000/auth/login", {
+      method: "POST", // Метод запроса
+      credentials: "include", // Указываем, что мы хотим использовать cookies
+      body: formData,
+    })
+      .then((response) => {
+        if (response.status === 204) {
+          console.log("Login successful");
+          login(); // Предположим, что это функция для установки состояния аутентификации
+          navigate("/home"); // Переход на главную страницу или другую страницу после успешного входа
+        } else if (response.status === 400) {
+          // Выводим сообщение об ошибке с помощью компонента message
+          message.error("Почта или пароль неверные.");
+        } else if (!response.ok) {
+          throw new Error("Login failed with status: " + response.status);
+        }
+      })
+      .catch((error) => {
+        console.error(error.message);
+        // Здесь можно обработать ошибку, например, показать пользователю сообщение
+      });
   }
 
   function onFinishFailed(errorInfo) {
