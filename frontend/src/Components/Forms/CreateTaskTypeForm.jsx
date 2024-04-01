@@ -16,6 +16,12 @@ import { UploadOutlined } from "@ant-design/icons"; // Если вы испол�
 import GraphMatrix from "./GraphMatrix";
 import data from "./data.json";
 
+import {
+  FetchBaseTaskTypes,
+  FetchForms,
+  PostTaskTypes,
+} from "../../Handlers/API";
+
 const { Option } = Select;
 
 export default function CreateTaskTypeForm({ open, onClose }) {
@@ -29,29 +35,8 @@ export default function CreateTaskTypeForm({ open, onClose }) {
   const [selectedAnswerForm, setSelectedAnswerForm] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/task_type/base_types/", {
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setBaseTypes(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        message.error("Ошибка при загрузке базовых типов заданий: ", error);
-      });
-
-    fetch("http://localhost:8000/forms/", {
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setForms(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        message.error("Ошибка при загрузке форм интерфейсов: ", error);
-      });
+    FetchBaseTaskTypes({ setter: setBaseTypes });
+    FetchForms({ setter: setForms });
   }, []);
 
   const onFinish = (values) => {
@@ -70,26 +55,8 @@ export default function CreateTaskTypeForm({ open, onClose }) {
       requestBody.base_task_type = values.base_task_type_id;
     }
 
-    fetch("http://localhost:8000/task_type/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => {
-        if (response.status === 201) {
-          console.log("Task Type was created successfully");
-        } else if (!response.ok) {
-          throw new Error(
-            "Task Type creation failed with status: " + response.status
-          );
-        }
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    PostTaskTypes({ requestBody: requestBody });
+
     setSelectedBaseType([]);
     setSelectedAnswerForm([]);
     setSelectedConditionForm([]);

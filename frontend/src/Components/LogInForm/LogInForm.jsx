@@ -9,12 +9,6 @@ export default function LogInForm() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  // function onFinish(values) {
-  //   console.log("Received values of form: ", values);
-  //   login();
-  //   navigate("/");
-  // }
-
   function onFinish(values) {
     console.log("Received values of form: ", values);
     let formData = new FormData();

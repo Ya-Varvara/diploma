@@ -13,7 +13,8 @@ import {
   Space,
 } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { UploadOutlined } from "@ant-design/icons"; // Если вы используете иконку загрузки
+
+import { FetchTaskTypes, PostTest } from "../../Handlers/API";
 
 const { RangePicker } = DatePicker;
 
@@ -26,17 +27,7 @@ const CreateTestForm = ({ open, onClose }) => {
   const [taskTypes, setTaskTypes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/task_type/", {
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setTaskTypes(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        message.error("Ошибка при загрузке типов заданий");
-      });
+    FetchTaskTypes({ setter: setTaskTypes });
   }, []);
 
   const onFinish = (values) => {
@@ -62,28 +53,7 @@ const CreateTestForm = ({ open, onClose }) => {
       task_types: task_types,
     };
 
-    fetch("http://localhost:8000/test/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(requestData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Ошибка при отправке данных");
-      })
-      .then((data) => {
-        console.log("Успешно:", data);
-        message.success("Тест успешно создан");
-      })
-      .catch((error) => {
-        console.error("Ошибка:", error);
-        message.error("Ошибка при создании теста");
-      });
+    PostTest({ requestBody: requestData });
 
     form.resetFields();
     onClose();

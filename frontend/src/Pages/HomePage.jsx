@@ -11,37 +11,7 @@ import CreateTaskTypeForm from "../Components/Forms/CreateTaskTypeForm";
 import CreateTestForm from "../Components/Forms/CreateTestForm";
 import ViewTable from "../Components/Forms/Table";
 
-const FetchTests = async ({ setter }) => {
-  try {
-    const response = await fetch("http://localhost:8000/test/", {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    setter(data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
-const FetchTaskTypes = async ({ setter }) => {
-  try {
-    const response = await fetch("http://localhost:8000/task_type/", {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    setter(data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+import { FetchTests, FetchTaskTypes } from "../Handlers/API";
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -53,9 +23,7 @@ export default function HomePage() {
   const [task_types, setTaskTypes] = useState([]);
   useEffect(() => {
     FetchTests({ setter: setTests });
-    // console.log(tests);
     FetchTaskTypes({ setter: setTaskTypes });
-    // console.log(task_types);
   }, []);
 
   return (
@@ -89,8 +57,8 @@ export default function HomePage() {
                 open={TestFormVisible}
                 onClose={() => setTestFormVisible(false)}
               />
-              <ViewTable data={tests} type="test" />
-              <ViewTable data={task_types} type="task_type" />
+              {/* <ViewTable data={tests} type="test" /> */}
+              {/* <ViewTable data={task_types} type="task_type" /> */}
             </>
           ) : (
             <MainUnauthorizedPage />

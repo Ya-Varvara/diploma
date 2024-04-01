@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
 // import { useNavigate } from "react-router-dom"; // Для навигации
-
 
 const AuthContext = createContext();
 
@@ -14,9 +13,9 @@ export const AuthProvider = ({ children }) => {
   // const navigate = useNavigate();
 
   useEffect(() => {
-    const isAuthenticatedCookie = Cookies.get('auth_cookie');
+    const isAuthenticatedCookie = Cookies.get("auth_cookie");
     console.log(isAuthenticatedCookie);
-    if (isAuthenticatedCookie === 'true') {
+    if (isAuthenticatedCookie) {
       setIsAuthenticated(true);
     }
   }, []);
@@ -24,13 +23,13 @@ export const AuthProvider = ({ children }) => {
   const login = () => {
     setIsAuthenticated(true);
     // Устанавливаем куку "cookie" при входе
-    Cookies.set('auth_cookie', 'true', { expires: 1 }); // Кука будет сохраняться 7 дней
+    Cookies.set("auth_cookie", "true", { expires: 1 }); // Кука будет сохраняться 7 дней
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     // Удаляем куку "cookie" при выходе
-    Cookies.remove('auth_cookie');
+    Cookies.remove("auth_cookie");
   };
 
   return (
