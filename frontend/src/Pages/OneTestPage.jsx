@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Col, Row, Card, Space, Typography, List } from "antd";
 
@@ -55,11 +56,13 @@ const TestInfo = ({ info }) => {
   );
 };
 
-const OneTestView = ({ test_id }) => {
+const OneTestPage = ({ test_id }) => {
+  const { id } = useParams();
+  console.log("From path: ", id);
   const [info, setInfo] = useState({});
 
   useEffect(() => {
-    FetchTestByID({ setter: setInfo, id: test_id });
+    FetchTestByID({ setter: setInfo, id: id });
     console.log("Info: ", info);
   }, []);
 
@@ -75,4 +78,4 @@ const OneTestView = ({ test_id }) => {
   );
 };
 
-export default OneTestView;
+export default OneTestPage;

@@ -31,7 +31,7 @@ export default function AppHeader() {
         if (response.ok) {
           console.log("Вы успешно вышли из системы");
           logout(); // очистка данных аутентификации на клиенте
-          navigate("/"); // перенаправление на страницу входа
+          navigate("/home"); // перенаправление на страницу входа
         } else {
           throw new Error("Проблема при выходе из системы");
         }

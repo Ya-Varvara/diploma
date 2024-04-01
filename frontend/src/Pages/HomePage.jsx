@@ -12,8 +12,7 @@ import BasePage from "../Components/Layout/BasePage";
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
 
-  const [taskTypeFormVisible, setTaskTypeFormVisible] = useState(false);
-  const [TestFormVisible, setTestFormVisible] = useState(false);
+
 
   if (!isAuthenticated) {
     return (
@@ -25,7 +24,14 @@ export default function HomePage() {
 
   return (
     <BasePage>
-      <Button
+      Welcome!
+    </BasePage>
+  );
+}
+
+  // const [taskTypeFormVisible, setTaskTypeFormVisible] = useState(false);
+  // const [TestFormVisible, setTestFormVisible] = useState(false);
+{/* <Button
         name="taskTypeForm"
         type="primary"
         onClick={() => setTaskTypeFormVisible(true)}
@@ -48,10 +54,7 @@ export default function HomePage() {
       <CreateTestForm
         open={TestFormVisible}
         onClose={() => setTestFormVisible(false)}
-      />
-      {/* <ViewTable data={tests} type="test" /> */}
-      {/* <ViewTable data={task_types} type="task_type" /> */}
-      {/* <OneTestView test_id={2} /> */}
-    </BasePage>
-  );
-}
+      /> */}
+      // <ViewTable data={tests} type="test" />
+      // <ViewTable data={task_types} type="task_type" />
+      //  <OneTestView test_id={2} />
