@@ -10,6 +10,7 @@ import MainUnauthorizedPage from "../Components/MainUnauthorizedPage";
 import CreateTaskTypeForm from "../Components/Forms/CreateTaskTypeForm";
 import CreateTestForm from "../Components/Forms/CreateTestForm";
 import ViewTable from "../Components/Forms/Table";
+import OneTestView from "./TestPage";
 
 import { FetchTests, FetchTaskTypes } from "../Handlers/API";
 
@@ -27,13 +28,17 @@ export default function HomePage() {
   }, []);
 
   return (
-    <Layout>
+    <Layout
+      style={{
+        minHeight: "100vh",
+      }}
+    >
       <AppHeader />
       <Layout>
         <AppContent>
           {isAuthenticated ? (
             <>
-              <Button
+              {/* <Button
                 name="taskTypeForm"
                 type="primary"
                 onClick={() => setTaskTypeFormVisible(true)}
@@ -56,15 +61,23 @@ export default function HomePage() {
               <CreateTestForm
                 open={TestFormVisible}
                 onClose={() => setTestFormVisible(false)}
-              />
+              /> */}
               {/* <ViewTable data={tests} type="test" /> */}
               {/* <ViewTable data={task_types} type="task_type" /> */}
+              <OneTestView test_id={2} />
             </>
           ) : (
             <MainUnauthorizedPage />
           )}
         </AppContent>
       </Layout>
+      <Layout.Footer
+        style={{
+          textAlign: "center",
+        }}
+      >
+        Created by Ya-Varvara
+      </Layout.Footer>
     </Layout>
   );
 }

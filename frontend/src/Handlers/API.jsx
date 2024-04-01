@@ -16,6 +16,23 @@ export const FetchTests = async ({ setter }) => {
   }
 };
 
+export const FetchTestByID = async ({ setter, id }) => {
+  try {
+    const response = await fetch(`http://localhost:8000/test/${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Test fetching failed: " + response.status);
+    }
+    const data = await response.json();
+    console.log("In Fetch Test By ID: ", data);
+    setter(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const PostTest = async ({ requestBody }) => {
   try {
     const response = await fetch("http://localhost:8000/test/", {

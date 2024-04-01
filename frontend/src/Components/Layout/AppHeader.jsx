@@ -13,7 +13,7 @@ const headerStyle = {
   backgroundColor: "#f5f5f5",
 };
 
-export default function AppHeader({ onClick }) {
+export default function AppHeader() {
   const { isAuthenticated, login, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -42,10 +42,19 @@ export default function AppHeader({ onClick }) {
   }
 
   return (
-    <Layout.Header style={headerStyle}>
+    <Layout.Header
+      style={{
+        // position: "sticky",
+        top: 0,
+        zIndex: 1,
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
       {isAuthenticated ? (
         <>
-          <Space size="small">  </Space>
+          <Space size="small"> </Space>
           <Button onClick={logoutClick} style={{ float: "right" }}>
             Выйти
           </Button>
