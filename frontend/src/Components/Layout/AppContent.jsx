@@ -18,7 +18,6 @@ export default function AppContent({ children }) {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  // console.log(isAuthenticated);
 
   if (isAuthenticated) {
     return (

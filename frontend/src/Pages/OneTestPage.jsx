@@ -4,6 +4,8 @@ import { Col, Row, Card, Space, Typography, List } from "antd";
 
 import { FetchTestByID } from "../Handlers/API";
 
+import BasePage from "../Components/Layout/BasePage";
+
 const TestInfo = ({ info }) => {
   const { Title, Text } = Typography;
   const formatDate = (dateString) => {
@@ -62,14 +64,14 @@ const OneTestView = ({ test_id }) => {
   }, []);
 
   return (
-    <>
+    <BasePage>
       <Row justify="space-between" style={{ width: "100%" }}>
         <Col span={12}>
           <TestInfo info={info} />
         </Col>
         <Col span={12}> РЕШЕНИЯ </Col>
       </Row>
-    </>
+    </BasePage>
   );
 };
 

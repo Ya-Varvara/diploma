@@ -13,11 +13,6 @@ export default function MainUnauthorizedPage() {
     console.log("Received values of form: ", values);
   }
 
-  function validateIdentifier(value) {
-    const regex = /^[a-zA-Z0-9-]+$/;
-    return regex.test(value) && value.trim() !== "";
-  }
-
   return (
     <>
       <Flex gap="small" align="center" justify="center">
