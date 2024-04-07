@@ -164,7 +164,7 @@ async def delete_test(
 
 
 @router.get(
-    "/variant/{test_link}",
+    "/variant/{link}/",
     status_code=status.HTTP_200_OK,
     response_model=sch.TestVariant,
 )

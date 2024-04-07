@@ -31,7 +31,8 @@ async def generate_graph(**settings) -> tuple:
     :param max_weight: Максимальный вес ребра
     :return: Возвращает 1, если граф сгенерирован успешно
     """
-    nodes = settings.get("nodes", 13)
+    print(settings)
+    nodes = settings.get("nodes_number", 13)
     min_weight = settings.get("min_weight", 10)
     max_weight = settings.get("max_weight", 70)
     info = settings.get("info", False)

@@ -33,6 +33,39 @@ export const FetchTestByID = async ({ setter, id }) => {
   }
 };
 
+// export const FetchTestByLink = async ({ setter, link }) => {
+//   try {
+//     const response = await fetch(`http://localhost:8000/test/variant/${link}`, {
+//       method: "GET",
+//     });
+//     if (!response.ok) {
+//       throw new Error("Test variant fetching failed: " + response.status);
+//     }
+//     const data = await response.json();
+//     console.log("In Fetch Test By Link: ", data);
+//     setter(data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+export const FetchTestByLink = async ({ link }) => {
+  try {
+    const response = await fetch(`http://localhost:8000/test/variant/${link}`, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      throw new Error("Test variant fetching failed: " + response.status);
+    }
+    const data = await response.json();
+    console.log("In Fetch Test By Link: ", data);
+    return data; // Возвращаем данные
+  } catch (error) {
+    console.error(error);
+    throw error; // Пробрасываем ошибку дальше, чтобы обработать её в вызывающем коде
+  }
+};
+
 export const PostTest = async ({ requestBody }) => {
   try {
     const response = await fetch("http://localhost:8000/test/", {
@@ -62,6 +95,23 @@ export const FetchTaskTypes = async ({ setter }) => {
       throw new Error("Task Types fetching failed: " + response.status);
     }
     const data = await response.json();
+    setter(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const FetchTaskTypeByID = async ({ setter, id }) => {
+  try {
+    const response = await fetch(`http://localhost:8000/task_type/${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Task Type fetching failed: " + response.status);
+    }
+    const data = await response.json();
+    console.log("In Fetch Task Type By ID: ", data);
     setter(data);
   } catch (error) {
     console.error(error);
