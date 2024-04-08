@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .test import Test
     from .task import Task
     from .test_task_result import TestTaskResult
+    from .uploaded_file import UploadedFile
 
 
 class TestTask(Base):
@@ -24,3 +25,4 @@ class TestTask(Base):
     test: Mapped["Test"] = relationship(back_populates="test_variants")
     task: Mapped["Task"] = relationship(back_populates="task_variants")
     result: Mapped["TestTaskResult"] = relationship(back_populates="test")
+    uploaded_file: Mapped["UploadedFile"] = relationship(back_populates="test_task")

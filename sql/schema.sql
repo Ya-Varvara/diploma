@@ -117,10 +117,10 @@ CREATE TABLE uploaded_files (
 	"name" text NOT NULL,
 	"path" text NOT NULL,
 	"upload_date" timestamp NOT NULL,
-	"test_variant_id" int NOT NULL,
+	"test_task_id" int NOT NULL,
 	
 	PRIMARY KEY ("id"),
-	FOREIGN KEY ("test_variant_id") REFERENCES test_task ("id")
+	FOREIGN KEY ("test_task_id") REFERENCES test_task ("id")
 );
 
 CREATE TABLE test_task_types (
