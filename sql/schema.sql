@@ -112,6 +112,17 @@ CREATE TABLE tests (
 	FOREIGN KEY ("user_id") REFERENCES users ("id")
 );
 
+CREATE TABLE uploaded_files (
+    "id" serial NOT NULL,
+	"name" text NOT NULL,
+	"path" text NOT NULL,
+	"upload_date" timestamp NOT NULL,
+	"test_variant_id" int NOT NULL,
+	
+	PRIMARY KEY ("id"),
+	FOREIGN KEY ("test_variant_id") REFERENCES test_task ("id")
+);
+
 CREATE TABLE test_task_types (
 	"id" serial NOT NULL,
 	"test_id" int NOT NULL,
@@ -140,7 +151,6 @@ CREATE TABLE test_task_result (
 	"student_info" jsonb NOT NULL,
 	"test_task_id" int NOT NULL,
 	"answer" jsonb NOT NULL,
-	"data" bytea,
 	
 	PRIMARY KEY ("id"),
 	FOREIGN KEY ("test_task_id") REFERENCES test_task ("id")
