@@ -1,6 +1,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Для навигации
+
 import { Card, Form, Input, Space, Button, Radio, Checkbox } from "antd";
 import BasePage from "../Components/Layout/BasePage";
 import GraphMatrix from "../Components/Forms/GraphMatrix";
@@ -39,39 +41,58 @@ const RenderForm = (props) => {
 
 const VariantPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const testData = location.state?.testData;
+
   const [form] = Form.useForm();
 
   const [tasks, setTasks] = useState([]);
 
   const [remainingTime, setRemainingTime] = useState("");
+  const [testStartTime, setTestStartTime] = useState(
+    localStorage.getItem("testStartTime") || new Date().getTime()
+  );
 
   const getSecondsFromTestTime = (testTime) => {
     const [hours, minutes, seconds] = testTime.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
 
-  // Функция для обновления таймера
+  const submitFormWithTime = () => {
+    const spentTime = CountSpentTime();
+    // form.setFieldValue("spent_time", spentTime);
+    form.setFieldsValue({ spentTime: spentTime });
+    console.log(form);
+    form.submit();
+  };
+
+  const CountSpentTime = () => {
+    const now = new Date().getTime();
+    const totalTime = Math.floor((now - parseInt(testStartTime, 10)) / 1000);
+    const hours = Math.floor(totalTime / 3600);
+    const minutes = Math.floor((totalTime % 3600) / 60);
+    const seconds = totalTime % 60;
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return formattedTime;
+  };
+
   const updateTimer = () => {
-    const startTime = localStorage.getItem("testStartTime");
     const now = new Date().getTime();
     const testDurationSeconds = getSecondsFromTestTime(testData.test_time);
-    const endTime = parseInt(startTime, 10) + testDurationSeconds * 1000;
+    const endTime = parseInt(testStartTime, 10) + testDurationSeconds * 1000;
     const timeLeft = endTime - now;
 
     if (timeLeft < 0) {
-      // Время вышло
       setRemainingTime("00:00:00");
-      // Можно добавить дополнительные действия по окончании времени, например, автоматическую отправку теста
+      // Вычисляем общее затраченное время
+      form.submit();
     } else {
       const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
       const seconds = Math.floor((timeLeft / 1000) % 60);
-
       setRemainingTime(
-        `${hours.toString().padStart(2, "0")}:${minutes
-          .toString()
-          .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+        `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
       );
     }
   };
@@ -80,19 +101,12 @@ const VariantPage = () => {
     let interval;
 
     if (testData) {
-      const startTime = localStorage.getItem("testStartTime");
-
-      if (!startTime) {
-        const now = new Date().getTime();
-        localStorage.setItem("testStartTime", now.toString());
-      }
-
-      updateTimer(); // Обновляем таймер сразу при загрузке
-      interval = setInterval(updateTimer, 1000); // Затем обновляем каждую секунду
+      updateTimer();
+      interval = setInterval(updateTimer, 1000);
     }
 
-    return () => clearInterval(interval); // Очищаем интервал при размонтировании компонента
-  }, [testData]);
+    return () => clearInterval(interval);
+  }, [testData, testStartTime]);
 
   useEffect(() => {
     if (location.state?.testData) {
@@ -100,15 +114,16 @@ const VariantPage = () => {
     }
   }, [location.state]);
 
-  //   console.log("Tasks", tasks);
-
   if (!testData) {
     return <div>No test data available</div>;
   }
-  //   console.log("Test data: ", testData);
 
   const onFinish = (values) => {
+    const spentTime = CountSpentTime();
+    console.log("Spent time", spentTime);
     console.log("Received values of variant: ", values);
+    localStorage.removeItem("testStartTime");
+    navigate("/home");
   };
 
   return (
