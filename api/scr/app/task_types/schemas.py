@@ -13,6 +13,7 @@ class BaseTaskType(BaseModel):
 
     Пользователь не может изменить или удалить базовый тип
     """
+
     id: int
     name: str
     settings: Dict[str, Any]

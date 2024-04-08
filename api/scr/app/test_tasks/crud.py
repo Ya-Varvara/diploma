@@ -25,7 +25,9 @@ async def get_test_tasks(session: AsyncSession) -> list[TestTask]:
     return list(test_tasks)
 
 
-async def get_test_task(session: AsyncSession, test_task_id: int) -> TestTask | None:
+async def get_test_task_by_id(
+    session: AsyncSession, test_task_id: int
+) -> TestTask | None:
     return await session.get(TestTask, test_task_id)
 
 

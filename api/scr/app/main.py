@@ -8,6 +8,7 @@ from api.scr.app.tests.router import router as test_router
 from api.scr.app.test_tasks.router import router as test_task_router
 from api.scr.app.test_task_results.router import router as test_task_result_router
 from api.scr.app.forms.router import router as form_router
+from api.scr.app.upload.router import router as upload_router
 
 
 origins = [
@@ -29,8 +30,9 @@ app.include_router(auth_router)
 app.include_router(task_type_router)
 app.include_router(test_router)
 # app.include_router(test_task_router)
-# app.include_router(test_task_result_router)
+app.include_router(test_task_result_router)
 app.include_router(form_router)
+app.include_router(upload_router)
 
 
 @app.get("/ping")

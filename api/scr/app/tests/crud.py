@@ -90,15 +90,19 @@ async def get_test_by_id(
     test: dbm.Test | None = await session.scalar(stmt)
     return test
 
+
 async def make_test_given(session: AsyncSession, test_id: int, variant: int) -> None:
     stmt = (
-        update(dbm.TestTask).where(dbm.TestTask.test_id == test_id).where(dbm.TestTask.variant == variant).values(is_given=True)
+        update(dbm.TestTask)
+        .where(dbm.TestTask.test_id == test_id)
+        .where(dbm.TestTask.variant == variant)
+        .values(is_given=True)
     )
     print(stmt)
     await session.execute(stmt)
     await session.commit()
     return
-    
+
 
 async def get_test_by_link_and_variant(
     session: AsyncSession, link: str, variant: int

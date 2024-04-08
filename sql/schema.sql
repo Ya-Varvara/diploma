@@ -140,7 +140,20 @@ CREATE TABLE test_task_result (
 	"student_info" jsonb NOT NULL,
 	"test_task_id" int NOT NULL,
 	"answer" jsonb NOT NULL,
-	"data" bytea,
+	"start_datetime" timestamp NOT NULL,
+	"end_datetime" timestamp NOT NULL,
+	"is_correct" bool,
+	
+	PRIMARY KEY ("id"),
+	FOREIGN KEY ("test_task_id") REFERENCES test_task ("id")
+);
+
+CREATE TABLE uploaded_files (
+    "id" serial NOT NULL,
+	"name" text NOT NULL,
+	"path" text NOT NULL,
+	"upload_date" timestamp NOT NULL,
+	"test_task_id" int NOT NULL,
 	
 	PRIMARY KEY ("id"),
 	FOREIGN KEY ("test_task_id") REFERENCES test_task ("id")
