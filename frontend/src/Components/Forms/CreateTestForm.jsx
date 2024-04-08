@@ -7,10 +7,10 @@ import {
   InputNumber,
   Button,
   Select,
-  message,
   Card,
   Drawer,
   Space,
+  Checkbox,
 } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 
@@ -25,6 +25,7 @@ const CreateTestForm = ({ open, onClose }) => {
   const [form] = Form.useForm();
 
   const [taskTypes, setTaskTypes] = useState([]);
+  const [uploadState, setUploadState] = useState(false);
 
   useEffect(() => {
     FetchTaskTypes({ setter: setTaskTypes });
@@ -51,6 +52,7 @@ const CreateTestForm = ({ open, onClose }) => {
       test_time: test_time,
       variants_number: values.variants,
       task_types: task_types,
+      upload: uploadState,
     };
 
     PostTest({ requestBody: requestData });
@@ -138,6 +140,9 @@ const CreateTestForm = ({ open, onClose }) => {
           ]}
         >
           <InputNumber min={1} step={1} />
+        </Form.Item>
+        <Form.Item name="upload" label="Загрузка файла">
+          <Checkbox onChange={(e) => setUploadState(e.target.checked)} />
         </Form.Item>
 
         <Form.List name="tasks">

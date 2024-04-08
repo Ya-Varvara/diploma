@@ -85,7 +85,6 @@ const VariantPage = () => {
 
     if (timeLeft < 0) {
       setRemainingTime("00:00:00");
-      // Вычисляем общее затраченное время
       form.submit();
     } else {
       const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
