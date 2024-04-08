@@ -33,9 +33,12 @@ export const FetchTestByID = async ({ setter, id }) => {
 
 export const FetchTestByLink = async ({ link }) => {
   try {
-    const response = await fetch(`http://localhost:8000/test/variant/${link}`, {
-      method: "GET",
-    });
+    const response = await fetch(
+      `http://localhost:8000/test/variant/${link}/`,
+      {
+        method: "GET",
+      }
+    );
     if (!response.ok) {
       throw new Error("Test variant fetching failed: " + response.status);
     }
@@ -50,7 +53,7 @@ export const FetchTestByLink = async ({ link }) => {
 
 export const DeleteTestByID = async ({ id }) => {
   try {
-    const response = await fetch(`http://localhost:8000/test/${id}`, {
+    const response = await fetch(`http://localhost:8000/test/${id}/`, {
       method: "DELETE", // Изменение на метод DELETE
       credentials: "include",
     });
@@ -98,9 +101,9 @@ export const FetchTaskTypes = async ({ setter }) => {
   }
 };
 
-export const DeleteTaskTypeByID = async ({ setter, id }) => {
+export const DeleteTaskTypeByID = async ({ id }) => {
   try {
-    const response = await fetch(`http://localhost:8000/task_type/${id}`, {
+    const response = await fetch(`http://localhost:8000/task_type/${id}/`, {
       method: "DELETE",
       credentials: "include",
     });

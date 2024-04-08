@@ -1,6 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Space, Table, Tag, Button } from "antd";
+import { Typography } from "antd";
+
+import { DeleteTaskTypeByID, DeleteTestByID } from "../../Handlers/API";
+
+const { Paragraph, Text } = Typography;
 
 const task_type_columns = [
   {
@@ -18,8 +23,13 @@ const task_type_columns = [
     key: "action",
     render: (_, record) => (
       <Space size="middle">
-        <a>Посмотреть</a>
-        <a>Удалить</a>
+        {/* <a>Посмотреть</a> */}
+        <Button
+          type="link"
+          onClick={() => DeleteTaskTypeByID({ id: record.id })}
+        >
+          Удалить
+        </Button>
       </Space>
     ),
   },
@@ -56,21 +66,23 @@ const ViewTable = ({ type, data }) => {
     },
     {
       title: "Ссылка",
-      dataIndex: "link",
       key: "link",
+      render: (_, record) => <Paragraph copyable>{record.link}</Paragraph>,
     },
     {
       title: "Действия",
       key: "action",
       render: (_, record) => (
-        <Space size="middle">
+        <Space size="small">
           <Button
             type="link"
             onClick={() => navigate(`/home/tests/${record.id}`)}
           >
             Перейти
           </Button>
-          {/* <a>Удалить</a> */}
+          <Button type="link" onClick={() => DeleteTestByID({ id: record.id })}>
+            Удалить
+          </Button>
         </Space>
       ),
     },
