@@ -1,11 +1,11 @@
-from typing import Any, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING
 from datetime import datetime
 
 from sqlalchemy import (
     String,
     ForeignKey,
 )
-from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
+from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
