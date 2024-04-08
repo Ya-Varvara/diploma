@@ -1,4 +1,6 @@
+import React from "react";
 import { Layout, Button, theme, Breadcrumb } from "antd";
+import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 
 const contentStyle = {
@@ -12,8 +14,30 @@ const contentStyle = {
   justifyContent: "center",
 };
 
+const createBreadcrumbItems = (pathname) => {
+  const paths = pathname.split("/").filter((x) => x);
+  const items = paths.map((path, index, arr) => {
+    const url = `/${arr.slice(0, index + 1).join("/")}`;
+    const isLast = index === paths.length - 1;
+    return (
+      <Breadcrumb.Item key={url}>
+        {isLast ? path : <Link to={url}>{path}</Link>}
+      </Breadcrumb.Item>
+    );
+  });
+  // Добавьте "Home" в начало массива, если требуется
+  // items.unshift(
+  //   <Breadcrumb.Item key="/">
+  //     <Link to="/">Home</Link>
+  //   </Breadcrumb.Item>
+  // );
+  return items;
+};
+
 export default function AppContent({ children }) {
   const { isAuthenticated } = useAuth();
+  const { pathname } = useLocation();
+  const breadcrumbItems = createBreadcrumbItems(pathname);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -31,9 +55,7 @@ export default function AppContent({ children }) {
             margin: "16px 0",
           }}
         >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
+          {breadcrumbItems}
         </Breadcrumb>
         <div
           style={{

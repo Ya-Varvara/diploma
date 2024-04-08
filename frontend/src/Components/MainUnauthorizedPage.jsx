@@ -1,16 +1,34 @@
 import { useNavigate } from "react-router-dom"; // Для навигации
 import { Button, Flex, Form, Input, Space } from "antd";
 
+import React from "react";
+import { useState, useEffect } from "react";
+
+import { FetchTestByLink } from "../Handlers/API";
+
 export default function MainUnauthorizedPage() {
   const navigate = useNavigate();
+
+  const [variant, setVariant] = useState({});
+
+  // useEffect(() => {
+  //   FetchTestByLink({ setter: setVariant, link: values.uuid });
+  // }, []);
 
   function clickRegisterButton() {
     console.log("Register Page");
     navigate("/register");
   }
 
-  function onFinish(values) {
+  async function onFinish(values) {
     console.log("Received values of form: ", values);
+    try {
+      const data = await FetchTestByLink({ link: values.uuid });
+      navigate("/variant", { state: { testData: data } });
+    } catch (error) {
+      console.error("Error fetching test variant:", error);
+      // Можно обработать ошибку здесь, если необходимо
+    }
   }
 
   return (

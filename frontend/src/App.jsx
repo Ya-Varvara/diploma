@@ -6,7 +6,10 @@ import LogInPage from "./Pages/LogInPage";
 import RegisterPage from "./Pages/RegisterPage";
 import OneTestPage from "./Pages/OneTestPage";
 import AllTestsPage from "./Pages/AllTestsPage";
+import AllTaskTypesPage from "./Pages/AllTaskTypesPage";
 import AnswerPage from "./Pages/AnswerPage";
+import VariantPage from "./Pages/VariantPage";
+
 
 export default function App() {
   return (
@@ -17,9 +20,14 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />}></Route>
 
           <Route path="/home" element={<HomePage />} />
+
           <Route path="/home/tests" element={<AllTestsPage />} />
           <Route path="/home/tests/:id" element={<OneTestPage />} />
           <Route path="/home/tests/:id/:answer_id" element={<AnswerPage />} />
+
+          <Route path="/home/task_types" element={<AllTaskTypesPage />} />
+
+          <Route path="/variant" element={<VariantPage />} />
         </Routes>
       </Router>
     </AuthProvider>

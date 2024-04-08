@@ -1,5 +1,5 @@
 dev:
-	docker compose up
+	docker compose up --build
 
 style:
 	black api/scr/app

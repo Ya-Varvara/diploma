@@ -56,6 +56,7 @@ const CreateTestForm = ({ open, onClose }) => {
     PostTest({ requestBody: requestData });
 
     form.resetFields();
+    window.location.reload();
     onClose();
   };
 

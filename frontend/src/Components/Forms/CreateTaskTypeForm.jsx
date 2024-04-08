@@ -61,6 +61,7 @@ export default function CreateTaskTypeForm({ open, onClose }) {
     setSelectedAnswerForm([]);
     setSelectedConditionForm([]);
     form.resetFields();
+    window.location.reload();
     onClose();
   };
 
