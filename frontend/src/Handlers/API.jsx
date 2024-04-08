@@ -1,5 +1,3 @@
-import React from "react";
-
 export const FetchTests = async ({ setter }) => {
   try {
     const response = await fetch("http://localhost:8000/test/", {
@@ -33,22 +31,6 @@ export const FetchTestByID = async ({ setter, id }) => {
   }
 };
 
-// export const FetchTestByLink = async ({ setter, link }) => {
-//   try {
-//     const response = await fetch(`http://localhost:8000/test/variant/${link}`, {
-//       method: "GET",
-//     });
-//     if (!response.ok) {
-//       throw new Error("Test variant fetching failed: " + response.status);
-//     }
-//     const data = await response.json();
-//     console.log("In Fetch Test By Link: ", data);
-//     setter(data);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
 export const FetchTestByLink = async ({ link }) => {
   try {
     const response = await fetch(`http://localhost:8000/test/variant/${link}`, {
@@ -63,6 +45,21 @@ export const FetchTestByLink = async ({ link }) => {
   } catch (error) {
     console.error(error);
     throw error; // Пробрасываем ошибку дальше, чтобы обработать её в вызывающем коде
+  }
+};
+
+export const DeleteTestByID = async ({ id }) => {
+  try {
+    const response = await fetch(`http://localhost:8000/test/${id}`, {
+      method: "DELETE", // Изменение на метод DELETE
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Test deletion failed: " + response.status);
+    }
+    console.log("Test successfully deleted with ID:", id);
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -101,7 +98,24 @@ export const FetchTaskTypes = async ({ setter }) => {
   }
 };
 
-export const FetchTaskTypeByID = async ({ setter, id }) => {
+export const DeleteTaskTypeByID = async ({ setter, id }) => {
+  try {
+    const response = await fetch(`http://localhost:8000/task_type/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Task Type deleting failed: " + response.status);
+    }
+    const data = await response.json();
+    console.log("Task Type successfully deleted with ID:", id);
+    setter(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const FetchTaskTypeByID = async ({ id }) => {
   try {
     const response = await fetch(`http://localhost:8000/task_type/${id}`, {
       method: "GET",
@@ -204,6 +218,46 @@ export const PostLogin = async ({ formData }) => {
       throw new Error("Login failed with status: " + response.status);
     }
     console.log("Login successful!");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const FetchTestTaskResult = async ({ setter, test_id, variant }) => {
+  try {
+    const queryParams = `test_id=${test_id}&variant=${variant}`; // Создание строки запроса
+    const response = await fetch(
+      `http://localhost:8000/test_task_result/?${queryParams}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Test Task Results fetching failed: " + response.status);
+    }
+    const data = await response.json();
+    setter(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const PostTestTaskResult = async ({ requestBody }) => {
+  try {
+    const response = await fetch("http://localhost:8000/test_task_result/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    if (!response.ok) {
+      throw new Error(
+        "Test task result creation failed with status: " + response.status
+      );
+    }
+    console.log("Test task result was created successfully");
   } catch (error) {
     console.error(error);
   }
