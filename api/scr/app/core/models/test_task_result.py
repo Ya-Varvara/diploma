@@ -18,7 +18,7 @@ class TestTaskResult(Base):
 
     test_task_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
     answer: Mapped[Dict[str, Any]] = mapped_column(JSONB)
-    student_info: Mapped[Dict[str, Any]] = mapped_column(JSONB)
+    students_info: Mapped[Dict[str, Any]] = mapped_column(JSONB)
     start_datetime: Mapped[datetime] = mapped_column(TIMESTAMP)
     end_datetime: Mapped[datetime] = mapped_column(TIMESTAMP)
     is_correct: Mapped[Optional[bool]]

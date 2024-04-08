@@ -22,6 +22,7 @@ from api.scr.app.task_types.router import make_full_task_type
 
 
 async def make_full_test_task_result_data(tt: dbm.TestTask):
+    print(tt.__dict__)
     new = sch.FullTestTaskResult(
         id=tt.result.id,
         test_task_id=tt.id,
@@ -29,8 +30,8 @@ async def make_full_test_task_result_data(tt: dbm.TestTask):
             type=tt.result.answer["type"], data=tt.result.answer["data"]
         ),
         students_info=sch.StudentsData(
-            name=tt.result.student_info["name"],
-            surname=tt.result.student_info["surname"],
+            name=tt.result.students_info["name"],
+            surname=tt.result.students_info["surname"],
         ),
         time_data=sch.TimeData(
             start_time=tt.result.start_datetime, end_time=tt.result.end_datetime
@@ -73,10 +74,12 @@ async def get_test_task_results(
         )
         .where(dbm.TestTask.test_id == test_id, dbm.TestTask.variant == variant)
     )
+    print(stmt)
     result: Result = await session.execute(stmt)
     test_tasks = result.scalars().unique().all()
-    result = [make_full_test_task_result_data(tt) for tt in test_tasks]
-    return result
+    print(test_tasks)
+    res = [await make_full_test_task_result_data(tt=tt) for tt in test_tasks]
+    return res
 
 
 async def check_test_task_result(
@@ -86,8 +89,7 @@ async def check_test_task_result(
         session=session, test_task_id=ttr.test_task_id
     )
     task = await tasks_crud.get_task_by_id(session=session, task_id=test_task.task_id)
-
-    if task.type_name.base_type == 1:
+    if task.type_name.base_type.id == 1:
         correct_answer = task.answer_data["max_flow"]
         if correct_answer == int(ttr.answer.data):
             return True

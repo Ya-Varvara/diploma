@@ -137,7 +137,7 @@ CREATE TABLE test_task (
 
 CREATE TABLE test_task_result (
     "id" serial NOT NULL,
-	"student_info" jsonb NOT NULL,
+	"students_info" jsonb NOT NULL,
 	"test_task_id" int NOT NULL,
 	"answer" jsonb NOT NULL,
 	"start_datetime" timestamp NOT NULL,
