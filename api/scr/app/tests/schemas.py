@@ -18,6 +18,7 @@ class TestBase(BaseModel):
     end_datetime: datetime
     test_time: time
     variants_number: int
+    upload: bool
 
 
 class TaskTypesForTestCreation(BaseModel):
@@ -85,3 +86,4 @@ class TestVariant(BaseModel):
     test_time: time
     variant_number: int
     tasks: List[TaskForStudent]
+    upload: bool

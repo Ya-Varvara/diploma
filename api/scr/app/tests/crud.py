@@ -138,6 +138,7 @@ async def get_test_by_link_and_variant(
         test_time=test.test_time,
         variant_number=variant,
         tasks=tasks,
+        upload=test.upload,
     )
     await make_test_given(session, test.id, variant)
     return result

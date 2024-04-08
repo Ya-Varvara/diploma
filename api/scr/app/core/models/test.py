@@ -37,6 +37,7 @@ class Test(Base):
     test_time: Mapped[time] = mapped_column(TIME)
     variants_number: Mapped[int]
     link: Mapped[str] = mapped_column(String(64))
+    upload: Mapped[bool]
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP)
     updated_at: Mapped[datetime] = mapped_column(TIMESTAMP)
     deleted: Mapped[bool]
