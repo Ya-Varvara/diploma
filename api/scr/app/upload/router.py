@@ -36,8 +36,12 @@ async def upload_file(
         ),
     )
 
+
 @router.get("/{file_id}/")
-async def get_file(file_id: int, session: AsyncSession = Depends(get_async_session),):
+async def get_file(
+    file_id: int,
+    session: AsyncSession = Depends(get_async_session),
+):
     file_data = await crud.get_file_by_id(session=session, file_id=file_id)
     if file_data:
         return FileResponse(path=file_data.path, filename=file_data.name)

@@ -30,7 +30,7 @@ app.include_router(auth_router)
 app.include_router(task_type_router)
 app.include_router(test_router)
 # app.include_router(test_task_router)
-# app.include_router(test_task_result_router)
+app.include_router(test_task_result_router)
 app.include_router(form_router)
 app.include_router(upload_router)
 

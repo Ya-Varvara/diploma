@@ -66,3 +66,7 @@ class Task(TaskCreate):
     created_at: datetime
     updated_at: datetime
     deleted: bool
+
+
+class FullTask(Task):
+    type: FullTaskType
