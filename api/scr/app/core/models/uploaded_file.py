@@ -23,4 +23,4 @@ class UploadedFile(Base):
     upload_date: Mapped[datetime] = mapped_column(TIMESTAMP)
     test_task_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
 
-    test_task: Mapped["TestTask"] = relationship(back_populates="test_task")
+    test_task: Mapped["TestTask"] = relationship(back_populates="uploaded_file")

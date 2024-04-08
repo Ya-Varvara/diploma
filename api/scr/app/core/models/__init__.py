@@ -10,6 +10,7 @@ __all__ = (
     "TestTaskType",
     "TaskTypesAnswerForm",
     "TaskTypesConditionForm",
+    "UploadedFile",
 )
 
 from .base_task_type import BaseTaskType
@@ -20,4 +21,5 @@ from .task_type import TaskType
 from .test import Test, TestTaskType
 from .test_task import TestTask
 from .test_task_result import TestTaskResult
+from .uploaded_file import UploadedFile
 from .user import User

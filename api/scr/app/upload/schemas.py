@@ -8,7 +8,7 @@ from api.scr.app.tasks.schemas import TaskForStudent
 from api.scr.app.task_types.schemas import FullTaskType
 
 
-class UploadedFilesBase(BaseModel):
+class UploadedFileBase(BaseModel):
     """
     Базовая модель для таблицы с файлами
     """
@@ -16,17 +16,20 @@ class UploadedFilesBase(BaseModel):
     name: str
     path: str
     upload_date: datetime
-    test_variant_id: int
+    test_task_id: int
 
-class UploadedFilesCreation(BaseModel):
+
+class UploadedFileCreation(BaseModel):
     """
     Базовая модель для добавления данных в таблицу с файлами
     """
 
     name: str
     path: str
+    test_task_id: int
 
-class UploadedFiles(UploadedFilesBase):
+
+class UploadedFile(UploadedFileBase):
     """
     Модель для таблицы с файлами
     """
