@@ -11,7 +11,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
 if TYPE_CHECKING:
-    from .test_task import TestTask
+    from .variant import Variant
 
 
 class UploadedFile(Base):
@@ -21,6 +21,6 @@ class UploadedFile(Base):
     name: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
     path: Mapped[str] = mapped_column(String(256), unique=True, nullable=False)
     upload_date: Mapped[datetime] = mapped_column(TIMESTAMP)
-    test_task_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
+    variant_id: Mapped[int] = mapped_column(ForeignKey("variants.id"))
 
-    test_task: Mapped["TestTask"] = relationship(back_populates="uploaded_file")
+    variant: Mapped["Variant"] = relationship(back_populates="uploaded_file")

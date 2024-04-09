@@ -3,7 +3,6 @@ CREATE TABLE users (
 	"username" text NOT NULL,
 	"hashed_password" text NOT NULL,
     "email" text NOT NULL,
-	-- "meta" jsonb NOT NULL,
 	"is_active" bool NOT NULL default true,
 	"is_superuser" bool NOT NULL default false,
 	"is_verified" bool NOT NULL default false,
@@ -124,29 +123,47 @@ CREATE TABLE test_task_types (
 	FOREIGN KEY ("task_type_id") REFERENCES task_types ("id")
 );
 
-CREATE TABLE test_task (
+CREATE TABLE variants (
     "id" serial NOT NULL,
 	"variant" int NOT NULL,
 	"test_id" int NOT NULL,
-	"task_id" int NOT NULL,
     "is_given" bool NOT NULL,
 	
 	PRIMARY KEY ("id"),
-	FOREIGN KEY ("test_id") REFERENCES tests ("id"),
+	FOREIGN KEY ("test_id") REFERENCES tests ("id")
+);
+
+-- Таблица связи
+CREATE TABLE variants_tasks (
+    "id" serial NOT NULL,
+	"variant_id" int NOT NULL,
+	"task_id" int NOT NULL,
+	
+	PRIMARY KEY ("id"),
+	FOREIGN KEY ("variant_id") REFERENCES variants ("id"),
 	FOREIGN KEY ("task_id") REFERENCES tasks ("id")
 );
 
-CREATE TABLE test_task_result (
+CREATE TABLE variant_result_info (
     "id" serial NOT NULL,
-	"students_info" jsonb NOT NULL,
-	"test_task_id" int NOT NULL,
-	"answer" jsonb NOT NULL,
+	"variant_id" int NOT NULL,
+	"students_name" text NOT NULL,
+	"students_surname" text NOT NULL,
 	"start_datetime" timestamp NOT NULL,
 	"end_datetime" timestamp NOT NULL,
+	
+	PRIMARY KEY ("id"),
+	FOREIGN KEY ("variant_id") REFERENCES variants ("id")
+);
+
+CREATE TABLE variants_task_result (
+    "id" serial NOT NULL,
+	"variants_task_id" int NOT NULL,
+	"answer" jsonb NOT NULL,
 	"is_correct" bool,
 	
 	PRIMARY KEY ("id"),
-	FOREIGN KEY ("test_task_id") REFERENCES test_task ("id")
+	FOREIGN KEY ("variants_task_id") REFERENCES variants_tasks ("id")
 );
 
 CREATE TABLE uploaded_files (
@@ -154,8 +171,8 @@ CREATE TABLE uploaded_files (
 	"name" text NOT NULL,
 	"path" text NOT NULL,
 	"upload_date" timestamp NOT NULL,
-	"test_task_id" int NOT NULL,
+	"variant_id" int NOT NULL,
 	
 	PRIMARY KEY ("id"),
-	FOREIGN KEY ("test_task_id") REFERENCES test_task ("id")
+	FOREIGN KEY ("variant_id") REFERENCES variants ("id")
 );
