@@ -87,3 +87,15 @@ class TestVariant(BaseModel):
     variant_number: int
     tasks: List[TaskForStudent]
     upload: bool
+
+
+class TestDataForVariant(BaseModel):
+    """
+    Модель для отображения информации о варианте для студента.
+    """
+
+    name: str
+    start_datetime: datetime
+    end_datetime: datetime
+    test_time: time
+    upload: bool

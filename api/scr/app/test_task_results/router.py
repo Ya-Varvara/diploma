@@ -23,7 +23,9 @@ async def get_test_task_results(
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ):
-    return await crud.get_test_task_results(session=session, test_id=test_id, variant=variant)
+    return await crud.get_test_task_results(
+        session=session, test_id=test_id, variant=variant
+    )
 
 
 @router.post(
@@ -34,4 +36,6 @@ async def create_test_task_results(
     test_task_result_in: List[sch.TestTaskResultCreate],
     session: AsyncSession = Depends(get_async_session),
 ):
-    return await crud.create_test_task_results(session=session, test_task_results_in=test_task_result_in)
+    return await crud.create_test_task_results(
+        session=session, test_task_results_in=test_task_result_in
+    )

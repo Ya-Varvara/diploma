@@ -2,7 +2,8 @@ from typing import Any, Dict, TYPE_CHECKING, Optional
 from datetime import datetime
 
 from sqlalchemy import (
-    ForeignKey, String,
+    ForeignKey,
+    String,
 )
 from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship

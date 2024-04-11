@@ -10,6 +10,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .task import Task
     from .variants_task_result import VariantsTaskResult
+    from .variant import Variant
 
 
 class VariantTask(Base):
@@ -19,4 +20,7 @@ class VariantTask(Base):
     task_id: Mapped[int] = mapped_column(ForeignKey("tasks.id"))
 
     task: Mapped["Task"] = relationship(back_populates="task_variants")
-    task_result: Mapped["VariantsTaskResult"] = relationship(back_populates="variant_task")
+    variant: Mapped["Variant"] = relationship(back_populates="tasks")
+    task_result: Mapped["VariantsTaskResult"] = relationship(
+        back_populates="variant_task"
+    )
