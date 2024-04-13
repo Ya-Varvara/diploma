@@ -5,8 +5,6 @@ Update
 Delete
 """
 
-from random import choice
-from typing import Any, List
 from datetime import datetime
 
 from sqlalchemy import select
@@ -14,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.scr.app.core import models as dbm
 
-from api.scr.app.upload import schemas as sch
+from api.scr.app.uploaded_files import schemas as sch
 
 
 async def get_file_by_id(
@@ -37,8 +35,8 @@ async def create_file(
     return file
 
 
-async def delete_test(
-    session: AsyncSession,
-    file_id: int,
-) -> None:
-    pass
+# async def delete_test(
+#     session: AsyncSession,
+#     file_id: int,
+# ) -> None:
+#     pass

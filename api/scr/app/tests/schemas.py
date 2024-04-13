@@ -94,6 +94,7 @@ class TestDataForVariant(BaseModel):
     Модель для отображения информации о варианте для студента.
     """
 
+    test_id: int
     name: str
     start_datetime: datetime
     end_datetime: datetime

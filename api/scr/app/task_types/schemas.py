@@ -33,50 +33,14 @@ class TaskTypeBase(BaseModel):
     answer_forms: List[int]
 
 
-class TaskTypeForTask(BaseModel):
-    """
-    Модель для получения информации о типе задания. Используется на фронте, когда нужно отобразить задание для студента.
-    """
-
-    name: str
-    condition_forms: List[int]
-    answer_forms: List[int]
-
-
 class TaskTypeCreate(TaskTypeBase):
-    """
-    Модель для cоздания типа задания
-    """
-
     pass
-
-
-class TaskTypeUpdate(TaskTypeCreate):
-    """
-    Модель для изменения типа задания
-    """
-
-    pass
-
-
-class TaskTypeUpdatePartial(TaskTypeCreate):
-    """
-    Модель для частичного изменения типа задания
-    """
-
-    name: Optional[str]
-    base_task_type: Optional[int]
-    settings: Optional[Dict[str, Any]]
-    condition_forms: Optional[List[int]]
-    answer_forms: Optional[List[int]]
 
 
 class TaskType(TaskTypeBase):
     """
     Модель типа задания. Используется для получения полной информации о типе
     """
-
-    # model_config = ConfigDict(from_attributes=True)
 
     id: int
     user_id: int

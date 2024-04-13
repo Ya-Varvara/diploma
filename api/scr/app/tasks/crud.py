@@ -15,7 +15,7 @@ from api.scr.app.tasks.schemas import TaskCreate, TaskUpdate, TaskUpdatePartial
 
 
 # async def get_tasks(session: AsyncSession, **options) -> list[Task]:
-#     stmt = select(Task).options(joinedload(Task.type_name)).order_by(Task.id)
+#     stmt = select(Task).options(joinedload(Task.type)).order_by(Task.id)
 #     if user_id := options.get("user_id", ""):
 #         stmt = stmt.where(Task.user_id == user_id)
 #     result: Result = await session.execute(stmt)
@@ -27,10 +27,10 @@ async def get_task_by_id(session: AsyncSession, task_id: int) -> dbm.Task | None
     stmt = (
         select(dbm.Task)
         .options(
-            joinedload(dbm.Task.type_name),
-            joinedload(dbm.Task.type_name, dbm.TaskType.answer_forms),
-            joinedload(dbm.Task.type_name, dbm.TaskType.condition_forms),
-            joinedload(dbm.Task.type_name, dbm.TaskType.base_type),
+            joinedload(dbm.Task.type),
+            joinedload(dbm.Task.type, dbm.TaskType.answer_forms),
+            joinedload(dbm.Task.type, dbm.TaskType.condition_forms),
+            joinedload(dbm.Task.type, dbm.TaskType.base_type),
         )
         .where(dbm.Task.id == task_id)
     )
@@ -42,7 +42,7 @@ async def get_task_by_id(session: AsyncSession, task_id: int) -> dbm.Task | None
 #     session: AsyncSession, task_name: str, **options
 # ) -> Task | None:
 #     stmt = (
-#         select(Task).where(Task.name == task_name).options(joinedload(Task.type_name))
+#         select(Task).where(Task.name == task_name).options(joinedload(Task.type))
 #     )
 #     if user_id := options.get("user_id", ""):
 #         stmt = stmt.where(Task.user_id == user_id)

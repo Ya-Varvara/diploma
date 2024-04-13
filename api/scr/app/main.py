@@ -8,7 +8,7 @@ from api.scr.app.tests.router import router as test_router
 from api.scr.app.test_tasks.router import router as test_task_router
 from api.scr.app.test_task_results.router import router as test_task_result_router
 from api.scr.app.forms.router import router as form_router
-from api.scr.app.upload.router import router as upload_router
+from api.scr.app.uploaded_files.router import router as upload_router
 
 
 origins = [

@@ -1,20 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
+from fastapi.responses import FileResponse
 import shutil
-from pathlib import Path
-import os
 
-from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.scr.app.database import get_async_session
-from api.scr.app.forms import schemas as sch
-from api.scr.app.core.models import User
 
-from api.scr.app.auth.router import get_current_user
-
-from api.scr.app.upload import crud
-from api.scr.app.upload import schemas as sch
+from api.scr.app.uploaded_files import crud
+from api.scr.app.uploaded_files import schemas as sch
 
 router = APIRouter(prefix="/upload", tags=["Upload files"])
 
@@ -31,7 +24,7 @@ async def upload_file(
         shutil.copyfileobj(file.file, buffer)
     return await crud.create_file(
         session=session,
-        file_in=sch.UploadedFileCreation(
+        file_in=sch.UploadedFileCreate(
             name=file.filename, path=file_location, test_task_id=test_task_id
         ),
     )

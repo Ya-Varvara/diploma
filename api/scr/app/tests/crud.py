@@ -127,7 +127,7 @@ async def get_test_by_link_and_variant(
             type_id=task.type_id,
             description_data=task.description_data,
             condition_data=task.condition_data,
-            type=make_full_task_type([task.type_name])[0],
+            type=make_full_task_type([task.type])[0],
         )
         tasks.append(tfs)
 

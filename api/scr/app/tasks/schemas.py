@@ -19,14 +19,6 @@ class TaskBase(BaseModel):
     condition_data: Dict[str, Any]
 
 
-class TaskForStudent(TaskBase):
-    """
-    Модель для отправки задания на фронтенд
-    """
-
-    type: FullTaskType
-
-
 class TaskCreate(TaskBase):
     """
     Модель для создания задания. Задание создается на сервере или в будущей экспортируется из файла, поэтому эта модель не отправляется на фронтенд.
@@ -35,24 +27,12 @@ class TaskCreate(TaskBase):
     answer_data: Dict[str, Any]
 
 
-class TaskUpdate(TaskCreate):
+class TaskForStudent(TaskBase):
     """
-    Модель для изменения задания
-    """
-
-    answer_data: Optional[Dict[str, Any]]
-
-
-class TaskUpdatePartial(TaskBase):
-    """
-    Модель для частичного изменения задания
+    Модель для отправки задания на фронтенд студенту
     """
 
-    name: Optional[str]
-    type_id: Optional[int]
-    description_data: Optional[str]
-    condition_data: Optional[Dict[str, Any]]
-    answer_data: Optional[Dict[str, Any]]
+    type: FullTaskType
 
 
 class Task(TaskCreate):

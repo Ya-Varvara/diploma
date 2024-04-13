@@ -47,7 +47,7 @@ async def make_full_test_task_result_data(tt: dbm.TestTask):
             created_at=tt.task.created_at,
             updated_at=tt.task.updated_at,
             deleted=tt.task.deleted,
-            type=make_full_task_type([tt.task.type_name])[0],
+            type=make_full_task_type([tt.task.type])[0],
         ),
     )
     return new
@@ -63,13 +63,9 @@ async def get_test_task_results(
         .options(
             joinedload(dbm.TestTask.task),
             joinedload(dbm.TestTask.uploaded_file),
-            joinedload(dbm.TestTask.task, dbm.Task.type_name),
-            joinedload(
-                dbm.TestTask.task, dbm.Task.type_name, dbm.TaskType.answer_forms
-            ),
-            joinedload(
-                dbm.TestTask.task, dbm.Task.type_name, dbm.TaskType.condition_forms
-            ),
+            joinedload(dbm.TestTask.task, dbm.Task.type),
+            joinedload(dbm.TestTask.task, dbm.Task.type, dbm.TaskType.answer_forms),
+            joinedload(dbm.TestTask.task, dbm.Task.type, dbm.TaskType.condition_forms),
             joinedload(dbm.TestTask.result),
         )
         .where(dbm.TestTask.test_id == test_id, dbm.TestTask.variant == variant)
@@ -89,7 +85,7 @@ async def check_test_task_result(
         session=session, test_task_id=ttr.test_task_id
     )
     task = await tasks_crud.get_task_by_id(session=session, task_id=test_task.task_id)
-    if task.type_name.base_type.id == 1:
+    if task.type.base_type.id == 1:
         correct_answer = task.answer_data["max_flow"]
         if correct_answer == int(ttr.answer.data):
             return True
