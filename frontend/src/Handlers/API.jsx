@@ -231,17 +231,15 @@ export const PostLogin = async ({ formData }) => {
 
 export const FetchVariantsResult = async ({ setter, test_id }) => {
   try {
-    const response = await fetch(
-      `${baseURL}/variant/${test_id}/`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`${baseURL}/variant/${test_id}/`, {
+      method: "GET",
+      credentials: "include",
+    });
     if (!response.ok) {
       throw new Error("Test Task Results fetching failed: " + response.status);
     }
     const data = await response.json();
+    console.log(data);
     setter(data);
   } catch (error) {
     console.error(error);

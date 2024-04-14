@@ -1,9 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Col, Row, Card, Space, Typography, List } from "antd";
+import { Col, Row, Card, Typography, List } from "antd";
 
-import { FetchTestByID } from "../Handlers/API";
+import { FetchTestByID, FetchVariantsResult } from "../Handlers/API";
+import ViewTable from "../Components/Forms/Table";
 
 import BasePage from "../Components/Layout/BasePage";
 
@@ -20,9 +21,6 @@ const TestInfo = ({ info }) => {
     };
     return new Date(dateString).toLocaleDateString("ru-RU", options);
   };
-
-  // Функция для получения списка типов заданий
-  //   const taskTypesList = info.task_types.map((taskType) => taskType.type.name).join(", ");
 
   return (
     <Card title="Информация о тесте">
@@ -47,32 +45,34 @@ const TestInfo = ({ info }) => {
           <Title level={5}>Количество вариантов:</Title>
           <Text>{info.variants_number}</Text>
         </List.Item>
-        {/* <List.Item>
-          <Title level={5}>Типы заданий:</Title>
-          <Text>{taskTypesList}</Text>
-        </List.Item> */}
       </List>
     </Card>
   );
 };
 
-const OneTestPage = ({ test_id }) => {
+const OneTestPage = ({}) => {
   const { id } = useParams();
   console.log("From path: ", id);
+
   const [info, setInfo] = useState({});
+  const [variants, setVariants] = useState([]);
 
   useEffect(() => {
     FetchTestByID({ setter: setInfo, id: id });
     console.log("Info: ", info);
+    FetchVariantsResult({ setter: setVariants, test_id: id });
+    console.log("Variants: ", variants);
   }, []);
 
   return (
     <BasePage>
       <Row justify="space-between" style={{ width: "100%" }}>
-        <Col span={12}>
+        <Col span={8}>
           <TestInfo info={info} />
         </Col>
-        <Col span={12}> РЕШЕНИЯ </Col>
+        <Col span={15}>
+          <ViewTable type="variant" data={variants} />
+        </Col>
       </Row>
     </BasePage>
   );

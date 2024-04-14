@@ -36,7 +36,13 @@ const task_type_columns = [
 ];
 
 const ViewTable = ({ type, data }) => {
+  console.log(data);
   const navigate = useNavigate();
+
+  function markAsChecked(index) {
+    document.querySelectorAll(".ant-table-row")[index].style.backgroundColor =
+      "lightgray";
+  }
 
   const test_columns = [
     {
@@ -88,10 +94,103 @@ const ViewTable = ({ type, data }) => {
     },
   ];
 
+  const variant_columns = [
+    {
+      title: "Вариант",
+      dataIndex: "variant",
+      key: "variant",
+    },
+    {
+      title: "Статус",
+      key: "status",
+      render: (_, record) => {
+        if (record.is_given) {
+          if (record.variant_result_info) {
+            return (
+              <Tag color={"green"} key={1}>
+                Ответ отправлен
+              </Tag>
+            );
+          } else {
+            return (
+              <Tag color={"orange"} key={2}>
+                Выдан
+              </Tag>
+            );
+          }
+        } else {
+          return (
+            <Tag color={"red"} key={2}>
+              Не выдан
+            </Tag>
+          );
+        }
+      },
+    },
+    {
+      title: "ФИО",
+      key: "fullName",
+      render: (_, record) => {
+        if (record.is_given && record.variant_result_info) {
+          return `${record.variant_result_info.students_surname} ${record.variant_result_info.students_name}`;
+        }
+        return "";
+      },
+    },
+    {
+      title: "Дата отправки",
+      key: "end_datetime",
+      render: (_, record) => {
+        if (
+          record.is_given &&
+          record.variant_result_info &&
+          record.variant_result_info.end_datetime
+        ) {
+          // Преобразуем дату в более читаемый формат, например "DD.MM.YYYY HH:mm"
+          return new Date(
+            record.variant_result_info.end_datetime
+          ).toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+        return ""; // Возвращаем пустую строку, если статус не "Ответ отправлен"
+      },
+    },
+    {
+      title: "Действия",
+      key: "actions",
+      render: (text, record, index) => {
+        return (
+          <>
+            <a
+              onClick={() =>
+                (window.location.href = `/details/${record.variant}`)
+              }
+            >
+              Посмотреть
+            </a>
+            <a
+              style={{ marginLeft: "10px" }}
+              onClick={() => markAsChecked(index)}
+            >
+              Отметить проверенным
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
   if (type === "test") {
     return <Table columns={test_columns} dataSource={data} bordered />;
   } else if (type === "task_type") {
     return <Table columns={task_type_columns} dataSource={data} bordered />;
+  } else if (type === "variant") {
+    return <Table columns={variant_columns} dataSource={data} bordered />;
   }
 };
 

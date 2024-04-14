@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -7,7 +7,6 @@ import {
   Radio,
   Checkbox,
   Upload,
-  message,
   Card,
   Space,
   Drawer,
@@ -114,16 +113,16 @@ export default function CreateTaskTypeForm({ open, onClose }) {
       case "radio":
         return (
           <Radio.Group key={type}>
-            <Radio value={1}>Опция 1</Radio>
-            <Radio value={2}>Опция 2</Radio>
-            <Radio value={3}>Опция 3</Radio>
+            <Radio value={1}>Ответ 1</Radio>
+            <Radio value={2}>Ответ 2</Radio>
+            <Radio value={3}>Ответ 3</Radio>
           </Radio.Group>
         );
       case "checkbox":
         return (
           <Checkbox.Group
             key={type}
-            options={["Опция 1", "Опция 2", "Опция 3"]}
+            options={["Ответ 1", "Ответ 2", "Ответ 3"]}
           />
         );
       case "upload":

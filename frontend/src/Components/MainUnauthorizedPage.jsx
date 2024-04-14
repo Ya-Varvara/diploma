@@ -4,7 +4,7 @@ import { Button, Flex, Form, Input, Space } from "antd";
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { FetchTestByLink } from "../Handlers/API";
+import { FetchTestVariantByLink } from "../Handlers/API";
 
 export default function MainUnauthorizedPage() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function MainUnauthorizedPage() {
   async function onFinish(values) {
     console.log("Received values of form: ", values);
     try {
-      const data = await FetchTestByLink({ link: values.uuid });
+      const data = await FetchTestVariantByLink({ link: values.uuid });
       navigate("/variant", { state: { testData: data } });
     } catch (error) {
       console.error("Error fetching test variant:", error);
