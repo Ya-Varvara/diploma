@@ -5,8 +5,7 @@ Update
 Delete
 """
 
-from random import choice
-from typing import Any, List
+import logging
 from datetime import datetime
 
 from sqlalchemy import select
@@ -14,7 +13,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.scr.app.core import models as dbm
 
-from api.scr.app.upload import schemas as sch
+from api.scr.app.uploaded_files import schemas as sch
+
+
+logger = logging.getLogger(__name__)
 
 
 async def get_file_by_id(
@@ -26,19 +28,12 @@ async def get_file_by_id(
 
 
 async def create_file(
-    session: AsyncSession, file_in: sch.UploadedFileCreation, **options
+    session: AsyncSession, file_in: sch.UploadedFileCreate, **options
 ) -> dbm.UploadedFile:
-    print("CRUD CREATE File")
+    logger.debug(f"CRUD New file creation for test variant id={file_in.variant_id}")
     file_data = file_in.model_dump()
     file_data["upload_date"] = datetime.now()
     file = dbm.UploadedFile(**file_data)
     session.add(file)
     await session.commit()
     return file
-
-
-async def delete_test(
-    session: AsyncSession,
-    file_id: int,
-) -> None:
-    pass

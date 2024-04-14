@@ -29,7 +29,7 @@ class TaskType(Base):
     updated_at: Mapped[datetime] = mapped_column(TIMESTAMP)
     deleted: Mapped[bool]
 
-    tasks: Mapped[list["Task"]] = relationship(back_populates="type_name")
+    tasks: Mapped[list["Task"]] = relationship(back_populates="type")
     user: Mapped["User"] = relationship(back_populates="task_types")
     base_type: Mapped["BaseTaskType"] = relationship(
         back_populates="task_types", lazy="selectin"

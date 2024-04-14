@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import (
     ForeignKey,
+    String,
 )
 from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -10,17 +11,16 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
 if TYPE_CHECKING:
-    from .test_task import TestTask
+    from .variant import Variant
 
 
-class TestTaskResult(Base):
-    __tablename__ = "test_task_result"
+class VariantResultInfo(Base):
+    __tablename__ = "variant_result_info"
 
-    test_task_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
-    answer: Mapped[Dict[str, Any]] = mapped_column(JSONB)
-    students_info: Mapped[Dict[str, Any]] = mapped_column(JSONB)
+    variant_id: Mapped[int] = mapped_column(ForeignKey("variants.id"))
+    students_name: Mapped[str] = mapped_column(String(256))
+    students_surname: Mapped[str] = mapped_column(String(256))
     start_datetime: Mapped[datetime] = mapped_column(TIMESTAMP)
     end_datetime: Mapped[datetime] = mapped_column(TIMESTAMP)
-    is_correct: Mapped[Optional[bool]]
 
-    test: Mapped["TestTask"] = relationship(back_populates="result")
+    variant: Mapped["Variant"] = relationship(back_populates="result_info")

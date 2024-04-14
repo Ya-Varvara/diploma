@@ -12,8 +12,8 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .task_type import TaskType
-    from .test_task import TestTask
     from .user import User
+    from .variant_task import VariantTask
 
 
 class Task(Base):
@@ -30,6 +30,6 @@ class Task(Base):
     updated_at: Mapped[datetime] = mapped_column(TIMESTAMP)
     deleted: Mapped[bool]
 
-    type_name: Mapped["TaskType"] = relationship(back_populates="tasks")
-    task_variants: Mapped[list["TestTask"]] = relationship(back_populates="task")
+    type: Mapped["TaskType"] = relationship(back_populates="tasks")
+    task_variants: Mapped[list["VariantTask"]] = relationship(back_populates="task")
     user: Mapped["User"] = relationship(back_populates="tasks")
