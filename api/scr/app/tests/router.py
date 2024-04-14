@@ -22,7 +22,7 @@ async def get_tests(
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ):
-    print("ROUTER GET TESTS")
+    logger.debug(f"ROUTER Getting all tests for user id={user.id}")
     options = {"user_id": user.id}
     tests = await crud.get_tests(session=session, options=options)
     return make_full_test(tests)
@@ -38,7 +38,7 @@ async def create_test(
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ):
-    logger.info(f"Create test from user {user.id}")
+    logger.debug(f"ROUTER Creation new test for user id={user.id}")
     options = {"user_id": user.id}
     test: dbm.Test = await crud.create_test(session=session, test_in=test_in, **options)
     return make_full_test([test])[0]
@@ -53,6 +53,7 @@ async def get_test(
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ):
+    logger.debug(f"ROUTER Getting test by id={test_id} for user id={user.id}")
     test = await crud.get_test_by_id(session=session, test_id=test_id, user_id=user.id)
     if test is None:
         raise HTTPException(
@@ -67,28 +68,10 @@ async def delete_test(
     session: AsyncSession = Depends(get_async_session),
     user: dbm.User = Depends(get_current_user()),
 ) -> None:
+    logger.debug(f"ROUTER Deleting test with id={test_id} for user id={user.id}")
     test = await crud.get_test_by_id(session=session, test_id=test_id, user_id=user.id)
     if test is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
         )
     await crud.delete_test(session=session, test=test)
-
-
-# @router.get(
-#     "/variant/{link}/",
-#     status_code=status.HTTP_200_OK,
-#     response_model=sch.TestVariant,
-# )
-# async def get_variant(link: str, session: AsyncSession = Depends(get_async_session)):
-#     # test = await crud.get_test_by_link(session=session, link="test")
-#     variant = await crud.get_free_variant_number(session=session, link=link)
-
-#     if variant is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
-#         )
-
-#     return await crud.get_test_by_link_and_variant(
-#         session=session, link=link, variant=variant
-#     )

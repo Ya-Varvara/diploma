@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def make_new_test_data(test_in: sch.TestCreate, **options) -> dbm.Test:
+    logger.debug(f"HANDLERS Making new test data...")
     test_data = test_in.model_dump(
         exclude={"task_types", "start_datetime", "end_datetime", "test_time"}
     )
@@ -27,12 +28,13 @@ def make_new_test_data(test_in: sch.TestCreate, **options) -> dbm.Test:
     test_data["updated_at"] = datetime.now()
     test_data["deleted"] = False
 
-    logger.debug(f"Make test data for test {test_data}")
+    logger.debug(f"HANDLERS New test data {test_data}")
 
     return dbm.Test(**test_data)
 
 
 def make_full_test(tests: List[dbm.Test]) -> List[sch.FullTest]:
+    logger.debug(f"HANDLERS Making full test's data...")
     result = []
     for test in tests:
         newtest = sch.FullTest(
@@ -56,4 +58,5 @@ def make_full_test(tests: List[dbm.Test]) -> List[sch.FullTest]:
             ],
         )
         result.append(newtest)
+    logger.debug(f"HANDLERS Full test's data {result}")
     return result
