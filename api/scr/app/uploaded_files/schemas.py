@@ -18,4 +18,4 @@ class UploadedFileCreate(UploadedFileBase):
 
 class UploadedFile(UploadedFileBase):
     id: int
-    uploaded_date: datetime
+    upload_date: datetime

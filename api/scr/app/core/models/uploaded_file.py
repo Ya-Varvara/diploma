@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 class UploadedFile(Base):
     __tablename__ = "uploaded_files"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
     path: Mapped[str] = mapped_column(String(256), unique=True, nullable=False)
     upload_date: Mapped[datetime] = mapped_column(TIMESTAMP)

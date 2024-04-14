@@ -10,7 +10,7 @@ from api.scr.app.tests.router import router as test_router
 from api.scr.app.forms.router import router as form_router
 from api.scr.app.uploaded_files.router import router as upload_router
 
-logger = logging.getLogger(__name__)
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)7s %(funcName)25s:%(lineno)-5d %(message)s",
@@ -37,9 +37,6 @@ app.include_router(task_type_router)
 app.include_router(test_router)
 app.include_router(form_router)
 app.include_router(upload_router)
-
-logger.info("Start app")
-
 
 @app.get("/ping")
 def pong():

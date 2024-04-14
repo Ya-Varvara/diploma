@@ -30,7 +30,7 @@ async def get_file_by_id(
 async def create_file(
     session: AsyncSession, file_in: sch.UploadedFileCreate, **options
 ) -> dbm.UploadedFile:
-    print("CRUD CREATE File")
+    logger.debug(f"CRUD New file creation for test variant id={file_in.variant_id}")
     file_data = file_in.model_dump()
     file_data["upload_date"] = datetime.now()
     file = dbm.UploadedFile(**file_data)
