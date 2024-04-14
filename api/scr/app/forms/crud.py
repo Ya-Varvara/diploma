@@ -4,6 +4,7 @@ Read
 """
 
 from typing import List
+import logging
 
 from sqlalchemy import select, delete
 from sqlalchemy.engine import Result
@@ -13,7 +14,10 @@ from api.scr.app.core import models as dbm
 from api.scr.app.forms.schemas import Form
 
 
+logger = logging.getLogger(__name__)
+
 async def get_all_forms(session: AsyncSession) -> List[Form]:
+    logger.debug(f"CRUD Getting all forms...")
     stmt = select(dbm.Form)
     result: Result = await session.execute(stmt)
     forms = result.scalars().all()
@@ -23,6 +27,7 @@ async def get_all_forms(session: AsyncSession) -> List[Form]:
 async def create_condition_forms(
     session: AsyncSession, forms_ids: List[int], task_type_id: int
 ) -> None:
+    logger.debug(f"CRUD Condition forms creation...")
     for form_id in forms_ids:
         session.add(
             dbm.TaskTypesConditionForm(
@@ -35,6 +40,7 @@ async def create_condition_forms(
 async def create_answer_forms(
     session: AsyncSession, forms_ids: List[int], task_type_id: int
 ) -> None:
+    logger.debug(f"CRUD Answer forms creation...")
     for form_id in forms_ids:
         session.add(
             dbm.TaskTypesAnswerForm(
@@ -47,6 +53,7 @@ async def create_answer_forms(
 async def update_condition_forms(
     session: AsyncSession, forms_ids: List[int], task_type_id: int
 ) -> None:
+    logger.debug(f"CRUD Condition forms update...")
     await delete_old_condition_forms(session, task_type_id)
     await create_condition_forms(session, forms_ids, task_type_id)
 
@@ -54,11 +61,13 @@ async def update_condition_forms(
 async def update_answer_forms(
     session: AsyncSession, forms_ids: List[int], task_type_id: int
 ) -> None:
+    logger.debug(f"CRUD Answer forms update...")
     await delete_old_answer_forms(session, task_type_id)
     await create_answer_forms(session, forms_ids, task_type_id)
 
 
 async def delete_old_condition_forms(session: AsyncSession, task_type_id: int) -> None:
+    logger.debug(f"CRUD Condition forms deleting...")
     await session.execute(
         delete(dbm.TaskTypesConditionForm).where(
             dbm.TaskTypesConditionForm.task_type_id == task_type_id
@@ -68,6 +77,7 @@ async def delete_old_condition_forms(session: AsyncSession, task_type_id: int) -
 
 
 async def delete_old_answer_forms(session: AsyncSession, task_type_id: int) -> None:
+    logger.debug(f"CRUD Answer forms deleting...")
     await session.execute(
         delete(dbm.TaskTypesAnswerForm).where(
             dbm.TaskTypesAnswerForm.task_type_id == task_type_id

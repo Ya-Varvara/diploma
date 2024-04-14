@@ -37,6 +37,17 @@ class TaskTypeCreate(TaskTypeBase):
     pass
 
 
+class TaskTypeUpdate(BaseModel):
+    """
+    """
+
+    name: Optional[str] = None
+    base_task_type: Optional[int] = None
+    settings: Optional[Dict[str, Any]] = None
+    condition_forms: Optional[List[int]] = None
+    answer_forms: Optional[List[int]] = None
+
+
 class TaskType(TaskTypeBase):
     """
     Модель типа задания. Используется для получения полной информации о типе

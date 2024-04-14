@@ -13,7 +13,7 @@ from api.scr.app.uploaded_files.router import router as upload_router
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG,
-    format="%(asctime)s %(levelname)7s %(funcName)s:%(lineno)-5d %(message)s",
+    format="%(asctime)s %(levelname)7s %(funcName)25s:%(lineno)-5d %(message)s",
     datefmt=r"%Y-%m-%d %H:%M:%S",
     filename="my_logs.log",
 )
