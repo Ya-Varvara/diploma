@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class VariantResultInfo(Base):
     __tablename__ = "variant_result_info"
 
-    variant_id: Mapped[int] = mapped_column(ForeignKey("test_task.id"))
+    variant_id: Mapped[int] = mapped_column(ForeignKey("variants.id"))
     students_name: Mapped[str] = mapped_column(String(256))
     students_surname: Mapped[str] = mapped_column(String(256))
     start_datetime: Mapped[datetime] = mapped_column(TIMESTAMP)

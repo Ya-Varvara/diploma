@@ -15,10 +15,12 @@ from api.scr.app.variants_task_result import schemas as sch
 async def add_variant_task_result(
     session: AsyncSession, task_result_in: sch.VariantTaskResultCreate
 ) -> sch.VariantTaskResult:
-    task_result_in.is_correct = await check_variant_task_result(session=session, ttr=task_result_in)
+    task_result_in.is_correct = await check_variant_task_result(
+        session=session, ttr=task_result_in
+    )
     new = dbm.VariantsTaskResult(task_result_in.model_dump())
     session.add(new)
-    session.flush()
+    await session.flush()
     return new
 
 

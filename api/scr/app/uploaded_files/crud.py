@@ -24,7 +24,7 @@ async def get_file_by_id(
 
 
 async def create_file(
-    session: AsyncSession, file_in: sch.UploadedFileCreation, **options
+    session: AsyncSession, file_in: sch.UploadedFileCreate, **options
 ) -> dbm.UploadedFile:
     print("CRUD CREATE File")
     file_data = file_in.model_dump()

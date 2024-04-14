@@ -13,5 +13,5 @@ async def add_variant_result_info(
 ) -> sch.VariantResultInfo:
     new = dbm.VariantResultInfo(info_in.model_dump())
     session.add(new)
-    session.flush()
+    await session.flush()
     return new

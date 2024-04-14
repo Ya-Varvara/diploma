@@ -17,5 +17,5 @@ async def add_variant_task(
 ) -> sch.VariantTaskResult:
     new = dbm.VariantTask(task_in.model_dump())
     session.add(new)
-    session.flush()
+    await session.flush()
     return new

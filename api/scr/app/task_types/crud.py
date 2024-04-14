@@ -16,11 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.scr.app.core import models as dbm
 from api.scr.app.forms import crud as fcrud
 
-from api.scr.app.task_types.schemas import (
-    TaskTypeCreate,
-    TaskTypeUpdate,
-    TaskTypeUpdatePartial,
-)
+from api.scr.app.task_types.schemas import TaskTypeCreate
 
 
 async def get_all_base_task_types(session: AsyncSession) -> List[dbm.BaseTaskType]:
@@ -121,31 +117,31 @@ async def create_task_type(
     return task_type
 
 
-async def update_task_type(
-    session: AsyncSession,
-    task_type: dbm.TaskType,
-    task_type_update: TaskTypeUpdate | TaskTypeUpdatePartial,
-    partial: bool = False,
-) -> dbm.TaskType:
-    for name, value in task_type_update.model_dump(
-        exclude_unset=partial, exclude={"condition_forms", "answer_forms"}
-    ).items():
-        setattr(task_type, name, value)
+# async def update_task_type(
+#     session: AsyncSession,
+#     task_type: dbm.TaskType,
+#     task_type_update: TaskTypeUpdate | TaskTypeUpdatePartial,
+#     partial: bool = False,
+# ) -> dbm.TaskType:
+#     for name, value in task_type_update.model_dump(
+#         exclude_unset=partial, exclude={"condition_forms", "answer_forms"}
+#     ).items():
+#         setattr(task_type, name, value)
 
-    setattr(task_type, "updated_at", datetime.now())
-    await session.commit()
+#     setattr(task_type, "updated_at", datetime.now())
+#     await session.commit()
 
-    if task_type_update.condition_forms:
-        await fcrud.update_condition_forms(
-            session, task_type_update.condition_forms, task_type.id
-        )
+#     if task_type_update.condition_forms:
+#         await fcrud.update_condition_forms(
+#             session, task_type_update.condition_forms, task_type.id
+#         )
 
-    if task_type_update.answer_forms:
-        await fcrud.update_answer_forms(
-            session, task_type_update.answer_forms, task_type.id
-        )
+#     if task_type_update.answer_forms:
+#         await fcrud.update_answer_forms(
+#             session, task_type_update.answer_forms, task_type.id
+#         )
 
-    return task_type
+#     return task_type
 
 
 async def delete_task_type(
