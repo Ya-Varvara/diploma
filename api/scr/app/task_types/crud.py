@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 async def get_all_base_task_types(session: AsyncSession) -> List[dbm.BaseTaskType]:
     logger.debug(f"CRUD Getting all base task types...")
-    
+
     stmt = select(dbm.BaseTaskType)
     result: Result = await session.execute(stmt)
     base_task_types = result.scalars().all()
@@ -115,7 +115,7 @@ async def create_task_type(
     task_type = make_new_task_type_data(task_type_in, user_id)
     session.add(task_type)
     await session.flush()
-    
+
     logger.debug(f"CRUD Task type was created with id={task_type.id}")
 
     await fcrud.create_answer_forms(session, task_type_in.answer_forms, task_type.id)

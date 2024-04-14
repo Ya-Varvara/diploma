@@ -16,6 +16,7 @@ from api.scr.app.forms.schemas import Form
 
 logger = logging.getLogger(__name__)
 
+
 async def get_all_forms(session: AsyncSession) -> List[Form]:
     logger.debug(f"CRUD Getting all forms...")
     stmt = select(dbm.Form)

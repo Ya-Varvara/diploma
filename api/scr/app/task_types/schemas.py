@@ -38,8 +38,7 @@ class TaskTypeCreate(TaskTypeBase):
 
 
 class TaskTypeUpdate(BaseModel):
-    """
-    """
+    """ """
 
     name: Optional[str] = None
     base_task_type: Optional[int] = None

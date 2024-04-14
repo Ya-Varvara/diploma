@@ -91,7 +91,7 @@ async def create_test(
     session: AsyncSession, test_in: sch.TestCreate, **options
 ) -> dbm.Test:
     logger.debug(f"CRUD Test creation {test_in}...")
-    
+
     # добавление теста
     db_test = make_new_test_data(test_in, **options)
     session.add(db_test)
@@ -110,7 +110,9 @@ async def create_test(
         task_types=test_in.task_types,
     )
 
-    test = await get_test_by_id(session=session, test_id=db_test.id, user_id=options.get("user_id", 1))
+    test = await get_test_by_id(
+        session=session, test_id=db_test.id, user_id=options.get("user_id", 1)
+    )
     return test
 
 
