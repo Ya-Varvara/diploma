@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import List
 import logging
 
-from sqlalchemy import select, delete
+from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
