@@ -1,12 +1,10 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.scr.app.database import get_async_session
 from api.scr.app.task_types import schemas as sch
-from api.scr.app.forms import schemas as formsch
 from api.scr.app.task_types.dependences import task_type_by_id
 
 from api.scr.app.core import models as dbm
@@ -15,6 +13,7 @@ from api.scr.app.auth.router import get_current_user
 
 import api.scr.app.task_types.crud as crud
 from api.scr.app.task_types.handlers import make_full_task_type
+
 
 router = APIRouter(prefix="/task_type", tags=["Task type"])
 
