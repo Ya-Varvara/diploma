@@ -14,7 +14,7 @@ from api.scr.app.variants.router import router as variants_router
 
 logging.basicConfig(
     level=logging.DEBUG,
-    format="%(asctime)s %(levelname)7s %(funcName)25s:%(lineno)-5d %(message)s",
+    format="%(asctime)s %(levelname)7s %(funcName)35s:%(lineno)-5d %(message)s",
     datefmt=r"%Y-%m-%d %H:%M:%S",
     filename="my_logs.log",
 )

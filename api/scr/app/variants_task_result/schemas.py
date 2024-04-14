@@ -13,13 +13,9 @@ class VariantTaskResultBase(BaseModel):
 
 
 class VariantTaskResultCreate(VariantTaskResultBase):
-    """ """
-
-    is_correct: bool
+    pass
 
 
 class VariantTaskResult(VariantTaskResultBase):
-    """ """
-
     id: int
     is_correct: bool

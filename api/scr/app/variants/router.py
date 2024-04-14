@@ -16,6 +16,9 @@ from api.scr.app.tests.crud import get_test_by_link
 
 from api.scr.app.auth.router import get_current_user
 
+from api.scr.app.variant_result_info.crud import add_variant_result_info
+from api.scr.app.variants_task_result.crud import add_variant_task_result
+
 
 router = APIRouter(prefix="/variant", tags=["Variant"])
 logger = logging.getLogger(__name__)
@@ -58,50 +61,19 @@ async def get_variant_for_student(
     return handlers.make_variant_for_student([variant])[0]
 
 
-# @router.post(
-#     "/",
-#     response_model=sch.FullTest,
-#     status_code=status.HTTP_201_CREATED,
-# )
-# async def create_test(
-#     test_in: sch.TestCreate,
-#     session: AsyncSession = Depends(get_async_session),
-#     user: dbm.User = Depends(get_current_user()),
-# ):
-#     logger.debug(f"ROUTER Creation new test for user id={user.id}")
-#     options = {"user_id": user.id}
-#     test: dbm.Test = await crud.create_test(session=session, test_in=test_in, **options)
-#     return make_full_test([test])[0]
+@router.post(
+    "/result/",
+    status_code=status.HTTP_200_OK,
+    # response_model=sch.VariantForStudent,
+)
+async def post_variant_results(
+    variant_result: sch.VariantResultCreate,
+    session: AsyncSession = Depends(get_async_session),
+):
+    logger.debug(f"ROUTER Posting variant's result from student...")
+    await add_variant_result_info(session=session, info_in=variant_result.info)
 
+    for r in variant_result.answers:
+        await add_variant_task_result(session=session, task_result_in=r)
 
-# @router.get(
-#     "/{test_id}/",
-#     response_model=sch.FullTest,
-# )
-# async def get_test(
-#     test_id: int,
-#     session: AsyncSession = Depends(get_async_session),
-#     user: dbm.User = Depends(get_current_user()),
-# ):
-#     logger.debug(f"ROUTER Getting test by id={test_id} for user id={user.id}")
-#     test = await crud.get_test_by_id(session=session, test_id=test_id, user_id=user.id)
-#     if test is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
-#         )
-#     return make_full_test([test])[0]
-
-
-# @router.delete("/{test_id}/", status_code=status.HTTP_204_NO_CONTENT)
-# async def delete_test(
-#     test_id: int,
-#     session: AsyncSession = Depends(get_async_session),
-#     user: dbm.User = Depends(get_current_user()),
-# ) -> None:
-#     logger.debug(f"ROUTER Deleting test with id={test_id} for user id={user.id}")
-#     test = await crud.get_test_by_id(session=session, test_id=test_id, user_id=user.id)
-#     if test is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Test not found"
-#         )
-#     await crud.delete_test(session=session, test=test)
+    return

@@ -10,6 +10,8 @@ from api.scr.app.variant_task.schemas import (
     VariantTaskForTeacher,
     VariantTaskForStudent,
 )
+from api.scr.app.variant_result_info.schemas import VariantResultInfoCreate
+from api.scr.app.variants_task_result.schemas import VariantTaskResultCreate
 
 
 class VariantBase(BaseModel):
@@ -40,3 +42,8 @@ class VariantForTeacher(BaseModel):
     uploaded_file: Optional[UploadedFile]
 
     is_given: bool
+
+
+class VariantResultCreate(BaseModel):
+    info: VariantResultInfoCreate
+    answers: List[VariantTaskResultCreate]
