@@ -18,6 +18,7 @@ async def get_task_for_test(
     task_type: dbm.TaskType,
     **options,
 ) -> dbm.Task | None:
+    logger.debug(f"HANDLERS Getting task for test variant...")
     user_id = options.get("user_id", 1)
 
     if task_type.base_task_type == 1:
@@ -35,7 +36,7 @@ async def get_task_for_test(
         )
         session.add(task)
         await session.flush()
-        logger.debug(f"Task with type {task_type.name} created {task.id}")
+        logger.debug(f"HANDLERS Task with type {task_type.name} created {task.id}")
         return task
     else:
         stmt = (
@@ -46,5 +47,5 @@ async def get_task_for_test(
         )
         result: Result = await session.execute(stmt)
         task: dbm.Task | None = result.scalar()
-        logger.debug(f"Task with type {task_type.name} found {task.id}")
+        logger.debug(f"HANDLERS Task with type {task_type.name} found {task.id}")
         return task
