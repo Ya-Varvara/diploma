@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from datetime import datetime
 
@@ -7,7 +8,11 @@ from api.scr.app.core import models as dbm
 from api.scr.app.task_types.schemas import TaskTypeCreate
 
 
+logger = logging.getLogger(__name__)
+
+
 def make_full_task_type(task_types: List[dbm.TaskType]) -> List[sch.FullTaskType]:
+    logger.debug(f"HANDLERS Making full task type...")
     result = []
     for tt in task_types:
         newtt = sch.FullTaskType(

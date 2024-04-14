@@ -87,6 +87,16 @@ async def get_test_by_id(
     return test
 
 
+async def get_test_by_link(session: AsyncSession, test_link: str) -> dbm.Test | None:
+    stmt = (
+        select(dbm.Test)
+        .where(dbm.Test.link == test_link)
+        .where(dbm.Test.deleted == False)
+    )
+    test: dbm.Test | None = await session.scalar(stmt)
+    return test
+
+
 async def create_test(
     session: AsyncSession, test_in: sch.TestCreate, **options
 ) -> dbm.Test:

@@ -13,5 +13,7 @@ def make_uploaded_files_info(
     logger.debug(f"HANDLERS Making uploaded file infos...")
     result = []
     for info in upfs:
+        if info is None:
+            continue
         result.append(sch.UploadedFile.model_validate(info))
     return result

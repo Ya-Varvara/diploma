@@ -73,7 +73,7 @@ def make_tasks_for_student(tasks: List[dbm.Task]) -> List[sch.TaskForStudent]:
 
 
 def make_full_tasks(tasks: List[dbm.Task]) -> List[sch.FullTask]:
-    logger.debug(f"HANDLERS Making full tasks for teacher...")
+    logger.debug(f"HANDLERS Making full tasks for teacher {tasks[0].__dict__}...")
     result = []
     for task in tasks:
         new = sch.FullTask(

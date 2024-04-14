@@ -12,6 +12,10 @@ from api.scr.app.tests.handlers import make_test_data_for_variant
 from api.scr.app.variant_result_info.handlers import make_variant_result_info
 from api.scr.app.uploaded_files.handlers import make_uploaded_files_info
 from api.scr.app.tasks.handlers import make_tasks_for_student
+from api.scr.app.variant_task.handlers import (
+    make_variant_tasks_for_teacher,
+    make_variant_tasks_for_student,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -45,13 +49,16 @@ def make_variant_for_teacher(
     logger.debug(f"HANDLERS Making variant for teacher...")
     result = []
     for var in variants:
+        vri = make_variant_result_info([var.result_info])
+        uf = make_uploaded_files_info([var.uploaded_file])
         new = sch.VariantForTeacher(
             id=var.id,
             variant=var.variant,
             test_info=make_test_data_for_variant([var.test])[0],
-            variant_result_info=make_variant_result_info([var.result_info])[0],
-            uploaded_file=make_uploaded_files_info([var.uploaded_file])[0],
+            variant_result_info=None if not vri else vri[0],
+            uploaded_file=None if not uf else uf[0],
             is_given=var.is_given,
+            tasks=make_variant_tasks_for_teacher(var.tasks),
         )
         result.append(new)
     return result
@@ -60,14 +67,14 @@ def make_variant_for_teacher(
 def make_variant_for_student(
     variants: List[dbm.Variant],
 ) -> List[sch.VariantForStudent]:
-    logger.debug(f"HANDLERS Making variant for teacher...")
+    logger.debug(f"HANDLERS Making variant for student...")
     result = []
     for var in variants:
         new = sch.VariantForStudent(
             id=var.id,
             variant=var.variant,
             test_info=make_test_data_for_variant([var.test])[0],
-            tasks=make_tasks_for_student(var.tasks),
+            tasks=make_variant_tasks_for_student(var.tasks),
         )
         result.append(new)
     return result

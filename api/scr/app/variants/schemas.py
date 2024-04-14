@@ -6,6 +6,10 @@ from api.scr.app.tests.schemas import TestDataForVariant
 from api.scr.app.tasks.schemas import TaskForStudent, FullTask
 from api.scr.app.uploaded_files.schemas import UploadedFile
 from api.scr.app.variant_result_info.schemas import VariantResultInfo
+from api.scr.app.variant_task.schemas import (
+    VariantTaskForTeacher,
+    VariantTaskForStudent,
+)
 
 
 class VariantBase(BaseModel):
@@ -22,7 +26,7 @@ class VariantForStudent(BaseModel):
     id: int
     variant: int
     test_info: TestDataForVariant
-    tasks: List[TaskForStudent]
+    tasks: List[VariantTaskForStudent]
 
 
 class VariantForTeacher(BaseModel):
@@ -30,7 +34,7 @@ class VariantForTeacher(BaseModel):
     variant: int
     test_info: TestDataForVariant
 
-    tasks: List[FullTask]
+    tasks: List[VariantTaskForTeacher]
 
     variant_result_info: Optional[VariantResultInfo]
     uploaded_file: Optional[UploadedFile]

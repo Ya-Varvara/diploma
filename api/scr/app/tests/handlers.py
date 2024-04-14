@@ -65,4 +65,16 @@ def make_full_test(tests: List[dbm.Test]) -> List[sch.FullTest]:
 def make_test_data_for_variant(
     test_infos: List[dbm.Test],
 ) -> List[sch.TestDataForVariant]:
-    pass
+    logger.debug(f"HANDLERS Making test data for variant...")
+    result = []
+    for data in test_infos:
+        new = sch.TestDataForVariant(
+            test_id=data.id,
+            name=data.name,
+            start_datetime=data.start_datetime,
+            end_datetime=data.end_datetime,
+            test_time=data.test_time,
+            upload=data.upload,
+        )
+        result.append(new)
+    return result

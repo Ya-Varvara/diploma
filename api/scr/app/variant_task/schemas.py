@@ -1,8 +1,8 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel
 
-from api.scr.app.tasks.schemas import FullTask
+from api.scr.app.tasks.schemas import FullTask, TaskForStudent
 from api.scr.app.variants_task_result.schemas import VariantTaskResult
 
 
@@ -19,7 +19,11 @@ class VariantTaskCreate(VariantTaskBase):
     pass
 
 
-class VariantTaskForTeacher(VariantTaskBase):
+class VariantTaskForStudent(VariantTaskBase):
     id: int
+    task: TaskForStudent
+
+
+class VariantTaskForTeacher(VariantTaskForStudent):
     task: FullTask
-    students_result: VariantTaskResult
+    students_result: Optional[VariantTaskResult]

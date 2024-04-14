@@ -13,5 +13,7 @@ def make_variant_task_result(
     logger.debug(f"HANDLERS Making variant task result...")
     result = []
     for vr in vris:
+        if vr is None:
+            continue
         result.append(sch.VariantTaskResult.model_validate(vr))
     return result
