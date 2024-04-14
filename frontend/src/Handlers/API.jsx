@@ -1,6 +1,8 @@
+const baseURL = "http://localhost:8000";
+
 export const FetchTests = async ({ setter }) => {
   try {
-    const response = await fetch("http://localhost:8000/test/", {
+    const response = await fetch(`${baseURL}/test/`, {
       method: "GET",
       credentials: "include",
     });
@@ -16,7 +18,7 @@ export const FetchTests = async ({ setter }) => {
 
 export const FetchTestByID = async ({ setter, id }) => {
   try {
-    const response = await fetch(`http://localhost:8000/test/${id}`, {
+    const response = await fetch(`${baseURL}/test/${id}`, {
       method: "GET",
       credentials: "include",
     });
@@ -31,14 +33,18 @@ export const FetchTestByID = async ({ setter, id }) => {
   }
 };
 
-export const FetchTestByLink = async ({ link }) => {
+export const FetchTestVariantByLink = async ({ link }) => {
+  const requestBody = {
+    link: link,
+  };
   try {
-    const response = await fetch(
-      `http://localhost:8000/test/variant/${link}/`,
-      {
-        method: "GET",
-      }
-    );
+    const response = await fetch(`${baseURL}/variant/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
     if (!response.ok) {
       throw new Error("Test variant fetching failed: " + response.status);
     }
@@ -53,7 +59,7 @@ export const FetchTestByLink = async ({ link }) => {
 
 export const DeleteTestByID = async ({ id }) => {
   try {
-    const response = await fetch(`http://localhost:8000/test/${id}/`, {
+    const response = await fetch(`${baseURL}/test/${id}/`, {
       method: "DELETE", // Изменение на метод DELETE
       credentials: "include",
     });
@@ -68,7 +74,7 @@ export const DeleteTestByID = async ({ id }) => {
 
 export const PostTest = async ({ requestBody }) => {
   try {
-    const response = await fetch("http://localhost:8000/test/", {
+    const response = await fetch(`${baseURL}/test/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +93,7 @@ export const PostTest = async ({ requestBody }) => {
 
 export const FetchTaskTypes = async ({ setter }) => {
   try {
-    const response = await fetch("http://localhost:8000/task_type/", {
+    const response = await fetch(`${baseURL}/task_type/`, {
       method: "GET",
       credentials: "include",
     });
@@ -103,7 +109,7 @@ export const FetchTaskTypes = async ({ setter }) => {
 
 export const DeleteTaskTypeByID = async ({ id }) => {
   try {
-    const response = await fetch(`http://localhost:8000/task_type/${id}/`, {
+    const response = await fetch(`${baseURL}/task_type/${id}/`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -120,7 +126,7 @@ export const DeleteTaskTypeByID = async ({ id }) => {
 
 export const FetchTaskTypeByID = async ({ id }) => {
   try {
-    const response = await fetch(`http://localhost:8000/task_type/${id}`, {
+    const response = await fetch(`${baseURL}/task_type/${id}`, {
       method: "GET",
       credentials: "include",
     });
@@ -137,7 +143,7 @@ export const FetchTaskTypeByID = async ({ id }) => {
 
 export const PostTaskTypes = async ({ requestBody }) => {
   try {
-    const response = await fetch("http://localhost:8000/task_type/", {
+    const response = await fetch(`${baseURL}/task_type/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -158,13 +164,10 @@ export const PostTaskTypes = async ({ requestBody }) => {
 
 export const FetchBaseTaskTypes = async ({ setter }) => {
   try {
-    const response = await fetch(
-      "http://localhost:8000/task_type/base_types/",
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`${baseURL}/task_type/base_types/`, {
+      method: "GET",
+      credentials: "include",
+    });
     if (!response.ok) {
       throw new Error("Base Task Types fetching failed: " + response.status);
     }
@@ -177,7 +180,7 @@ export const FetchBaseTaskTypes = async ({ setter }) => {
 
 export const FetchForms = async ({ setter }) => {
   try {
-    const response = await fetch("http://localhost:8000/forms/", {
+    const response = await fetch(`${baseURL}/forms/`, {
       method: "GET",
       credentials: "include",
     });
@@ -193,7 +196,7 @@ export const FetchForms = async ({ setter }) => {
 
 export const PostRegister = async ({ requestBody }) => {
   try {
-    const response = await fetch("http://localhost:8000/auth/register/", {
+    const response = await fetch(`${baseURL}/auth/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -212,7 +215,7 @@ export const PostRegister = async ({ requestBody }) => {
 
 export const PostLogin = async ({ formData }) => {
   try {
-    const response = await fetch("http://localhost:8000/auth/login/", {
+    const response = await fetch(`${baseURL}/auth/login/`, {
       method: "POST",
       credentials: "include",
       body: formData,
@@ -226,11 +229,10 @@ export const PostLogin = async ({ formData }) => {
   }
 };
 
-export const FetchTestTaskResult = async ({ setter, test_id, variant }) => {
+export const FetchVariantsResult = async ({ setter, test_id }) => {
   try {
-    const queryParams = `test_id=${test_id}&variant=${variant}`; // Создание строки запроса
     const response = await fetch(
-      `http://localhost:8000/test_task_result/?${queryParams}`,
+      `${baseURL}/variant/${test_id}/`,
       {
         method: "GET",
         credentials: "include",
@@ -246,9 +248,9 @@ export const FetchTestTaskResult = async ({ setter, test_id, variant }) => {
   }
 };
 
-export const PostTestTaskResult = async ({ requestBody }) => {
+export const PostVariantResult = async ({ requestBody }) => {
   try {
-    const response = await fetch("http://localhost:8000/test_task_result/", {
+    const response = await fetch(`${baseURL}/variant/result/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -257,7 +259,7 @@ export const PostTestTaskResult = async ({ requestBody }) => {
     });
     if (!response.ok) {
       throw new Error(
-        "Test task result creation failed with status: " + response.status
+        "Variant result creation failed with status: " + response.status
       );
     }
     console.log("Test task result was created successfully");
