@@ -15,11 +15,20 @@ def make_variant_task_result(
     for vr in vris:
         if vr is None:
             continue
-        result.append(sch.VariantTaskResult.model_validate(vr))
-    print(result)
+        result.append(
+            sch.VariantTaskResult(
+                variants_task_id=vr.variants_task_id,
+                answer=vr.answer,
+                id=vr.id,
+                is_correct=vr.is_correct,
+            )
+        )
     return result
 
-def make_new_variant_task_result_data(res_in: sch.VariantTaskResultCreate, **options) -> dbm.VariantsTaskResult:
+
+def make_new_variant_task_result_data(
+    res_in: sch.VariantTaskResultCreate, **options
+) -> dbm.VariantsTaskResult:
     logger.debug(f"HANDLERS Making new variant task result data...")
     data = res_in.model_dump()
 
@@ -29,9 +38,8 @@ def make_new_variant_task_result_data(res_in: sch.VariantTaskResultCreate, **opt
 
     return dbm.VariantsTaskResult(**data)
 
-def check_variant_task_result(
-    ttr: sch.VariantTaskResultCreate
-) -> bool | None:
+
+def check_variant_task_result(ttr: sch.VariantTaskResultCreate) -> bool | None:
     # task = await test_tasks_crud.get_test_task_by_id(
     #     session=session, test_task_id=ttr.test_task_id
     # )

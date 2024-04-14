@@ -15,15 +15,24 @@ def make_variant_result_info(
     for vr in vris:
         if vr is None:
             continue
-        result.append(sch.VariantResultInfo.model_validate(vr))
+        result.append(
+            sch.VariantResultInfo(
+                variant_id=vr.variant_id,
+                students_name=vr.students_name,
+                students_surname=vr.students_surname,
+                start_datetime=vr.start_datetime,
+                end_datetime=vr.end_datetime,
+                id=vr.id,
+            )
+        )
     return result
 
 
-def make_new_variant_result_info(res_in: sch.VariantResultInfoCreate, **options) -> dbm.VariantResultInfo:
+def make_new_variant_result_info(
+    res_in: sch.VariantResultInfoCreate, **options
+) -> dbm.VariantResultInfo:
     logger.debug(f"HANDLERS Making new variant result info...")
-    data = res_in.model_dump(
-        exclude={"start_datetime", "end_datetime"}
-    )
+    data = res_in.model_dump(exclude={"start_datetime", "end_datetime"})
 
     data["start_datetime"] = res_in.start_datetime.replace(tzinfo=None)
     data["end_datetime"] = res_in.end_datetime.replace(tzinfo=None)

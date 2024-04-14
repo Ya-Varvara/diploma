@@ -6,7 +6,7 @@ import logging
 
 from typing import List
 
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, desc
 from sqlalchemy.engine import Result
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -45,7 +45,7 @@ async def get_all_variants_for_test(
             ),
         )
         .where(dbm.Variant.test_id == test_id)
-        .order_by(dbm.Variant.is_given, dbm.Variant.variant)
+        .order_by(desc(dbm.Variant.is_given), dbm.Variant.variant)
     )
     result: Result = await session.execute(stmt)
     variants = result.scalars().unique().all()

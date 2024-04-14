@@ -15,5 +15,13 @@ def make_uploaded_files_info(
     for info in upfs:
         if info is None:
             continue
-        result.append(sch.UploadedFile.model_validate(info))
+        result.append(
+            sch.UploadedFile(
+                name=info.name,
+                path=info.path,
+                variant_id=info.variant_id,
+                id=info.id,
+                upload_date=info.upload_date,
+            )
+        )
     return result

@@ -23,7 +23,6 @@ async def upload_file(
 ):
     logger.debug(f"ROUTER Adding file for variant {variant_id}")
     file_location = f"files/{file.filename}"
-    print(file_location)
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     return await crud.create_file(

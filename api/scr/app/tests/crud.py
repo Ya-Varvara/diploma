@@ -52,7 +52,6 @@ async def get_tests(session: AsyncSession, **options) -> list[dbm.Test]:
 
     if user_id := options.get("user_id", ""):
         stmt = stmt.where(dbm.Test.user_id == user_id)
-    print(stmt)
     result: Result = await session.execute(stmt)
     tests = result.scalars().unique().all()
     return list(tests)
