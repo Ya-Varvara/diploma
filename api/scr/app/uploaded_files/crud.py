@@ -4,7 +4,7 @@ Read
 Update
 Delete
 """
-
+import logging
 from datetime import datetime
 
 from sqlalchemy import select
@@ -13,6 +13,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.scr.app.core import models as dbm
 
 from api.scr.app.uploaded_files import schemas as sch
+
+
+logger = logging.getLogger(__name__)
 
 
 async def get_file_by_id(
@@ -33,10 +36,3 @@ async def create_file(
     session.add(file)
     await session.commit()
     return file
-
-
-# async def delete_test(
-#     session: AsyncSession,
-#     file_id: int,
-# ) -> None:
-#     pass
