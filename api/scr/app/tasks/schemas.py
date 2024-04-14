@@ -32,6 +32,7 @@ class TaskForStudent(TaskBase):
     Модель для отправки задания на фронтенд студенту
     """
 
+    id: int
     type: FullTaskType
 
 

@@ -60,3 +60,9 @@ def make_full_test(tests: List[dbm.Test]) -> List[sch.FullTest]:
         result.append(newtest)
     logger.debug(f"HANDLERS Full test's data {result}")
     return result
+
+
+def make_test_data_for_variant(
+    test_infos: List[dbm.Test],
+) -> List[sch.TestDataForVariant]:
+    pass

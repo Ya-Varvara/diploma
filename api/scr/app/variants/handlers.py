@@ -4,9 +4,14 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.scr.app.core import models as dbm
+from api.scr.app.variants import schemas as sch
 from api.scr.app.tests.schemas import TaskTypesForTestCreation
 
 from api.scr.app.variant_task.handlers import add_tasks_to_variants
+from api.scr.app.tests.handlers import make_test_data_for_variant
+from api.scr.app.variant_result_info.handlers import make_variant_result_info
+from api.scr.app.uploaded_files.handlers import make_uploaded_files_info
+from api.scr.app.tasks.handlers import make_tasks_for_student
 
 
 logger = logging.getLogger(__name__)
@@ -32,3 +37,37 @@ async def create_variant_for_test(
 
     # добавление заданий к тестам
     await add_tasks_to_variants(session, variant_ids, task_types, **options)
+
+
+def make_variant_for_teacher(
+    variants: List[dbm.Variant],
+) -> List[sch.VariantForTeacher]:
+    logger.debug(f"HANDLERS Making variant for teacher...")
+    result = []
+    for var in variants:
+        new = sch.VariantForTeacher(
+            id=var.id,
+            variant=var.variant,
+            test_info=make_test_data_for_variant([var.test])[0],
+            variant_result_info=make_variant_result_info([var.result_info])[0],
+            uploaded_file=make_uploaded_files_info([var.uploaded_file])[0],
+            is_given=var.is_given,
+        )
+        result.append(new)
+    return result
+
+
+def make_variant_for_student(
+    variants: List[dbm.Variant],
+) -> List[sch.VariantForStudent]:
+    logger.debug(f"HANDLERS Making variant for teacher...")
+    result = []
+    for var in variants:
+        new = sch.VariantForStudent(
+            id=var.id,
+            variant=var.variant,
+            test_info=make_test_data_for_variant([var.test])[0],
+            tasks=make_tasks_for_student(var.tasks),
+        )
+        result.append(new)
+    return result
