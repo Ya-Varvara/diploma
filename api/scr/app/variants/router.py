@@ -40,6 +40,23 @@ async def get_all_variants_for_test(
     return handlers.make_variant_for_teacher(variants=variants)
 
 
+@router.get("/{test_id}/{variant_id}/", response_model=sch.VariantForTeacher)
+async def get_variant_for_test_by_id(
+    test_id: int,
+    variant_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: dbm.User = Depends(get_current_user()),
+):
+    logger.debug(
+        f"ROUTER Getting variant with id={variant_id} for test with id={test_id} for user with id={user.id}"
+    )
+    options = {"user_id": user.id}
+    variants = await crud.get_variant_for_test_by_id(
+        session=session, test_id=test_id, variant_id=variant_id, **options
+    )
+    return handlers.make_variant_for_teacher(variants=[variants])[0]
+
+
 @router.post(
     "/",
     status_code=status.HTTP_200_OK,
@@ -56,9 +73,19 @@ async def get_variant_for_student(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Test variant not found",
         )
-    logger.debug(f"ROUTER Making variant with id={variant.id} given")
-    await crud.make_test_variant_given(session=session, test_variant_id=variant.id)
     return handlers.make_variant_for_student([variant])[0]
+
+
+@router.post(
+    "/make_given/",
+    status_code=status.HTTP_200_OK,
+)
+async def make_variant_given(
+    id: int, session: AsyncSession = Depends(get_async_session)
+):
+    logger.debug(f"ROUTER Making variant with id={id} given")
+    await crud.make_test_variant_given(session=session, test_variant_id=id)
+    return None
 
 
 @router.post(
@@ -75,5 +102,4 @@ async def post_variant_results(
 
     for r in variant_result.answers:
         await add_variant_task_result(session=session, task_result_in=r)
-
     return

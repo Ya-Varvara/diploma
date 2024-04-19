@@ -52,6 +52,40 @@ async def get_all_variants_for_test(
     return list(variants)
 
 
+async def get_variant_for_test_by_id(
+    session: AsyncSession, test_id: int, variant_id: int, **options
+) -> List[dbm.Variant]:
+    stmt = (
+        select(dbm.Variant)
+        .options(
+            joinedload(dbm.Variant.test),
+            joinedload(dbm.Variant.uploaded_file),
+            joinedload(dbm.Variant.result_info),
+            joinedload(dbm.Variant.tasks),
+            joinedload(dbm.Variant.tasks, dbm.VariantTask.task_result),
+            joinedload(dbm.Variant.tasks, dbm.VariantTask.task),
+            joinedload(dbm.Variant.tasks, dbm.VariantTask.task, dbm.Task.type),
+            joinedload(
+                dbm.Variant.tasks,
+                dbm.VariantTask.task,
+                dbm.Task.type,
+                dbm.TaskType.answer_forms,
+            ),
+            joinedload(
+                dbm.Variant.tasks,
+                dbm.VariantTask.task,
+                dbm.Task.type,
+                dbm.TaskType.condition_forms,
+            ),
+        )
+        .where(dbm.Variant.test_id == test_id)
+        .where(dbm.Variant.id == variant_id)
+    )
+    result: Result = await session.execute(stmt)
+    variant = result.first()
+    return variant
+
+
 async def get_variant_for_test(
     session: AsyncSession, test_id: int, **options
 ) -> dbm.Variant:
