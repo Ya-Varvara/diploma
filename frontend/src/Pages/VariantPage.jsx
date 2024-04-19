@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // Для навигации
 import { Card, Form, Input, Space, Button, Radio, Checkbox } from "antd";
 import BasePage from "../Components/Layout/BasePage";
 import GraphMatrix from "../Components/Forms/GraphMatrix";
+import { PostVariantResult } from "../Handlers/API";
 
 const { Item } = Form;
 
@@ -53,18 +54,13 @@ const VariantPage = () => {
   const [testStartTime, setTestStartTime] = useState(
     localStorage.getItem("testStartTime") || new Date().getTime()
   );
+  const [testStartDateTime, setTestStartDateTime] = useState(
+    localStorage.getItem("testStartDateTime") || new Date()
+  );
 
   const getSecondsFromTestTime = (testTime) => {
     const [hours, minutes, seconds] = testTime.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
-  };
-
-  const submitFormWithTime = () => {
-    const spentTime = CountSpentTime();
-    // form.setFieldValue("spent_time", spentTime);
-    form.setFieldsValue({ spentTime: spentTime });
-    console.log(form);
-    form.submit();
   };
 
   const CountSpentTime = () => {
@@ -79,7 +75,9 @@ const VariantPage = () => {
 
   const updateTimer = () => {
     const now = new Date().getTime();
-    const testDurationSeconds = getSecondsFromTestTime(testData.test_time);
+    const testDurationSeconds = getSecondsFromTestTime(
+      testData.test_info.test_time
+    );
     const endTime = parseInt(testStartTime, 10) + testDurationSeconds * 1000;
     const timeLeft = endTime - now;
 
@@ -100,6 +98,21 @@ const VariantPage = () => {
     let interval;
 
     if (testData) {
+      const startTime = localStorage.getItem("testStartTime");
+      const startDateTime = localStorage.getItem("testStartDateTime");
+
+      if (!startTime) {
+        const now = new Date().getTime();
+        localStorage.setItem("testStartTime", now.toString());
+      }
+
+      if (!startDateTime) {
+        localStorage.setItem(
+          "testStartDateTime",
+          testStartDateTime.toISOString()
+        );
+      }
+
       updateTimer();
       interval = setInterval(updateTimer, 1000);
     }
@@ -123,15 +136,34 @@ const VariantPage = () => {
     console.log("Received values of variant: ", values);
     localStorage.removeItem("testStartTime");
     navigate("/home");
+
+    const now = new Date();
+
+    const formData = {
+      info: {
+        students_name: values.name,
+        students_surname: values.surname,
+        start_datetime: localStorage.getItem("testStartDateTime"),
+        end_datetime: now.toISOString(),
+        variant_id: testData.id,
+      },
+      answers: Object.entries(values)
+        .filter(([key]) => !isNaN(parseInt(key))) // Фильтруем только числовые ключи
+        .map(([key, value]) => ({
+          variants_task_id: parseInt(key),
+          answer: { int: value },
+        })),
+    };
+    console.log(formData);
+    localStorage.removeItem("testStartDateTime");
+    PostVariantResult({ requestBody: formData });
   };
 
   return (
     <BasePage>
       <Space direction="vertical" size="middle">
-        <h1>{testData.name}</h1>
-        {/* Отображение таймера */}
+        <h1>{testData.test_info.name}</h1>
         <h2>Оставшееся время: {remainingTime}</h2>
-        {/* Остальная часть формы */}
         <Form
           form={form}
           name="create_task_type"
@@ -158,17 +190,18 @@ const VariantPage = () => {
               return (
                 <Card title={`Задание ${index + 1}`} style={{ minWidth: 800 }}>
                   <Space size="middle" direction="vertical">
-                    <Item name={`desc_${index + 1}`} label="Описание">
-                      {task.description_data}
-                    </Item>
-                    <Item name={`cond_${index + 1}`} label="Условие">
+                    <div>{task.task.description_data}</div>
+                    <div>
                       <RenderForm
-                        type={task.type.condition_forms[0]}
-                        data={task.condition_data}
+                        type={task.task.type.condition_forms[0]}
+                        data={task.task.condition_data}
                       />
-                    </Item>
-                    <Item name={`answer_${index + 1}`} label="Ответ">
-                      <RenderForm type={task.type.answer_forms[0]} data={""} />
+                    </div>
+                    <Item name={`${task.id}`} label="Ответ">
+                      <RenderForm
+                        type={task.task.type.answer_forms[0]}
+                        data={""}
+                      />
                     </Item>
                   </Space>
                 </Card>

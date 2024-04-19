@@ -9,12 +9,6 @@ import { FetchTestVariantByLink } from "../Handlers/API";
 export default function MainUnauthorizedPage() {
   const navigate = useNavigate();
 
-  const [variant, setVariant] = useState({});
-
-  // useEffect(() => {
-  //   FetchTestByLink({ setter: setVariant, link: values.uuid });
-  // }, []);
-
   function clickRegisterButton() {
     console.log("Register Page");
     navigate("/register");

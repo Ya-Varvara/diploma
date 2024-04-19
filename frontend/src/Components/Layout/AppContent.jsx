@@ -59,6 +59,7 @@ export default function AppContent({ children }) {
         </Breadcrumb>
         <div
           style={{
+            textAlign: "center",
             padding: 24,
             minHeight: "85vh",
             background: colorBgContainer,

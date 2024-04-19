@@ -1,4 +1,6 @@
-const baseURL = "http://localhost:8000";
+import React from "react";
+
+export const baseURL = "http://localhost:8000";
 
 export const FetchTests = async ({ setter }) => {
   try {
@@ -34,16 +36,12 @@ export const FetchTestByID = async ({ setter, id }) => {
 };
 
 export const FetchTestVariantByLink = async ({ link }) => {
-  const requestBody = {
-    link: link,
-  };
   try {
-    const response = await fetch(`${baseURL}/variant/`, {
+    const response = await fetch(`${baseURL}/variant/?link=${link}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody),
     });
     if (!response.ok) {
       throw new Error("Test variant fetching failed: " + response.status);

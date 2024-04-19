@@ -65,8 +65,7 @@ export default function RegisterForm() {
     .then(response => {
       if (response.status === 201) {
         console.log("Login successful");
-        // login(); // Предположим, что это функция для установки состояния аутентификации
-        navigate("/login"); // Переход на главную страницу или другую страницу после успешного входа
+        navigate("/login"); 
       } else if (!response.ok) {
         throw new Error('Login failed with status: ' + response.status);
       }

@@ -9,7 +9,7 @@ import AllTestsPage from "./Pages/AllTestsPage";
 import AllTaskTypesPage from "./Pages/AllTaskTypesPage";
 import AnswerPage from "./Pages/AnswerPage";
 import VariantPage from "./Pages/VariantPage";
-
+import VariantResultPage from "./Pages/VariantResultPage";
 
 export default function App() {
   return (
@@ -28,6 +28,7 @@ export default function App() {
           <Route path="/home/task_types" element={<AllTaskTypesPage />} />
 
           <Route path="/variant" element={<VariantPage />} />
+          <Route path="/variant/result" element={<VariantResultPage />} />
         </Routes>
       </Router>
     </AuthProvider>

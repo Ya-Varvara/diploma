@@ -39,10 +39,13 @@ const ViewTable = ({ type, data }) => {
   console.log(data);
   const navigate = useNavigate();
 
-  function markAsChecked(index) {
-    document.querySelectorAll(".ant-table-row")[index].style.backgroundColor =
-      "lightgray";
-  }
+  const findVariantById = ({ id }) => {
+    // Используем метод find для поиска первого объекта с указанным id.
+    console.log(id);
+    const result = data.find((item) => item.id === id);
+    console.log(result);
+    return result; // Возвращаем найденный объект или null, если ничего не найдено.
+  };
 
   const test_columns = [
     {
@@ -165,21 +168,16 @@ const ViewTable = ({ type, data }) => {
       key: "actions",
       render: (text, record, index) => {
         return (
-          <>
-            <a
-              onClick={() =>
-                (window.location.href = `/details/${record.variant}`)
-              }
-            >
-              Посмотреть
-            </a>
-            <a
-              style={{ marginLeft: "10px" }}
-              onClick={() => markAsChecked(index)}
-            >
-              Отметить проверенным
-            </a>
-          </>
+          <Button
+            type="link"
+            onClick={() =>
+              navigate(`/variant/result`, {
+                state: { variantData: findVariantById({ id: record.id }) },
+              })
+            }
+          >
+            Перейти
+          </Button>
         );
       },
     },

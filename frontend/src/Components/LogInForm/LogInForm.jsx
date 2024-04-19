@@ -14,6 +14,7 @@ export default function LogInForm() {
     let formData = new FormData();
     formData.append("username", values.email);
     formData.append("password", values.password);
+    console.log(formData);
 
     // Используем fetch для отправки запроса на сервер
     fetch("http://localhost:8000/auth/login", {
@@ -93,16 +94,6 @@ export default function LogInForm() {
             placeholder="Password"
           />
         </Form.Item>
-        <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
-        </Form.Item>
-
         <Form.Item>
           <Button
             type="primary"
