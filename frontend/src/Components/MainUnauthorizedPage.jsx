@@ -1,33 +1,64 @@
-import { useNavigate } from "react-router-dom"; // Для навигации
-import { Button, Flex, Form, Input, Space } from "antd";
-
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Flex, Form, Input, Modal, Space } from "antd";
+import moment from "moment";
 
 import { FetchTestVariantByLink } from "../Handlers/API";
 
 export default function MainUnauthorizedPage() {
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [variant, setVariant] = useState("");
+  const [testInfo, settestInfo] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Добавляем состояние для отключения кнопки
+
+  const formattedStartDatetime = moment(testInfo.start_datetime);
+  const formattedEndDatetime = moment(testInfo.end_datetime);
+  const currentTime = moment();
+
+  useEffect(() => {
+    if (
+      currentTime.isAfter(formattedStartDatetime) &&
+      currentTime.isBefore(formattedEndDatetime)
+    ) {
+      setIsButtonDisabled(false); // Кнопка доступна
+    } else {
+      setIsButtonDisabled(true); // Кнопка не доступна
+    }
+  }, [formattedStartDatetime, formattedEndDatetime, currentTime]);
 
   function clickRegisterButton() {
-    console.log("Register Page");
     navigate("/register");
   }
 
   async function onFinish(values) {
-    console.log("Received values of form: ", values);
     try {
       const data = await FetchTestVariantByLink({ link: values.uuid });
-      navigate("/variant", { state: { testData: data } });
+      setVariant(data);
+      settestInfo(data.test_info);
+      console.log(variant);
+      showModal();
     } catch (error) {
       console.error("Error fetching test variant:", error);
-      // Можно обработать ошибку здесь, если необходимо
     }
+  }
+
+  function showModal() {
+    setIsModalVisible(true);
+  }
+
+  function handleOk() {
+    navigate("/variant", { state: { testData: variant } });
+    setIsModalVisible(false);
+  }
+
+  function handleCancel() {
+    setIsModalVisible(false);
   }
 
   return (
     <>
-      <Flex gap="small" align="center" justify="center">
+      <Space direction="vertical" size="small">
         <Flex gap="small" align="center" justify="center" vertical={true}>
           <Form onFinish={onFinish} layout="inline">
             <Form.Item
@@ -68,7 +99,28 @@ export default function MainUnauthorizedPage() {
         <Button type="link" onClick={clickRegisterButton}>
           Регистрация
         </Button>
-      </Flex>
+      </Space>
+      <Modal
+        title={`Тест: ${testInfo.name}`}
+        open={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Да"
+        cancelText="Нет"
+        okButtonProps={{ disabled: isButtonDisabled }} // Устанавливаем свойство disabled
+      >
+        <p>
+          Дата и время начала:{" "}
+          {formattedStartDatetime.format("DD.MM.YYYY HH:mm")}
+        </p>
+        <p>
+          Дата и время окончания:{" "}
+          {formattedEndDatetime.format("DD.MM.YYYY HH:mm")}
+        </p>
+        <p>Продолжительность теста: {testInfo.test_time}</p>
+        <p />
+        <p>Вы готовы начать тестирование?</p>
+      </Modal>
     </>
   );
 }
