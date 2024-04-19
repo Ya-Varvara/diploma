@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Flex, Form, Input, Modal, Space } from "antd";
 import moment from "moment";
 
-import { FetchTestVariantByLink } from "../Handlers/API";
+import { FetchTestVariantByLink, MakeTestVariantGiven } from "../Handlers/API";
 
 export default function MainUnauthorizedPage() {
   const navigate = useNavigate();
@@ -48,6 +48,8 @@ export default function MainUnauthorizedPage() {
   }
 
   function handleOk() {
+    console.log(variant.id);
+    MakeTestVariantGiven({ id: variant.id });
     navigate("/variant", { state: { testData: variant } });
     setIsModalVisible(false);
   }

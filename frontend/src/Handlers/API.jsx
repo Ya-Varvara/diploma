@@ -35,26 +35,6 @@ export const FetchTestByID = async ({ setter, id }) => {
   }
 };
 
-export const FetchTestVariantByLink = async ({ link }) => {
-  try {
-    const response = await fetch(`${baseURL}/variant/?link=${link}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!response.ok) {
-      throw new Error("Test variant fetching failed: " + response.status);
-    }
-    const data = await response.json();
-    console.log("In Fetch Test By Link: ", data);
-    return data; // Возвращаем данные
-  } catch (error) {
-    console.error(error);
-    throw error; // Пробрасываем ошибку дальше, чтобы обработать её в вызывающем коде
-  }
-};
-
 export const DeleteTestByID = async ({ id }) => {
   try {
     const response = await fetch(`${baseURL}/test/${id}/`, {
@@ -261,5 +241,42 @@ export const PostVariantResult = async ({ requestBody }) => {
     console.log("Test task result was created successfully");
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const FetchTestVariantByLink = async ({ link }) => {
+  try {
+    const response = await fetch(`${baseURL}/variant/?link=${link}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Test variant fetching failed: " + response.status);
+    }
+    const data = await response.json();
+    console.log("In Fetch Test By Link: ", data);
+    return data; // Возвращаем данные
+  } catch (error) {
+    console.error(error);
+    throw error; // Пробрасываем ошибку дальше, чтобы обработать её в вызывающем коде
+  }
+};
+
+export const MakeTestVariantGiven = async ({ id }) => {
+  try {
+    const response = await fetch(`${baseURL}/variant/make_given/?id=${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Test variant making given failed: " + response.status);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error; // Пробрасываем ошибку дальше, чтобы обработать её в вызывающем коде
   }
 };
