@@ -8,6 +8,8 @@ import ViewTable from "../Components/Forms/Table";
 
 import BasePage from "../Components/Layout/BasePage";
 
+const { Paragraph } = Typography;
+
 const TestInfo = ({ info }) => {
   const { Title, Text } = Typography;
   const formatDate = (dateString) => {
@@ -44,6 +46,12 @@ const TestInfo = ({ info }) => {
         <List.Item>
           <Title level={5}>Количество вариантов:</Title>
           <Text>{info.variants_number}</Text>
+        </List.Item>
+        <List.Item>
+          <Title level={5}>ID:</Title>
+          <Text>
+            <Paragraph copyable>{info.link}</Paragraph>
+          </Text>
         </List.Item>
       </List>
     </Card>

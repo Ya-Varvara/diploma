@@ -280,3 +280,27 @@ export const MakeTestVariantGiven = async ({ id }) => {
     throw error; // Пробрасываем ошибку дальше, чтобы обработать её в вызывающем коде
   }
 };
+
+export const sendFileToServer = async ({ data, variant_id }) => {
+  const url = `${baseURL}/upload/?variant_id=${variant_id}`;
+  console.log(data, variant_id);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: data,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Server returned ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Ошибка при отправке файла:", error);
+    throw error;
+  }
+};

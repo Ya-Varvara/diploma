@@ -3,10 +3,19 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom"; // Для навигации
 
-import { Card, Form, Input, Space, Button, Radio, Checkbox } from "antd";
+import {
+  Card,
+  Form,
+  Input,
+  Space,
+  Button,
+  Radio,
+  Checkbox,
+  Upload,
+} from "antd";
 import BasePage from "../Components/Layout/BasePage";
 import GraphMatrix from "../Components/Forms/GraphMatrix";
-import { PostVariantResult } from "../Handlers/API";
+import { PostVariantResult, sendFileToServer } from "../Handlers/API";
 
 const { Item } = Form;
 
@@ -49,6 +58,8 @@ const VariantPage = () => {
   const [form] = Form.useForm();
 
   const [tasks, setTasks] = useState([]);
+  const [file, setFile] = useState();
+  // console.log(file);
 
   const [remainingTime, setRemainingTime] = useState("");
   const [testStartTime, setTestStartTime] = useState(
@@ -130,7 +141,11 @@ const VariantPage = () => {
     return <div>No test data available</div>;
   }
 
-  const onFinish = (values) => {
+  const onFileChange = (info) => {
+    setFile(info.file);
+  };
+
+  const onFinish = async (values) => {
     const spentTime = CountSpentTime();
     console.log("Spent time", spentTime);
     console.log("Received values of variant: ", values);
@@ -154,9 +169,29 @@ const VariantPage = () => {
           answer: { int: value },
         })),
     };
+    console.log("On finish", file);
+    if (file) {
+      let file_data = new FormData();
+      file_data.append("file", file);
+      try {
+        const result = await sendFileToServer({
+          data: file_data,
+          variant_id: testData.id,
+        });
+        console.log("Ответ сервера", result);
+      } catch (error) {
+        console.error("Не удалось отправить данные на сервер", error);
+      }
+    }
     console.log(formData);
     localStorage.removeItem("testStartDateTime");
-    PostVariantResult({ requestBody: formData });
+
+    try {
+      const answersResult = await PostVariantResult({ requestBody: formData });
+      console.log("Ответ сервера на отправку ответов", answersResult);
+    } catch (error) {
+      console.error("Не удалось отправить ответы на сервер", error);
+    }
   };
 
   return (
@@ -207,6 +242,11 @@ const VariantPage = () => {
                 </Card>
               );
             })}
+            {/* <Form.Item label="Загрузить PDF файл"> */}
+            <Upload beforeUpload={() => false} onChange={onFileChange}>
+              <Button>Выбрать файл</Button>
+            </Upload>
+            {/* </Form.Item> */}
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 Отправить
