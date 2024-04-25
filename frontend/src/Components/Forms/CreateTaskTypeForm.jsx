@@ -23,6 +23,42 @@ import {
 
 const { Option } = Select;
 
+const ExtraFields = {
+  nodes_number: {
+    name: "nodes_number",
+    label: "Количество вершин",
+    rules: [
+      {
+        required: true,
+        type: "int",
+        message: "Пожалуйста, введите количество вершин!",
+      },
+    ],
+  },
+  min_weight: {
+    name: "min_weight",
+    label: "Минимальный вес",
+    rules: [
+      {
+        required: true,
+        type: "int",
+        message: "Пожалуйста, введите минимальный вес!",
+      },
+    ],
+  },
+  max_weight: {
+    name: "max_weight",
+    label: "Максимальный вес",
+    rules: [
+      {
+        required: true,
+        type: "int",
+        message: "Пожалуйста, введите максимальный вес!",
+      },
+    ],
+  },
+};
+
 export default function CreateTaskTypeForm({ open, onClose }) {
   const [form] = Form.useForm();
 

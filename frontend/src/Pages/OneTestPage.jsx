@@ -7,23 +7,11 @@ import { FetchTestByID, FetchVariantsResult } from "../Handlers/API";
 import ViewTable from "../Components/Forms/Table";
 
 import BasePage from "../Components/Layout/BasePage";
+import { MakePrettyDateTime, MakePrettyTime } from "../Handlers/Time";
 
-const { Paragraph } = Typography;
+const { Paragraph, Title, Text } = Typography;
 
 const TestInfo = ({ info }) => {
-  const { Title, Text } = Typography;
-  const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString("ru-RU", options);
-  };
-
   return (
     <Card title="Информация о тесте">
       <List>
@@ -33,25 +21,15 @@ const TestInfo = ({ info }) => {
         </List.Item>
         <List.Item>
           <Title level={5}>Время начала:</Title>
-          <Text>
-            {moment
-              .utc(info.start_datetime)
-              .local()
-              .format("YYYY-MM-DD HH:mm:ss")}
-          </Text>
+          <Text>{MakePrettyDateTime({ datetime: info.start_datetime })}</Text>
         </List.Item>
         <List.Item>
           <Title level={5}>Время окончания:</Title>
-          <Text>
-            {moment
-              .utc(info.end_datetime)
-              .local()
-              .format("YYYY-MM-DD HH:mm:ss")}
-          </Text>
+          <Text>{MakePrettyDateTime({ datetime: info.end_datetime })}</Text>
         </List.Item>
         <List.Item>
           <Title level={5}>Время на выполнение:</Title>
-          <Text>{info.test_time}</Text>
+          <Text>{MakePrettyTime({ time: info.test_time })}</Text>
         </List.Item>
         <List.Item>
           <Title level={5}>Количество вариантов:</Title>

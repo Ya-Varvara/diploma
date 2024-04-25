@@ -16,6 +16,10 @@ import {
 import BasePage from "../Components/Layout/BasePage";
 import GraphMatrix from "../Components/Forms/GraphMatrix";
 
+import { MakePrettyDateTime, MakePrettyTime } from "../Handlers/Time";
+
+const { Title, Text } = Typography;
+
 const RenderForm = (props) => {
   switch (props.type.id) {
     case 1:
@@ -47,19 +51,6 @@ const RenderForm = (props) => {
 };
 
 const VariantResultInfo = ({ info }) => {
-  const { Title, Text } = Typography;
-
-  const formatDate = (dateString) => {
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    };
-    return new Date(dateString).toLocaleDateString("ru-RU", options);
-  };
   if (!info) {
     return <></>;
   }
@@ -74,11 +65,11 @@ const VariantResultInfo = ({ info }) => {
         </List.Item>
         <List.Item>
           <Title level={5}>Время начала:</Title>
-          <Text>{formatDate(info.start_datetime)}</Text>
+          <Text>{MakePrettyDateTime({ datetime: info.start_datetime })}</Text>
         </List.Item>
         <List.Item>
           <Title level={5}>Время окончания:</Title>
-          <Text>{formatDate(info.end_datetime)}</Text>
+          <Text>{MakePrettyDateTime({ datetime: info.end_datetime })}</Text>
         </List.Item>
       </List>
     </Card>
