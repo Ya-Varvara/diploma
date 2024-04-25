@@ -33,11 +33,21 @@ const TestInfo = ({ info }) => {
         </List.Item>
         <List.Item>
           <Title level={5}>Время начала:</Title>
-          <Text>{formatDate(info.start_datetime)}</Text>
+          <Text>
+            {moment
+              .utc(info.start_datetime)
+              .local()
+              .format("YYYY-MM-DD HH:mm:ss")}
+          </Text>
         </List.Item>
         <List.Item>
           <Title level={5}>Время окончания:</Title>
-          <Text>{formatDate(info.end_datetime)}</Text>
+          <Text>
+            {moment
+              .utc(info.end_datetime)
+              .local()
+              .format("YYYY-MM-DD HH:mm:ss")}
+          </Text>
         </List.Item>
         <List.Item>
           <Title level={5}>Время на выполнение:</Title>
