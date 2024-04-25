@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import FileViewer from "../Components/PDFViewer";
 
 import {
@@ -151,6 +151,7 @@ const StudentAnswer = ({ answer }) => {
 
 const VariantResultPage = () => {
   const location = useLocation();
+  const { test_id, variant_id } = useParams();
 
   const variantData = location.state?.variantData;
   console.log(variantData);

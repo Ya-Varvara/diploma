@@ -22,13 +22,16 @@ export default function App() {
           <Route path="/home" element={<HomePage />} />
 
           <Route path="/home/tests" element={<AllTestsPage />} />
-          <Route path="/home/tests/:id" element={<OneTestPage />} />
-          <Route path="/home/tests/:id/:answer_id" element={<AnswerPage />} />
+          <Route path="/home/tests/:test_id" element={<OneTestPage />} />
+          <Route
+            path="/home/tests/:test_id/variant/:variant_id"
+            element={<VariantResultPage />}
+          />
 
           <Route path="/home/task_types" element={<AllTaskTypesPage />} />
 
           <Route path="/variant" element={<VariantPage />} />
-          <Route path="/variant/result" element={<VariantResultPage />} />
+          {/* <Route path="/variant/result" element={<VariantResultPage />} /> */}
         </Routes>
       </Router>
     </AuthProvider>

@@ -14,7 +14,49 @@ const contentStyle = {
   justifyContent: "center",
 };
 
+const breadcrumbNameMap = {
+  home: "Главная",
+  tests: "Тесты",
+  task_types: "Типы заданий",
+};
+
 const createBreadcrumbItems = (pathname) => {
+  const paths = pathname.split("/").filter((x) => x);
+  const items = [];
+  let pathAccum = "";
+  let prevItem = "";
+
+  paths.forEach((path, index) => {
+    pathAccum += `/${path}`;
+    if (path !== "variant") {
+      const isLast = index === paths.length - 1;
+      let breadcrumbName;
+
+      if (prevItem === "tests") {
+        breadcrumbName = `Тест ${path}`;
+      } else if (prevItem === "variant") {
+        breadcrumbName = `Вариант ${path}`;
+      } else {
+        breadcrumbName = breadcrumbNameMap[path] || path;
+      }
+      console.log(path, breadcrumbName);
+      items.push(
+        <Breadcrumb.Item key={pathAccum}>
+          {isLast ? (
+            breadcrumbName
+          ) : (
+            <Link to={pathAccum}>{breadcrumbName}</Link>
+          )}
+        </Breadcrumb.Item>
+      );
+    }
+    prevItem = path;
+  });
+  console.log(items);
+  return items;
+};
+
+const createBreadcrumb = (pathname) => {
   const paths = pathname.split("/").filter((x) => x);
   const items = paths.map((path, index, arr) => {
     const url = `/${arr.slice(0, index + 1).join("/")}`;
@@ -25,12 +67,6 @@ const createBreadcrumbItems = (pathname) => {
       </Breadcrumb.Item>
     );
   });
-  // Добавьте "Home" в начало массива, если требуется
-  // items.unshift(
-  //   <Breadcrumb.Item key="/">
-  //     <Link to="/">Home</Link>
-  //   </Breadcrumb.Item>
-  // );
   return items;
 };
 

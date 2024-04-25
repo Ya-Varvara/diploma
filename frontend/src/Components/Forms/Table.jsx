@@ -171,9 +171,12 @@ const ViewTable = ({ type, data }) => {
           <Button
             type="link"
             onClick={() =>
-              navigate(`/variant/result`, {
-                state: { variantData: findVariantById({ id: record.id }) },
-              })
+              navigate(
+                `/home/tests/${record.test_info.test_id}/variant/${record.id}`,
+                {
+                  state: { variantData: findVariantById({ id: record.id }) },
+                }
+              )
             }
           >
             Перейти

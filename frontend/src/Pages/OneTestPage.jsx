@@ -59,16 +59,16 @@ const TestInfo = ({ info }) => {
 };
 
 const OneTestPage = ({}) => {
-  const { id } = useParams();
-  console.log("From path: ", id);
+  const { test_id } = useParams();
+  console.log("From path: ", test_id);
 
   const [info, setInfo] = useState({});
   const [variants, setVariants] = useState([]);
 
   useEffect(() => {
-    FetchTestByID({ setter: setInfo, id: id });
+    FetchTestByID({ setter: setInfo, id: test_id });
     console.log("Info: ", info);
-    FetchVariantsResult({ setter: setVariants, test_id: id });
+    FetchVariantsResult({ setter: setVariants, test_id: test_id });
     console.log("Variants: ", variants);
   }, []);
 
