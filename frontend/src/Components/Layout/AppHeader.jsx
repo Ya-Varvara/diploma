@@ -2,17 +2,6 @@ import { Layout, Button, Space } from "antd";
 import { useAuth } from "../../AuthContext";
 import { useNavigate } from "react-router-dom"; // Для навигации
 
-const headerStyle = {
-  width: "100%",
-  // textAlign: "center",
-  height: 60,
-  padding: "1rem",
-  display: "flex",
-  justifyContent: "space-between",
-  // alignItems: "center",
-  backgroundColor: "#f5f5f5",
-};
-
 export default function AppHeader() {
   const { isAuthenticated, login, logout } = useAuth();
   const navigate = useNavigate();

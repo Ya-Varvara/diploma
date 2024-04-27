@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Для навигации
-import { Button, Form, Input, Flex } from "antd";
+import { Button, Form, Input } from "antd";
 import { useAuth } from "../AuthContext";
 // import "./RegisterForm.css";
 

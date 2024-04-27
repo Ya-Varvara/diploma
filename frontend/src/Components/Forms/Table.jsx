@@ -5,7 +5,7 @@ import { Typography } from "antd";
 
 import { DeleteTaskTypeByID, DeleteTestByID } from "../../Handlers/API";
 
-const { Paragraph, Text } = Typography;
+const { Paragraph } = Typography;
 
 const task_type_columns = [
   {

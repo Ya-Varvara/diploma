@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Для навигации
 import { LockOutlined, MailOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Flex, message } from "antd";
+import { Button, Form, Input, Flex, message } from "antd";
 import { useAuth } from "../../AuthContext";
 import "./LogInForm.css";
 

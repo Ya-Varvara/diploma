@@ -1,11 +1,8 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { Layout, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import React from "react";
+import { Layout } from "antd";
 
 import AppHeader from "./AppHeader";
 import AppContent from "./AppContent";
-
 
 export default function BasePage({ children }) {
   return (

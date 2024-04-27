@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Col, Row, Card, Space, Typography, List } from "antd";
+import { Col, Card, Typography, List } from "antd";
 
 import { FetchTaskTypeByID } from "../Handlers/API";
 
@@ -68,10 +68,9 @@ export default function OneTaskTypePage({ test_id }) {
 
   return (
     <BasePage>
-        <Col span={12}>
-          <TestInfo info={info} />
-        </Col>
+      <Col span={12}>
+        <TestInfo info={info} />
+      </Col>
     </BasePage>
   );
-};
-
+}

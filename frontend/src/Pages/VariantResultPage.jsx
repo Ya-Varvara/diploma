@@ -16,7 +16,7 @@ import {
 import BasePage from "../Components/Layout/BasePage";
 import GraphMatrix from "../Components/Forms/GraphMatrix";
 
-import { MakePrettyDateTime, MakePrettyTime } from "../Handlers/Time";
+import { MakePrettyDateTime } from "../Handlers/Time";
 
 const { Title, Text } = Typography;
 
