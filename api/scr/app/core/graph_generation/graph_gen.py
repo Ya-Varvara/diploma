@@ -4,19 +4,39 @@ from .graph_draw import draw_graph
 from collections import deque
 
 
-async def make_graph_data(graph: tuple) -> dict:
+async def shuffle_graph_vertices(graph: tuple) -> tuple:
     net, nodes, cutA, cutB, cut, r_cut, max_flow = graph
+    vertex_list = list(net.keys())
+
+    shuffled_vertices = vertex_list[:]
+    shuffle(shuffled_vertices)
+    vertex_mapping = dict(zip(vertex_list, shuffled_vertices))
+
+    new_graph_net = {}
+    for old_vertex, new_vertex in vertex_mapping.items():
+        new_graph_net[new_vertex] = {}
+        for neighbor, weight in net[old_vertex].items():
+            new_graph_net[new_vertex][vertex_mapping[neighbor]] = weight
+
+    new_answer_data = {}
+    new_answer_data["cut"] = [
+        [vertex_mapping[edge[0]], vertex_mapping[edge[1]]] for edge in cut
+    ]
+    new_answer_data["cut_A"] = [vertex_mapping[node] for node in cutA]
+    new_answer_data["cut_B"] = [vertex_mapping[node] for node in cutB]
+    new_answer_data["max_flow"] = max_flow
+    new_answer_data["reverse_cut"] = [[vertex_mapping[edge[0]], vertex_mapping[edge[1]]] for edge in r_cut]
+    new_answer_data["nodes_number"] = nodes
+
+    return new_graph_net, new_answer_data
+
+
+async def make_graph_data(graph: tuple) -> dict:
+    net, answer = await shuffle_graph_vertices(graph=graph)
     return {
         "description_data": "Найдите максимальный поток и минимальный разрез с помощью алгоритма Форда Фалкерсона",
         "condition_data": {"graph_net": net},
-        "answer_data": {
-            "nodes_number": nodes,
-            "cut_A": cutA,
-            "cut_B": cutB,
-            "cut": cut,
-            "reverse_cut": r_cut,
-            "max_flow": max_flow,
-        },
+        "answer_data": answer,
     }
 
 
