@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Layout, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Layout, Button, Space, Row, Col, Typography, Divider } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../AuthContext";
@@ -9,6 +8,8 @@ import MainUnauthorizedPage from "../Components/MainUnauthorizedPage";
 import CreateTaskTypeForm from "../Components/Forms/CreateTaskTypeForm";
 import CreateTestForm from "../Components/Forms/CreateTestForm";
 import BasePage from "../Components/Layout/BasePage";
+
+const { Title, Paragraph, Text } = Typography;
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -24,13 +25,37 @@ export default function HomePage() {
 
   return (
     <BasePage>
-      Welcome!
-      <Button type="primary" onClick={() => navigate(`/home/tests/`)}>
-        Тесты
-      </Button>
-      <Button type="primary" onClick={() => navigate(`/home/task_types/`)}>
-        Типы заданий
-      </Button>
+      <Space direction="vertical" size="large" style={{ display: "flex" }}>
+        <Row>
+          <Col span={24}>
+            <Title level={1}>Добро пожаловать!</Title>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Text>
+              Это приложение предназначено для создания тестирований для курса
+              "Дискретная математика"
+            </Text>
+          </Col>
+        </Row>
+        <Divider />
+        <Row>
+          <Col span={12}>
+            <Button type="primary" onClick={() => navigate(`/home/tests/`)}>
+              Тесты
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button
+              type="primary"
+              onClick={() => navigate(`/home/task_types/`)}
+            >
+              Типы заданий
+            </Button>
+          </Col>
+        </Row>
+      </Space>
     </BasePage>
   );
 }

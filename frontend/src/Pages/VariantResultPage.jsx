@@ -123,13 +123,16 @@ const GraphAnswer = ({ data }) => {
   );
 };
 
-const StudentAnswer = ({ answer }) => {
+const StudentAnswer = ({ answer, task }) => {
   const { Title, Text } = Typography;
+  let is_correct;
+  if (answer.answer.int == task.task.answer_data.max_flow) {
+    is_correct = true;
+  } else {
+    is_correct = false;
+  }
   return (
-    <Tag
-      color={answer.is_correct ? "green" : "red"}
-      style={{ minWidth: "100%" }}
-    >
+    <Tag color={is_correct ? "green" : "red"} style={{ minWidth: "100%" }}>
       <List>
         <List.Item>
           <Title level={5}>Ответ:</Title>
@@ -151,7 +154,11 @@ const VariantResultPage = () => {
     <BasePage>
       <Space direction="vertical" size="middle">
         <h1>{variantData.test_info.name}</h1>
-        <VariantResultInfo info={variantData.variant_result_info} />
+        {variantData.variant_result_info ? (
+          <VariantResultInfo info={variantData.variant_result_info} />
+        ) : (
+          <></>
+        )}
         <Space size="middle" direction="vertical">
           {variantData.tasks.map((task, index) => {
             return (
@@ -164,7 +171,11 @@ const VariantResultPage = () => {
                       data={task.task.condition_data}
                     />
                   </div>
-                  <StudentAnswer answer={task.students_result} />
+                  {task.students_result ? (
+                    <StudentAnswer answer={task.students_result} task={task} />
+                  ) : (
+                    <></>
+                  )}
                   <Divider orientation="left">Правильный ответ</Divider>
                   <GraphAnswer data={task.task.answer_data} />
                 </Space>
