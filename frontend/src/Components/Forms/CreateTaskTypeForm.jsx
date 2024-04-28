@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
+  InputNumber,
   Button,
   Select,
   Radio,
@@ -25,37 +26,73 @@ const { Option } = Select;
 
 const ExtraFields = {
   nodes_number: {
-    name: "nodes_number",
-    label: "Количество вершин",
-    rules: [
-      {
-        required: true,
-        type: "int",
-        message: "Пожалуйста, введите количество вершин!",
-      },
-    ],
+    form: {
+      name: ["settings", "nodes_number"],
+      label: "Количество вершин",
+      rules: [
+        {
+          required: true,
+          type: "int",
+          message: "Пожалуйста, введите количество вершин!",
+        },
+      ],
+    },
+    input: <InputNumber type="int" min={10} max={16} changeOnWheel />,
   },
   min_weight: {
-    name: "min_weight",
-    label: "Минимальный вес",
-    rules: [
-      {
-        required: true,
-        type: "int",
-        message: "Пожалуйста, введите минимальный вес!",
-      },
-    ],
+    form: {
+      name: ["settings", "min_weight"],
+      label: "Минимальный вес",
+      rules: [
+        {
+          required: true,
+          type: "int",
+          message: "Пожалуйста, введите минимальный вес!",
+        },
+        ({ getFieldValue }) => ({
+          validator(_, value) {
+            let settings = getFieldValue("settings");
+            console.log(value, settings.max_weight);
+            if (value && settings.max_weight >= value + 20) {
+              return Promise.resolve();
+            }
+            return Promise.reject(
+              new Error(
+                "Пожалуйста, введите минимальный вес и убедитесь, что он меньше максимального веса не менее чем на 20 единиц!"
+              )
+            );
+          },
+        }),
+      ],
+    },
+    input: <InputNumber type="int" min={1} changeOnWheel />,
   },
   max_weight: {
-    name: "max_weight",
-    label: "Максимальный вес",
-    rules: [
-      {
-        required: true,
-        type: "int",
-        message: "Пожалуйста, введите максимальный вес!",
-      },
-    ],
+    form: {
+      name: ["settings", "max_weight"],
+      label: "Максимальный вес",
+      rules: [
+        {
+          required: true,
+          type: "int",
+          message: "Пожалуйста, введите максимальный вес!",
+        },
+        ({ getFieldValue }) => ({
+          validator(_, value) {
+            let settings = getFieldValue("settings");
+            if (value && settings.min_weight <= value - 20) {
+              return Promise.resolve();
+            }
+            return Promise.reject(
+              new Error(
+                "Пожалуйста, введите максимальный вес и убедитесь, что он больше минимального веса не менее чем на 20 единиц!"
+              )
+            );
+          },
+        }),
+      ],
+    },
+    input: <InputNumber type="int" min={10} changeOnWheel />,
   },
 };
 
@@ -127,16 +164,20 @@ export default function CreateTaskTypeForm({ open, onClose }) {
     if (!selectedBaseType || !selectedBaseType.settings) return null;
 
     return Object.entries(selectedBaseType.settings).map(
-      ([key, type], index) => (
-        <Form.Item
-          key={index}
-          name={["settings", key]}
-          label={key}
-          rules={[{ required: true, message: `Пожалуйста, введите ${key}!` }]}
-        >
-          <Input type={type === "int" ? "number" : "text"} />
-        </Form.Item>
-      )
+      ([key, type], index) => {
+        console.log(
+          key,
+          type,
+          ExtraFields[key],
+          ExtraFields[key].form,
+          ExtraFields[key].input
+        );
+        return (
+          <Form.Item key={index} {...ExtraFields[key].form}>
+            {ExtraFields[key].input}
+          </Form.Item>
+        );
+      }
     );
   };
 
