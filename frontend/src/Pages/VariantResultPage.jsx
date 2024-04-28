@@ -79,14 +79,14 @@ const VariantResultInfo = ({ info }) => {
 const GraphAnswer = ({ data }) => {
   const { Title, Text } = Typography;
   const cutString = data.cut
-    .map((pair) => `x${pair[0]} -> x${pair[1]}`)
+    .map((pair) => `x${pair[0] + 1} -> x${pair[1] + 1}`)
     .join(", ");
   const reverseCutString = data.reverse_cut
-    .map((pair) => `x${pair[0]} -> x${pair[1]}`)
+    .map((pair) => `x${pair[0] + 1} -> x${pair[1] + 1}`)
     .join(", ");
 
-  const subsetAString = data.cut_A.map((i) => `x${i}`).join(", ");
-  const subsetBString = data.cut_B.map((i) => `x${i}`).join(", ");
+  const subsetAString = data.cut_A.map((i) => `x${i + 1}`).join(", ");
+  const subsetBString = data.cut_B.map((i) => `x${i + 1}`).join(", ");
   return (
     <List size="small">
       <List.Item>

@@ -5,5 +5,5 @@ export const MakePrettyDateTime = ({ datetime }) => {
 };
 
 export const MakePrettyTime = ({ time }) => {
-  return moment.utc(time).local().format("HH:mm:ss");
+  return moment.utc(`1970-01-01 ${time}`).local().format("HH:mm:ss");
 };
