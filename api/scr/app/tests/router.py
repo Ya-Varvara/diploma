@@ -24,7 +24,7 @@ async def get_tests(
 ):
     logger.debug(f"ROUTER Getting all tests for user id={user.id}")
     options = {"user_id": user.id}
-    tests = await crud.get_tests(session=session, options=options)
+    tests = await crud.get_tests(session=session, **options)
     return make_full_test(tests)
 
 

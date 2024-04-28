@@ -37,7 +37,7 @@ async def get_all_base_task_types(session: AsyncSession) -> List[dbm.BaseTaskTyp
 
 
 async def get_all_task_types(session: AsyncSession, **options) -> List[dbm.TaskType]:
-    logger.debug(f"CRUD Getting all task types...")
+    logger.debug(f"CRUD Getting all task types... {options}")
 
     stmt = (
         select(dbm.TaskType)
@@ -50,6 +50,7 @@ async def get_all_task_types(session: AsyncSession, **options) -> List[dbm.TaskT
         .order_by(dbm.TaskType.id)
     )
     if user_id := options.get("user_id", ""):
+        logger.debug(f"...For user {user_id}...")
         stmt = stmt.where(dbm.TaskType.user_id == user_id)
     result: Result = await session.execute(stmt)
     task_types = result.scalars().unique().all()

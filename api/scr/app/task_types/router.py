@@ -24,7 +24,7 @@ async def get_all_task_types(
     user: dbm.User = Depends(get_current_user()),
 ):
     options = {"user_id": user.id}
-    tts = await crud.get_all_task_types(session=session, options=options)
+    tts = await crud.get_all_task_types(session=session, **options)
     return make_full_task_type(tts)
 
 
@@ -59,7 +59,7 @@ async def get_task_type_by_id(
 ):
     options = {"user_id": user.id}
     task_type = await crud.get_task_type_by_id(
-        session=session, task_type_id=task_type_id, options=options
+        session=session, task_type_id=task_type_id, **options
     )
     if task_type is None:
         raise HTTPException(
