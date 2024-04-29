@@ -65,7 +65,7 @@ const ExtraFields = {
         }),
       ],
     },
-    input: <InputNumber type="int" min={1} changeOnWheel />,
+    input: <InputNumber type="int" min={1} max={11} changeOnWheel />,
   },
   max_weight: {
     form: {
@@ -92,7 +92,7 @@ const ExtraFields = {
         }),
       ],
     },
-    input: <InputNumber type="int" min={10} changeOnWheel />,
+    input: <InputNumber type="int" min={30} changeOnWheel />,
   },
 };
 
