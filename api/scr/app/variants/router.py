@@ -85,7 +85,7 @@ async def get_variant_for_student_by_id(
     id: int, session: AsyncSession = Depends(get_async_session)
 ):
     logger.debug(f"ROUTER Getting variant by id={id}")
-    variant = await crud.get_variant_for_student_by_id(session=session,  id=id)
+    variant = await crud.get_variant_for_student_by_id(session=session, id=id)
     if variant is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

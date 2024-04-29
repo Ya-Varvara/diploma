@@ -40,6 +40,14 @@ async def make_graph_data(graph: tuple) -> dict:
     }
 
 
+async def check_min_flow(graph: dict, min_flow: int) -> bool:
+    for x in graph:
+        for y in graph[x]:
+            if graph[x][y] < min_flow:
+                return False
+    return True
+
+
 async def generate_graph(**settings) -> tuple:
     #     nodes: int = 13, min_weight=10, max_weight=70, info=False, draw=False
     # ) -> tuple:
@@ -105,7 +113,9 @@ async def generate_graph(**settings) -> tuple:
             f"Максимальный заданный поток = {ff_max_flow}\n"
         )
     if max_flow == ff_max_flow and cutA == ff_cutA and cutB == ff_cutB:
-        return await make_graph_data((net, nodes, cutA, cutB, cut, r_cut, max_flow))
+        if await check_min_flow(net, min_weight):
+            return await make_graph_data((net, nodes, cutA, cutB, cut, r_cut, max_flow))
+        return None
     else:
         return None
 

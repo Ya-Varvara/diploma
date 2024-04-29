@@ -28,6 +28,8 @@ async def get_task_for_test(
 
     if task_type.base_task_type == 1:
         graph_data = await generate_graph(**task_type.settings)
+        while graph_data is None:
+            graph_data = await generate_graph(**task_type.settings)
         task = dbm.Task(
             name=f"graph_{uuid4()}",
             type_id=task_type.id,
