@@ -119,6 +119,38 @@ async def get_variant_for_test(
     return None
 
 
+async def get_variant_for_student_by_id(
+    session: AsyncSession, id: int, **options
+) -> dbm.Variant:
+    stmt = (
+        select(dbm.Variant)
+        .options(
+            joinedload(dbm.Variant.test),
+            joinedload(dbm.Variant.tasks),
+            joinedload(dbm.Variant.tasks, dbm.VariantTask.task),
+            joinedload(dbm.Variant.tasks, dbm.VariantTask.task, dbm.Task.type),
+            joinedload(
+                dbm.Variant.tasks,
+                dbm.VariantTask.task,
+                dbm.Task.type,
+                dbm.TaskType.answer_forms,
+            ),
+            joinedload(
+                dbm.Variant.tasks,
+                dbm.VariantTask.task,
+                dbm.Task.type,
+                dbm.TaskType.condition_forms,
+            ),
+        )
+        .where(dbm.Variant.id == id)
+    )
+    result: Result = await session.execute(stmt)
+    variant = result.first()
+    if variant is not None:
+        return variant[0]
+    return None
+
+
 async def make_test_variant_given(
     session: AsyncSession, test_variant_id: int, **options
 ) -> dbm.Variant:

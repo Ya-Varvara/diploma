@@ -12,10 +12,11 @@ import {
   Radio,
   Checkbox,
   Upload,
+  Modal,
 } from "antd";
 import BasePage from "../Components/Layout/BasePage";
 import GraphMatrix from "../Components/Forms/GraphMatrix";
-import { PostVariantResult, sendFileToServer } from "../Handlers/API";
+import { PostVariantResult, sendFileToServer, baseURL } from "../Handlers/API";
 
 const { Item } = Form;
 
@@ -53,9 +54,35 @@ const VariantPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const testData = location.state?.testData;
+  const [testData, setTestData] = useState();
+  // console.log(testData);
+
+  useEffect(() => {
+    async function FetchTestVariantByID({ id }) {
+      try {
+        const response = await fetch(`${baseURL}/variant/id/?id=${id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Test variant fetching failed: " + response.status);
+        }
+        const data = await response.json();
+        console.log("In Fetch Test By ID: ", data);
+        setTestData(data);
+        setTasks(data.tasks);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    FetchTestVariantByID({ id: parseInt(localStorage.getItem("variant")) });
+    console.log(testData);
+  }, []);
 
   const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [tasks, setTasks] = useState([]);
   const [file, setFile] = useState();
@@ -72,6 +99,19 @@ const VariantPage = () => {
   const getSecondsFromTestTime = (testTime) => {
     const [hours, minutes, seconds] = testTime.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = async () => {
+    setIsModalVisible(false);
+    form.submit();
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   const CountSpentTime = () => {
@@ -131,12 +171,6 @@ const VariantPage = () => {
     return () => clearInterval(interval);
   }, [testData, testStartTime]);
 
-  useEffect(() => {
-    if (location.state?.testData) {
-      setTasks(location.state.testData.tasks);
-    }
-  }, [location.state]);
-
   if (!testData) {
     return <div>No test data available</div>;
   }
@@ -156,8 +190,8 @@ const VariantPage = () => {
 
     const formData = {
       info: {
-        students_name: values.name,
-        students_surname: values.surname,
+        students_name: localStorage.getItem("name"),
+        students_surname: localStorage.getItem("surname"),
         start_datetime: localStorage.getItem("testStartDateTime"),
         end_datetime: now.toISOString(),
         variant_id: testData.id,
@@ -185,6 +219,9 @@ const VariantPage = () => {
     }
     console.log(formData);
     localStorage.removeItem("testStartDateTime");
+    localStorage.removeItem("name");
+    localStorage.removeItem("surname");
+    localStorage.removeItem("variant");
 
     try {
       const answersResult = await PostVariantResult({ requestBody: formData });
@@ -206,20 +243,6 @@ const VariantPage = () => {
           layout="vertical"
           style={{ maxWidth: 800 }}
         >
-          <Item
-            label="Имя"
-            name="name"
-            rules={[{ required: true, message: "Введите имя" }]}
-          >
-            <Input />
-          </Item>
-          <Item
-            label="Фамилия"
-            name="surname"
-            rules={[{ required: true, message: "Введите фамилию" }]}
-          >
-            <Input />
-          </Item>
           <Space size="middle" direction="vertical">
             {tasks.map((task, index) => {
               return (
@@ -248,13 +271,23 @@ const VariantPage = () => {
             </Upload>
             {/* </Form.Item> */}
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" onClick={showModal}>
                 Отправить
               </Button>
             </Form.Item>
           </Space>
         </Form>
       </Space>
+      <Modal
+        title="Подтверждение"
+        open={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Да, завершить"
+        cancelText="Отмена"
+      >
+        <p>Вы уверены, что хотите завершить тестирование?</p>
+      </Modal>
     </BasePage>
   );
 };

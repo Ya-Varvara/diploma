@@ -52,7 +52,6 @@ const createBreadcrumbItems = (pathname) => {
     }
     prevItem = path;
   });
-  console.log(items);
   return items;
 };
 

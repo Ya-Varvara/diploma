@@ -10,6 +10,8 @@ export default function MainUnauthorizedPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [variant, setVariant] = useState("");
   const [testInfo, settestInfo] = useState("");
+  const [form] = Form.useForm();
+
   const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Добавляем состояние для отключения кнопки
 
   const formattedStartDatetime = moment(testInfo.start_datetime);
@@ -47,8 +49,10 @@ export default function MainUnauthorizedPage() {
     setIsModalVisible(true);
   }
 
-  function handleOk() {
+  function handleOk(values) {
     console.log(variant.id);
+    form.submit();
+    localStorage.setItem("variant", variant.id);
     MakeTestVariantGiven({ id: variant.id });
     navigate("/variant", { state: { testData: variant } });
     setIsModalVisible(false);
@@ -57,6 +61,11 @@ export default function MainUnauthorizedPage() {
   function handleCancel() {
     setIsModalVisible(false);
   }
+
+  const onFinishModal = async (values) => {
+    localStorage.setItem("name", values.name);
+    localStorage.setItem("surname", values.surname);
+  };
 
   return (
     <>
@@ -122,6 +131,26 @@ export default function MainUnauthorizedPage() {
         <p>Продолжительность теста: {testInfo.test_time}</p>
         <p />
         <p>Вы готовы начать тестирование?</p>
+        {!isButtonDisabled ? (
+          <Form onFinish={onFinishModal} form={form}>
+            <Form.Item
+              key={"name"}
+              name="name"
+              rules={[{ required: true, message: "Введите ваше имя!" }]}
+            >
+              <Input placeholder="Имя" />
+            </Form.Item>
+            <Form.Item
+              key={"surname"}
+              name="surname"
+              rules={[{ required: true, message: "Введите вашу фамилию!" }]}
+            >
+              <Input placeholder="Фамилия" />
+            </Form.Item>
+          </Form>
+        ) : (
+          <></>
+        )}
       </Modal>
     </>
   );

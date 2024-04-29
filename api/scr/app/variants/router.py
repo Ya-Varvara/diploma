@@ -77,6 +77,24 @@ async def get_variant_for_student(
 
 
 @router.post(
+    "/id/",
+    status_code=status.HTTP_200_OK,
+    response_model=sch.VariantForStudent,
+)
+async def get_variant_for_student_by_id(
+    id: int, session: AsyncSession = Depends(get_async_session)
+):
+    logger.debug(f"ROUTER Getting variant by id={id}")
+    variant = await crud.get_variant_for_student_by_id(session=session,  id=id)
+    if variant is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Test variant not found",
+        )
+    return handlers.make_variant_for_student([variant])[0]
+
+
+@router.post(
     "/make_given/",
     status_code=status.HTTP_200_OK,
 )
