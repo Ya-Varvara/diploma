@@ -2,6 +2,7 @@ import React from "react";
 import { Layout, theme, Breadcrumb } from "antd";
 import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
+import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 
 const contentStyle = {
   textAlign: "center",
@@ -15,7 +16,7 @@ const contentStyle = {
 };
 
 const breadcrumbNameMap = {
-  home: "Главная",
+  home: <HomeOutlined />,
   tests: "Тесты",
   task_types: "Типы заданий",
 };

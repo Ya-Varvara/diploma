@@ -38,19 +38,42 @@ export default function HomePage() {
         </Row>
         <Divider />
         <Row>
-          <Col span={12}>
-            <Button type="primary" onClick={() => navigate(`/home/tests/`)}>
+          {/* <Space size="large"> */}
+          <Col span={6}>
+            <Button
+              type="default"
+              style={{ height: "100px", borderRadius: 0 }}
+              block
+            />
+          </Col>
+          <Col span={6}>
+            <Button
+              type="default"
+              onClick={() => navigate(`/home/tests/`)}
+              style={{ height: "100px", borderRadius: 0 }}
+              block
+            >
               Тесты
             </Button>
           </Col>
-          <Col span={12}>
+          <Col span={6}>
             <Button
-              type="primary"
+              type="default"
               onClick={() => navigate(`/home/task_types/`)}
+              style={{ height: "100px", borderRadius: 0 }}
+              block
             >
               Типы заданий
             </Button>
           </Col>
+          <Col span={6}>
+            <Button
+              type="default"
+              style={{ height: "100px", borderRadius: 0 }}
+              block
+            />
+          </Col>
+          {/* </Space> */}
         </Row>
       </Space>
     </BasePage>
